@@ -1,0 +1,17 @@
+data/src/Models/Ticket.php.i
+data/src/Exceptions/AuthenticationException.php.i
+data/.idea/vcs.xml.i
+data/src/Controllers/AccountAuthenticationController.php.i
+data/src/Helpers/HttpHelper.php.i
+data/.hgignore.i
+data/src/Models/CreditCard.php.i
+data/src/Helpers/StringFormatter.php.i
+data/src/Controllers/ContactController.php.i
+data/src/Controllers/AccountTicketController.php.i
+data/src/Exceptions/ApiException.php.i
+data/src/AccountAuthenticationController.php.i
+data/src/Models/Contact.php.i
+data/composer.json.i
+data/src/Controllers/AccountBillingController.php.i
+data/src/.env.example.i
+data/src/Models/PhoneNumber.php.i

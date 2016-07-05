@@ -131,7 +131,7 @@ class CustomerPortalInstaller
         }
         else
         {
-            throw new Exception("/usr/share/portal already exists - please remove it manually before installing (rm -rf /usr/share/portal)");
+            throw new RuntimeException("/usr/share/portal already exists - please remove it manually before installing (rm -rf /usr/share/portal)");
         }
         $this->executeCommand("/bin/cp -R {$this->fileDirectory}/portal/* /usr/share/portal/");
         #Setup permissions

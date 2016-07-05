@@ -1,0 +1,7 @@
+syntax: glob
+.idea/*
+composer.lock
+vendor/*
+*.swp
+src/.env
+test.php
