@@ -45,6 +45,7 @@ class CustomerPortalInstaller
         catch (RuntimeException $e)
         {
             $this->climate->shout("FAILED!");
+            $this->climate->shout($e->getMessage());
             $this->climate->shout("See {$this->logFile} for failure details.");
             return;
         }
@@ -124,7 +125,7 @@ class CustomerPortalInstaller
      */
     private function setupLaravel()
     {
-        $this->climate->info()->inline("Configuring customer portal... ");
+        $this->climate->info("Configuring customer portal... ");
         if (!file_exists("/usr/share/portal"))
         {
             $this->executeCommand("/bin/mkdir /usr/share/portal");
@@ -133,19 +134,27 @@ class CustomerPortalInstaller
         {
             throw new RuntimeException("/usr/share/portal already exists - please remove it manually before installing (rm -rf /usr/share/portal)");
         }
+        $this->climate->info()->inline("Copying files... ");
         $this->executeCommand("/bin/cp -R {$this->fileDirectory}/portal/. /usr/share/portal/");
+        $this->executeCommand("/bin/mv /usr/share/portal/.env.example /usr/share/portal/.env");
+        $this->climate->info("Success!");
         #Setup permissions
+        $this->climate->info()->inline("Configuring permissions... ");
         $this->executeCommand("/bin/chown -R www-data:www-data /usr/share/portal");
         $this->executeCommand("/bin/touch /usr/share/portal/storage/logs/laravel.log");
         $this->executeCommand("/bin/chown www-data:www-data /usr/share/portal/storage/logs/laravel.log");
         $this->executeCommand("/bin/chmod 777 /usr/share/portal/storage/logs/laravel.log");
+        $this->climate->info("Success!");
         #Run Laravel basic setup
+        $this->climate->info()->inline("Performing basic Laravel setup... ");
         $this->executeCommand("/usr/bin/touch /usr/share/portal/storage/database.sqlite");
-        $this->executeCommand("/bin/mv /usr/share/portal/.env.example /usr/share/portal/.env");
+        $this->executeCommand("/bin/chown www-data:www-data /usr/share/portal/storage/database.sqlite");
         $this->executeCommand("/usr/bin/php /usr/share/portal/artisan key:generate");
         $this->executeCommand("/usr/bin/php /usr/share/portal/artisan migrate --force");
         $this->executeCommand("/usr/bin/php /usr/share/portal/artisan route:cache");
+        $this->climate->info("Success!");
         #Add the scheduler
+        $this->climate->info()->inline("Setting up scheduler... ");
         $this->executeCommand("/bin/cp {$this->fileDirectory}/sonar_scheduler /etc/cron.d/");
         $this->executeCommand("/bin/chmod 644 /etc/cron.d/sonar_scheduler");
         $this->executeCommand("/usr/sbin/service cron restart");

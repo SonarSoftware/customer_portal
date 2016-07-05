@@ -29,7 +29,13 @@ class DataUsageController extends Controller
         $currentUsage = $historicalUsage[0];
         $historicalUsage = json_encode($historicalUsage);
         $calculatedCap = $policyDetails->policy_cap_in_gigabytes + round($policyDetails->rollover_available_in_bytes/1000**3,2) + round($policyDetails->purchased_top_off_total_in_bytes/1000**3,2);
-        $usagePercentage = round(($currentUsage['billable'] / $calculatedCap) * 100);
+        if ($calculatedCap > 0)
+        {
+            $usagePercentage = round(($currentUsage['billable'] / $calculatedCap) * 100);
+        }
+        else {
+            $usagePercentage = 0;
+        }
         return view("pages.data_usage.index",compact('historicalUsage','policyDetails','currentUsage','calculatedCap','usagePercentage'));
     }
 

@@ -239,11 +239,16 @@ class BillingController extends Controller
     {
         
         try {
-            return $this->accountBillingController->makePaymentUsingExistingPaymentMethod(get_user()->account_id, intval($request->input('payment_method')), trim($request->input('amount')));
+            $result = $this->accountBillingController->makePaymentUsingExistingPaymentMethod(get_user()->account_id, intval($request->input('payment_method')), trim($request->input('amount')));
         }
         catch (Exception $e)
         {
             Log::error($e->getMessage());
+            throw new Exception(trans("billing.paymentFailedTryAnother"));
+        }
+
+        if ($result->success !== true)
+        {
             throw new Exception(trans("billing.paymentFailedTryAnother"));
         }
     }
