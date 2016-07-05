@@ -133,17 +133,18 @@ class CustomerPortalInstaller
         {
             throw new RuntimeException("/usr/share/portal already exists - please remove it manually before installing (rm -rf /usr/share/portal)");
         }
-        $this->executeCommand("/bin/cp -R {$this->fileDirectory}/portal/* /usr/share/portal/");
+        $this->executeCommand("/bin/cp -R {$this->fileDirectory}/portal/. /usr/share/portal/");
         #Setup permissions
         $this->executeCommand("/bin/chown -R www-data:www-data /usr/share/portal");
         $this->executeCommand("/bin/touch /usr/share/portal/storage/logs/laravel.log");
         $this->executeCommand("/bin/chown www-data:www-data /usr/share/portal/storage/logs/laravel.log");
         $this->executeCommand("/bin/chmod 777 /usr/share/portal/storage/logs/laravel.log");
         #Run Laravel basic setup
-        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan key:generate");
-        $this->executeCommand("/usr/bin/php /usr/share/portal/migrate --force");
-        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan route:cache");
         $this->executeCommand("/usr/bin/touch /usr/share/portal/storage/database.sqlite");
+        $this->executeCommand("/bin/mv /usr/share/portal/.env.example /usr/share/portal/.env");
+        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan key:generate");
+        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan migrate --force");
+        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan route:cache");
         #Add the scheduler
         $this->executeCommand("/bin/cp {$this->fileDirectory}/sonar_scheduler /etc/cron.d/");
         $this->executeCommand("/bin/chmod 644 /etc/cron.d/sonar_scheduler");
