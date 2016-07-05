@@ -1,0 +1,35 @@
+body {
+    background-color: rgba(236, 240, 241,1.0);
+}
+
+h1 {
+    rgba(52, 73, 94,1.0);
+}
+
+.give_bottom_room {
+    margin-bottom: 1em !important;
+}
+
+.give_top_room {
+    margin-top: 1em !important;
+}
+
+.push_right {
+    padding-left: 2em !important;
+}
+
+.push_left {
+    padding-right: 2em !important;
+}
+
+.attention_text {
+    font-size: 48px;
+}
+
+.bigger_text {
+    font-size: 24px;
+}
+
+.big_text {
+    font-size: 18px;
+}

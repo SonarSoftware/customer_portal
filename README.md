@@ -1,2 +1,2 @@
-# customer_portal
-A customer portal for Sonar.
+# Sonar Customer Portal
+This provides a prebuilt customer portal for [Sonar](https://sonar.software). This requires Sonar 0.6 or greater. Please check the [wiki](https://github.com/SonarSoftware/customer_portal/wiki) for installation instructions.
