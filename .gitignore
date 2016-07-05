@@ -1,7 +1,6 @@
 syntax: glob
 .idea/*
 portal/.env
-portal/bootstrap/*
 portal/storage/framework/views/*
 portal/composer.lock
 portal/storage/database.sqlite

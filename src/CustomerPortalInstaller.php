@@ -2,6 +2,7 @@
 
 namespace SonarSoftware\CustomerPortal;
 
+use Exception;
 use League\CLImate\CLImate;
 use RuntimeException;
 
@@ -71,7 +72,7 @@ class CustomerPortalInstaller
     private function installAndConfigureApache()
     {
         $this->climate->info()->inline("Installing Apache... ");
-        $this->executeCommand("apt-get -y install apache2 apache2-mpm-event libapache2-mod-fastcgi");
+        $this->executeCommand("apt-get -y install apache2 libapache2-mod-fastcgi");
         $this->climate->info("Success!");
         $this->climate->info()->inline("Configuring Apache... ");
 
@@ -89,9 +90,8 @@ class CustomerPortalInstaller
         }
 
         $this->executeCommand("/bin/rm -rf /etc/apache2/conf-enabled/php7-fpm.conf");
-        $this->executeCommand("/bin/cp {$this->fileDirectory}/conf/php7-fpm.conf /etc/apache2/conf-enabled/");
+        $this->executeCommand("/bin/cp {$this->fileDirectory}/conf/php7-fpm.conf /etc/apache2/conf-available/");
         $this->executeCommand("/usr/sbin/a2enconf php7-fpm");
-        $this->executeCommand("/usr/sbin/a2enmod mpm_event");
         $this->executeCommand("/bin/rm -rf /etc/apache2/sites-available/000-default.conf");
         $this->executeCommand("/bin/cp {$this->fileDirectory}/conf/000-default.conf /etc/apache2/sites-available/");
         $this->executeCommand("/bin/rm -rf /etc/apache2/apache2.conf");
@@ -125,8 +125,15 @@ class CustomerPortalInstaller
     private function setupLaravel()
     {
         $this->climate->info()->inline("Configuring customer portal... ");
-        $this->executeCommand("/bin/mkdir /usr/share/portal");
-        $this->executeCommand("/bin/cp {$this->fileDirectory}/portal/* /usr/share/portal/");
+        if (!file_exists("/usr/share/portal"))
+        {
+            $this->executeCommand("/bin/mkdir /usr/share/portal");
+        }
+        else
+        {
+            throw new Exception("/usr/share/portal already exists - please remove it manually before installing (rm -rf /usr/share/portal)");
+        }
+        $this->executeCommand("/bin/cp -R {$this->fileDirectory}/portal/* /usr/share/portal/");
         #Setup permissions
         $this->executeCommand("/bin/chown -R www-data:www-data /usr/share/portal");
         $this->executeCommand("/bin/touch /usr/share/portal/storage/logs/laravel.log");
