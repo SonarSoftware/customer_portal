@@ -337,6 +337,7 @@ class BillingController extends Controller
                     'amount' => $debit->amount,
                     'date' => $debit->date,
                     'taxes' => $debit->taxes,
+                    'description' => $debit->description,
                 ]);
             }
 
@@ -348,6 +349,7 @@ class BillingController extends Controller
                     'amount' => $discount->amount,
                     'date' => $discount->date,
                     'taxes' => $discount->taxes,
+                    'description' => $discount->description,
                 ]);
             }
 

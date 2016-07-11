@@ -97,9 +97,9 @@
                                     @else
                                         @foreach($transactions as $transaction)
                                             <TR @if($transaction['type'] != "debit") class="success text-success" @endif>
-                                                <TD>{{trans("transaction_types." . $transaction['type'])}}</TD>
+                                                <TD>@if(in_array($transaction['type'],['debit','discount'])) {{$transaction['description']}} @else {{trans("transaction_types." . $transaction['type'])}} @endif</TD>
                                                 <TD>{{Formatter::date($transaction['date'],false)}}</TD>
-                                                <TD>{{Formatter::currency($transaction['amount'])}}</TD>
+                                                <TD>@if($transaction['type'] != "debit")-@endif{{Formatter::currency($transaction['amount'])}}</TD>
                                             </TR>
                                             @if(in_array($transaction['type'],['credit','debit']))
                                                 @foreach($transaction['taxes'] as $tax)

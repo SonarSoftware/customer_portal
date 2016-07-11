@@ -8,7 +8,11 @@
                 <span class="icon-bar"></span>
             </button>
             <span class="navbar-brand">
-                <img src="/assets/images/transparent_logo.png" height="20px">
+                @if(file_exists(base_path("/public/assets/images/logo.png")))
+                    <img src="/assets/images/logo.png" height="20px">
+                @else
+                    <img src="/assets/images/transparent_logo.png" height="20px">
+                @endif
             </span>
         </div>
 
