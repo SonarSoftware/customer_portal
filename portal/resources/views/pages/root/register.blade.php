@@ -2,11 +2,13 @@
 @section('content')
     <div class="container">
         <div class="row">
-            @if(file_exists(base_path("/public/assets/images/logo.png")))
-                <img src="/assets/images/logo.png">
-            @else
-                <img src="/assets/images/transparent_logo.png">
-            @endif
+            <div class="col-md-6 col-md-offset-3 give_bottom_room">
+                @if(file_exists(base_path("/public/assets/images/logo.png")))
+                    <img src="/assets/images/logo.png">
+                @else
+                    <img src="/assets/images/transparent_logo.png">
+                @endif
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
