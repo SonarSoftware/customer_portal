@@ -56,21 +56,27 @@ class ProfileController extends Controller
         $contact->setRole($request->input('role'));
         $contact->setEmailAddress($request->input('email_address'));
 
-        $work = $contact->getPhoneNumber(PhoneNumber::WORK);
-        $work->setNumber(preg_replace("/[^0-9]/","",$request->input('work_phone')));
-        $contact->setPhoneNumber($work);
+        try {
+            $work = $contact->getPhoneNumber(PhoneNumber::WORK);
+            $work->setNumber(preg_replace("/[^0-9]/","",$request->input('work_phone')));
+            $contact->setPhoneNumber($work);
 
-        $mobile = $contact->getPhoneNumber(PhoneNumber::MOBILE);
-        $mobile->setNumber(preg_replace("/[^0-9]/","",$request->input('mobile_phone')));
-        $contact->setPhoneNumber($mobile);
+            $mobile = $contact->getPhoneNumber(PhoneNumber::MOBILE);
+            $mobile->setNumber(preg_replace("/[^0-9]/","",$request->input('mobile_phone')));
+            $contact->setPhoneNumber($mobile);
 
-        $home = $contact->getPhoneNumber(PhoneNumber::HOME);
-        $home->setNumber(preg_replace("/[^0-9]/","",$request->input('home_phone')));
-        $contact->setPhoneNumber($home);
+            $home = $contact->getPhoneNumber(PhoneNumber::HOME);
+            $home->setNumber(preg_replace("/[^0-9]/","",$request->input('home_phone')));
+            $contact->setPhoneNumber($home);
 
-        $fax = $contact->getPhoneNumber(PhoneNumber::FAX);
-        $fax->setNumber(preg_replace("/[^0-9]/","",$request->input('fax')));
-        $contact->setPhoneNumber($fax);
+            $fax = $contact->getPhoneNumber(PhoneNumber::FAX);
+            $fax->setNumber(preg_replace("/[^0-9]/","",$request->input('fax')));
+            $contact->setPhoneNumber($fax);
+        }
+        catch (Exception $e)
+        {
+            return redirect()->back()->withErrors($e->getMessage());
+        }
         
         $contactController = new ContactController();
         try {
