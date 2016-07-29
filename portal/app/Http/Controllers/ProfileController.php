@@ -57,19 +57,19 @@ class ProfileController extends Controller
         $contact->setEmailAddress($request->input('email_address'));
 
         $work = $contact->getPhoneNumber(PhoneNumber::WORK);
-        $work->setNumber($request->input('work_phone'));
+        $work->setNumber(preg_replace("/[^0-9]/","",$request->input('work_phone')));
         $contact->setPhoneNumber($work);
 
         $mobile = $contact->getPhoneNumber(PhoneNumber::MOBILE);
-        $mobile->setNumber($request->input('mobile_phone'));
+        $mobile->setNumber(preg_replace("/[^0-9]/","",$request->input('mobile_phone')));
         $contact->setPhoneNumber($mobile);
 
         $home = $contact->getPhoneNumber(PhoneNumber::HOME);
-        $home->setNumber($request->input('home_phone'));
+        $home->setNumber(preg_replace("/[^0-9]/","",$request->input('home_phone')));
         $contact->setPhoneNumber($home);
 
         $fax = $contact->getPhoneNumber(PhoneNumber::FAX);
-        $fax->setNumber($request->input('fax'));
+        $fax->setNumber(preg_replace("/[^0-9]/","",$request->input('fax')));
         $contact->setPhoneNumber($fax);
         
         $contactController = new ContactController();
