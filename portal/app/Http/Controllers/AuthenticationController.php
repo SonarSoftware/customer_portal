@@ -105,7 +105,7 @@ class AuthenticationController extends Controller
         {
             $creationToken = new CreationToken([
                 'token' => uniqid(),
-                'email' => $result->email_address,
+                'email' => strtolower($result->email_address),
                 'account_id' => $result->account_id,
                 'contact_id' => $result->contact_id,
             ]);
@@ -176,7 +176,7 @@ class AuthenticationController extends Controller
             return redirect()->action("AuthenticationController@showRegistrationForm")->withErrors(trans("errors.invalidToken"));
         }
         
-        if ($creationToken->email != $request->input('email'))
+        if (strtolower(trim($creationToken->email)) != strtolower(trim($request->input('email'))))
         {
             $this->incrementThrottleValue("email_lookup", md5($token . $request->getClientIp()));
             return redirect()->back()->withErrors(trans("errors.invalidEmailAddress"))->withInput();
