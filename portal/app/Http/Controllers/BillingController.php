@@ -309,11 +309,26 @@ class BillingController extends Controller
      */
     private function getInvoices()
     {
-        
         if (!Cache::tags("billing.invoices")->has(get_user()->account_id))
         {
+            $invoicesToReturn = [];
             $invoices = $this->accountBillingController->getInvoices(get_user()->account_id);
-            Cache::tags("billing.invoices")->put(get_user()->account_id, $invoices, 10);
+            foreach ($invoices as $invoice)
+            {
+                //This check is here because this property did not exist prior to Sonar 0.6.6
+                if (property_exists($invoice,"void"))
+                {
+                    if ($invoice->void != 1)
+                    {
+                        array_push($invoicesToReturn,$invoice);
+                    }
+                }
+                else
+                {
+                    array_push($invoicesToReturn,$invoice);
+                }
+            }
+            Cache::tags("billing.invoices")->put(get_user()->account_id, $invoicesToReturn, 10);
         }
 
         return Cache::tags("billing.invoices")->get(get_user()->account_id);
