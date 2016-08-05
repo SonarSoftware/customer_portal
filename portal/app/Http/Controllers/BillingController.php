@@ -251,6 +251,8 @@ class BillingController extends Controller
         {
             throw new Exception(trans("billing.paymentFailedTryAnother"));
         }
+
+        return $result;
     }
 
     /**
