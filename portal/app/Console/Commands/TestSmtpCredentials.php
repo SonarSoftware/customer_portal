@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
 class TestSmtpCredentials extends Command
@@ -47,7 +48,7 @@ class TestSmtpCredentials extends Command
 
         try {
             Mail::send('emails.test', [], function($m) use ($email) {
-                $m->from('donotreply@sonar.software','Sonar Customer Portal');
+                $m->from(Config::get("customer_portal.from_address"),Config::get("customer_portal.from_name"));
                 $m->to($email, $email)
                     ->subject('Sonar customer portal test email!');
             });
