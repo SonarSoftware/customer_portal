@@ -116,8 +116,7 @@ class ProfileController extends Controller
         }
         catch (Exception $e)
         {
-            Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.failedToUpdatePassword"));
+            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return redirect()->action("ProfileController@show")->with('success',trans("profile.passwordUpdated"));

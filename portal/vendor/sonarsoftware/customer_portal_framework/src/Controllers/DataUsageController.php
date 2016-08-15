@@ -36,24 +36,6 @@ class DataUsageController
     }
 
     /**
-     * Get granular data usage across the last $days days, grouped into 24 hour periods - see https://sonar.software/apidoc/index.html#api-Account_Data_Usage-GetDailyGranularAccountDataUsage
-     * This is calculated using UTC.
-     * @param $accountID
-     * @param $days
-     * @return mixed
-     * @throws \SonarSoftware\CustomerPortalFramework\Exceptions\ApiException
-     */
-    public function getGranularUsageByDay($accountID, $days)
-    {
-        $endTime = Carbon::now("UTC");
-        $endTime->hour = 0;
-        $endTime->minute = 0;
-        $endTime->second = 0;
-        $startTime = Carbon::now("UTC")->subDays(intval($days));
-        return $this->httpHelper->get("accounts/" . intval($accountID) . "/daily_granular_data_usage/" . $startTime->timestamp . "/" . $endTime->timestamp);
-    }
-
-    /**
      * Get the last 100 aggregated data usage items - see https://sonar.software/apidoc/index.html#api-Account_Data_Usage-GetAccountDataUsageHistories
      * @param $accountID
      * @return mixed

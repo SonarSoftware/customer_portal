@@ -188,8 +188,7 @@ class AuthenticationController extends Controller
         }
         catch (Exception $e)
         {
-            //We're not able to definitively know why this fails, the most likely scenario is that the username is already taken, so we display that as the message.
-            return redirect()->back()->withErrors(trans("errors.accountCreationFailed"))->withInput();
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
 
         $creationToken->delete();
