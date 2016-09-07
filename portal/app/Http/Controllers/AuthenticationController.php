@@ -255,8 +255,8 @@ class AuthenticationController extends Controller
                 'username' => $result->username,
             ], function($m) use ($result) {
                 $m->from(Config::get("customer_portal.from_address"),Config::get("customer_portal.from_name"));
-                $m->to($result->email_address, $result->email_address)
-                    ->subject(trans("emails.passwordReset",['companyName' => Config::get("customer_portal.company_name")]));
+                $m->to($result->email_address, $result->email_address);
+                $m->subject(trans("emails.passwordReset",['companyName' => Config::get("customer_portal.company_name")]));
             });
         }
         catch (Exception $e)
