@@ -24,7 +24,7 @@
                         <tr @if($contract->getAcceptanceDatetime() == null) class="warning" @else class="success" @endif>
                             <TD>{{$contract->getContractName()}}</TD>
                             <TD>@if($contract->getAcceptanceDatetime() == null) {{trans("contracts.pendingSignature")}} @else {{trans("contracts.signed")}} @endif</TD>
-                            <TD>@if($contract->getAcceptanceDatetime() == null) <a href="{{$contract->generateSignatureLink()}}">{{trans("contracts.sign")}}</a> @else <a href="{{action("ContractController@downloadContractPdf",['id' => $contract->getId()])}}">{{trans("contracts.download")}}</a> @endif</TD>
+                            <TD>@if($contract->getAcceptanceDatetime() == null) <a href="{{$contract->generateSignatureLink()}}" target="_blank">{{trans("contracts.sign")}}</a> @else <a href="{{action("ContractController@downloadContractPdf",['id' => $contract->getId()])}}">{{trans("contracts.download")}}</a> @endif</TD>
                         </tr>
                     @endforeach
                     </tbody>
