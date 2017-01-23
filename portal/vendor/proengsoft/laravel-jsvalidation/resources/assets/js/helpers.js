@@ -22,15 +22,23 @@ $.extend(true, laravelValidation, {
          * Gets the file information from file input
          *
          * @param fieldObj
+         * @param index
          * @returns {{file: *, extension: string, size: number}}
          */
-        fileinfo: function (fieldObj) {
+        fileinfo: function (fieldObj, index) {
             var FileName = fieldObj.value;
-            return {
-                file: FileName,
-                extension: FileName.substr(FileName.lastIndexOf('.') + 1),
-                size: fieldObj.files[0].size / 1024
-            };
+            index = typeof index !== 'undefined' ? index : 0;
+            if ( fieldObj.files !== null ) {
+                if (typeof fieldObj.files[index] !== 'undefined') {
+                    return {
+                        file: FileName,
+                        extension: FileName.substr(FileName.lastIndexOf('.') + 1),
+                        size: fieldObj.files[index].size / 1024,
+                        type: fieldObj.files[index].type
+                    };
+                }
+            }
+            return false;
         },
 
 
@@ -78,16 +86,27 @@ $.extend(true, laravelValidation, {
             }
 
             var validator = $.data(element.form, "validator");
-            var objRules = validator.settings.rules[element.name];
-            if ('laravelValidation' in objRules) {
-                var _rules=objRules.laravelValidation;
-                for (var i = 0; i < _rules.length; i++) {
-                    if ($.inArray(_rules[i][0],rules) !== -1) {
-                        found = true;
-                        break;
+            var listRules = [];
+            var cache = validator.arrayRulesCache;
+            if (element.name in cache) {
+                $.each(cache[element.name], function (index, arrayRule) {
+                    listRules.push(arrayRule);
+                });
+            }
+            if (element.name in validator.settings.rules) {
+                listRules.push(validator.settings.rules[element.name]);
+            }
+            $.each(listRules, function(index,objRules){
+                if ('laravelValidation' in objRules) {
+                    var _rules=objRules.laravelValidation;
+                    for (var i = 0; i < _rules.length; i++) {
+                        if ($.inArray(_rules[i][0],rules) !== -1) {
+                            found = true;
+                            return false;
+                        }
                     }
                 }
-            }
+            });
 
             return found;
         },
@@ -119,7 +138,7 @@ $.extend(true, laravelValidation, {
             } else if ($.isArray(value)) {
                 return parseFloat(value.length);
             } else if (element.type === 'file') {
-                return parseFloat(Math.ceil(this.fileinfo(element).size));
+                return parseFloat(Math.floor(this.fileinfo(element).size));
             }
 
             return parseFloat(this.strlen(value));
@@ -233,6 +252,14 @@ $.extend(true, laravelValidation, {
         },
 
 
+        /**
+         * Makes element dependant from other
+         *
+         * @param validator
+         * @param element
+         * @param name
+         * @returns {*}
+         */
         dependentElement: function(validator, element, name) {
 
             var el=validator.findByName(name);
@@ -256,8 +283,56 @@ $.extend(true, laravelValidation, {
             }
 
             return el[0];
-        }
+        },
 
+        /**
+         * Parses error Ajax response and gets the message
+         *
+         * @param response
+         * @returns {string[]}
+         */
+        parseErrorResponse: function (response) {
+            var newResponse = ['Whoops, looks like something went wrong.'];
+            if ('responseText' in response) {
+                var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
+                if ($.isArray(errorMsg)) {
+                    newResponse = [errorMsg[1]];
+                }
+            }
+            return newResponse;
+        },
+
+        /**
+         * Escape string to use as Regular Expression
+         * @param str
+         * @returns string
+         */
+        escapeRegExp: function (str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        },
+
+        /**
+         * Generate RegExp from wildcard attributes
+         * @param name
+         * @returns {RegExp}
+         */
+        regexFromWildcard: function(name) {
+            var nameParts = name.split("[*]");
+            if (nameParts.length === 1) {
+                nameParts.push('');
+            }
+            var regexpParts = nameParts.map(function(currentValue, index) {
+                if (index % 2 === 0) {
+                    currentValue = currentValue + '[';
+                } else {
+                    currentValue = ']' +currentValue;
+                }
+
+                return laravelValidation.helpers.escapeRegExp(currentValue);
+            });
+
+            return new RegExp('^'+regexpParts.join('.*')+'$');
+        }
 
 
     }

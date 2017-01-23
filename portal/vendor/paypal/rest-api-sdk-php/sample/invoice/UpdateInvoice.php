@@ -17,11 +17,8 @@ $invoice->setInvoiceDate("2014-12-16 PST");
 
 // ### NOTE: These are the work-around added to the
 // sample, to get past the bug in PayPal APIs.
-// There is already an internal ticket #PPTIPS-1932 created for it.
 $invoice->setDiscount(null);
-$billingInfo = $invoice->getBillingInfo()[0];
-$billingInfo->setAddress(null);
-$invoice->getPaymentTerm()->setDueDate(null);
+$invoice->getItems()[1]->setDiscount(null);
 
 try {
     // ### Update Invoice
@@ -30,7 +27,7 @@ try {
     $invoice->update($apiContext);
 } catch (Exception $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
- 	ResultPrinter::printError("Invoice Updated", "Invoice", null, $request, $ex);
+    ResultPrinter::printError("Invoice Updated", "Invoice", null, $request, $ex);
     exit(1);
 }
 
@@ -47,7 +44,7 @@ try {
     $invoice = Invoice::get($invoice->getId(), $apiContext);
 } catch (Exception $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
- 	ResultPrinter::printError("Get Invoice (Not Required - For Sample Only)", "Invoice", $invoice->getId(), $invoice->getId(), $ex);
+    ResultPrinter::printError("Get Invoice (Not Required - For Sample Only)", "Invoice", $invoice->getId(), $invoice->getId(), $ex);
     exit(1);
 }
 

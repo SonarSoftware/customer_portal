@@ -24,6 +24,7 @@ class DelegatedValidator
 
     /**
      * DelegatedValidator constructor.
+     *
      * @param \Illuminate\Validation\Validator $validator
      */
     public function __construct(BaseValidator $validator)
@@ -32,6 +33,13 @@ class DelegatedValidator
         $this->validatorMethod = $this->createProtectedCaller($validator);
     }
 
+    /**
+     * Call validator method.
+     *
+     * @param string $method
+     * @param array $args
+     * @return mixed
+     */
     private function callValidator($method, $args = [])
     {
         return $this->callProtected($this->validatorMethod, $method, $args);
@@ -75,28 +83,6 @@ class DelegatedValidator
     public function getRules()
     {
         return $this->validator->getRules();
-    }
-
-    /**
-     * Get the files under validation.
-     *
-     * @return array
-     */
-    public function getFiles()
-    {
-        return $this->validator->getFiles();
-    }
-
-    /**
-     * Set the files under validation.
-     *
-     * @param array $files
-     *
-     * @return BaseValidator
-     */
-    public function setFiles(array $files)
-    {
-        return $this->validator->setFiles($files);
     }
 
     /**
@@ -162,6 +148,30 @@ class DelegatedValidator
     public function parseRule($rules)
     {
         return $this->callValidator('parseRule', [$rules]);
+    }
+
+    /**
+     * Explode the rules into an array of rules.
+     *
+     * @param  string|array  $rules
+     * @return array
+     */
+    public function explodeRules($rules)
+    {
+        return $this->callValidator('explodeRules', [$rules]);
+    }
+
+    /**
+     * Add conditions to a given field based on a Closure.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @param  callable  $callback
+     * @return void
+     */
+    public function sometimes($attribute, $rules, callable $callback)
+    {
+        $this->validator->sometimes($attribute, $rules, $callback);
     }
 
     /**

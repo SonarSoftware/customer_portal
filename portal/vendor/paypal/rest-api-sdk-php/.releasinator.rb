@@ -16,7 +16,6 @@ end
 
 def validate_tests()
    CommandProcessor.command("vendor/bin/phpunit", live_output=true)
-   CommandProcessor.command("vendor/bin/phpunit -c phpunit.integration.xml", live_output=true)
 end
 
 configatron.custom_validation_methods = [
@@ -39,14 +38,14 @@ end
 configatron.publish_to_package_manager_method = method(:publish_to_package_manager)
 
 def create_downloadable_zip(version)
-    sleep(30)
+    sleep(120)
     CommandProcessor.command("rm -rf temp; mkdir temp; cd temp; composer clear-cache; composer require 'paypal/rest-api-sdk-php:#{version}'", live_output=true)
     CommandProcessor.command("cd temp; mv vendor PayPal-PHP-SDK", live_output=true)
     CommandProcessor.command("cd temp; zip -r PayPal-PHP-SDK-#{version}.zip PayPal-PHP-SDK", live_output=true)
 end
 
 def add_to_release(version)
-    sleep(5)
+    sleep(30)
     Publisher.new(@releasinator_config).upload_asset(GitUtil.repo_url, @current_release, "temp/PayPal-PHP-SDK-#{version}.zip", "application/zip")
 end
 
@@ -65,7 +64,7 @@ configatron.wait_for_package_manager_method = method(:wait_for_package_manager)
 configatron.release_to_github = true
 
 def constant_version()
-  f=File.open("lib/PayPal/Core/PayPalConstants.php", 'r') do |f|
+  File.open("lib/PayPal/Core/PayPalConstants.php", 'r') do |f|
     f.each_line do |line|
       if line.match (/SDK_VERSION = \'\d+\.\d+\.\d+\'/)
         return line.strip.split('= ')[1].strip.split('\'')[1]

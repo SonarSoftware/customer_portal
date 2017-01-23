@@ -13,7 +13,6 @@ class NameValuePairTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Gets Json String of Object NameValuePair
-     *
      * @return string
      */
     public static function getJson()
@@ -23,7 +22,6 @@ class NameValuePairTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Gets Object Instance with Json data filled in
-     *
      * @return NameValuePair
      */
     public static function getObject()
@@ -34,7 +32,6 @@ class NameValuePairTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests for Serialization and Deserialization Issues
-     *
      * @return NameValuePair
      */
     public function testSerializationDeserialization()
@@ -56,6 +53,4 @@ class NameValuePairTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->getName(), "TestSample");
         $this->assertEquals($obj->getValue(), "TestSample");
     }
-
-
 }

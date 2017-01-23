@@ -21,7 +21,7 @@ class PayPalHttpConfig
     public static $defaultCurlOptions = array(
         CURLOPT_SSLVERSION => 6,
         CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 60,    // maximum number of seconds to allow cURL functions to execute
         CURLOPT_USERAGENT => 'PayPal-PHP-SDK',
         CURLOPT_HTTPHEADER => array(),
@@ -64,7 +64,7 @@ class PayPalHttpConfig
         // Update the Cipher List based on OpenSSL or NSS settings
         $curl = curl_version();
         $sslVersion = isset($curl['ssl_version']) ? $curl['ssl_version'] : '';
-        if (substr_compare($sslVersion, "NSS/", 0, strlen("NSS/")) === 0) {
+        if($sslVersion && substr_compare($sslVersion, "NSS/", 0, strlen("NSS/")) === 0) {
             //Remove the Cipher List for NSS
             $this->removeCurlOption(CURLOPT_SSL_CIPHER_LIST);
         }

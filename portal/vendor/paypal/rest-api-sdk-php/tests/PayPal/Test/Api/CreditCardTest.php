@@ -23,7 +23,6 @@ class CreditCardTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Gets Object Instance with Json data filled in
-     *
      * @return CreditCard
      */
     public static function getObject()
@@ -78,6 +77,4 @@ class CreditCardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->getValidUntil(), "TestSample");
         $this->assertEquals($obj->getLinks(), LinksTest::getObject());
     }
-
-
 }

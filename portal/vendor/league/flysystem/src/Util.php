@@ -81,11 +81,13 @@ class Util
      */
     public static function normalizePath($path)
     {
+        $isWindowsPath = strpos($path, '\\') !== false;
+        $normalized = str_replace('\\', '/', $path);
         // Remove any kind of funky unicode whitespace
-        $normalized = preg_replace('#\p{C}+|^\./#u', '', $path);
+        $normalized = preg_replace('#\p{C}+|^\./#u', '', $normalized);
         $normalized = static::normalizeRelativePath($normalized);
 
-        if (preg_match('#/\.{2}|^\.{2}/|^\.{2}$#', $normalized)) {
+        if (preg_match('#(^|/)\.{2}(/|$)#', $normalized)) {
             throw new LogicException(
                 'Path is outside of the defined root, path: [' . $path . '], resolved: [' . $normalized . ']'
             );
@@ -93,6 +95,10 @@ class Util
 
         $normalized = preg_replace('#\\\{2,}#', '\\', trim($normalized, '\\'));
         $normalized = preg_replace('#/{2,}#', '/', trim($normalized, '/'));
+
+        if ($isWindowsPath) {
+            return str_replace('/', '\\', $normalized);
+        }
 
         return $normalized;
     }
@@ -110,7 +116,7 @@ class Util
         $path = preg_replace('#/\.(?=/)|^\./|(/|^)\./?$#', '', $path);
 
         // Regex for resolving relative paths
-        $regex = '#/*[^/\.]+/\.\.#Uu';
+        $regex = '#/*[^/\.]+/\.\.(?=/|$)#Uu';
 
         while (preg_match($regex, $path)) {
             $path = preg_replace($regex, '', $path);

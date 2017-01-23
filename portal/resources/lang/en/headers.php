@@ -23,4 +23,5 @@ return [
     'dataUsage' => 'Data Usage',
     'currentUsage' => 'Current Usage',
     'purchaseAdditionalData' => 'Purchase Additional Data',
+    'contracts' => 'Contracts',
 ];

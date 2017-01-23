@@ -50,13 +50,11 @@ class HttpHelper
         }
         catch (ClientException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
         catch (TransferException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
 
         $body = json_decode($response->getBody());
@@ -87,13 +85,11 @@ class HttpHelper
         }
         catch (ClientException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
         catch (TransferException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
 
         $body = json_decode($response->getBody());
@@ -124,13 +120,11 @@ class HttpHelper
         }
         catch (ClientException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
         catch (TransferException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
 
         $body = json_decode($response->getBody());
@@ -159,13 +153,11 @@ class HttpHelper
         }
         catch (ClientException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
         catch (TransferException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            throw new ApiException($e->getMessage());
         }
 
         $body = json_decode($response->getBody());
@@ -183,33 +175,5 @@ class HttpHelper
         $endpoint = ltrim($endpoint,"/");
         $endpoint = rtrim($endpoint,"/");
         return getenv('SONAR_URL') . "/api/v1/" . $endpoint;
-    }
-
-    /**
-     * Transform a JSON error response into a string message
-     * @param $jsonDecodedObject
-     * @return null|string
-     */
-    private function transformErrorToMessage($jsonDecodedObject)
-    {
-        if (property_exists($jsonDecodedObject,"error"))
-        {
-            $message = $jsonDecodedObject->error->message;
-            if (!is_object($message))
-            {
-                return $message;
-            }
-            else
-            {
-                $messageArray = [];
-                foreach ($message as $key => $value)
-                {
-                    array_push($messageArray,$value);
-                }
-                return implode(", ",$messageArray);
-            }
-        }
-
-        return null;
     }
 }

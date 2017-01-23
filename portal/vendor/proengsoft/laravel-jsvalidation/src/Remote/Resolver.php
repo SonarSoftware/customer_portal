@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation\Remote;
 
 use Closure;
+use Illuminate\Support\Arr;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
@@ -56,20 +57,35 @@ class Resolver
      * @param $customAttributes
      * @param $field
      *
-     * @return Validator
+     * @return \Illuminate\Validation\Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
-        if (is_null($this->resolver)) {
-            $validator = new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
-        } else {
-            $validator = call_user_func($this->resolver, $translator, $data, $rules, $messages, $customAttributes);
-        }
-        $validator->sometimes($field, Validator::EXTENSION_NAME, function () {
-            return true;
-        });
+        $validateAll = Arr::get($data, $field.'_validate_all', false);
+        $validationRule = 'bail|'.Validator::EXTENSION_NAME.':'.$validateAll;
+        $rules = [$field => $validationRule] + $rules;
+        $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
 
         return $validator;
+    }
+
+    /**
+     * Create new validator instance.
+     *
+     * @param $translator
+     * @param $data
+     * @param $rules
+     * @param $messages
+     * @param $customAttributes
+     * @return BaseValidator
+     */
+    protected function createValidator($translator, $data, $rules, $messages, $customAttributes)
+    {
+        if (is_null($this->resolver)) {
+            return new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
+        }
+
+        return call_user_func($this->resolver, $translator, $data, $rules, $messages, $customAttributes);
     }
 
     /**
@@ -77,11 +93,13 @@ class Resolver
      *
      * @return Closure
      */
-    public function validator()
+    public function validatorClosure()
     {
-        return function ($attribute, $value, $parameters, $validator) {
+        return function ($attribute, $value, $parameters, BaseValidator $validator) {
             $remoteValidator = new Validator($validator);
-            $remoteValidator->validate($attribute, $value, $parameters);
+            $remoteValidator->validate($value, $parameters);
+
+            return $attribute;
         };
     }
 }

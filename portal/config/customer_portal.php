@@ -97,4 +97,9 @@ return [
      */
     'data_usage_enabled' => env('DATA_USAGE_ENABLED',true),
     'top_off_requires_immediate_payment' => env('TOP_OFF_REQUIRES_IMMEDIATE_PAYMENT',true),
+
+    /**
+     * CONTRACTS
+     */
+    'contracts_enabled' => env('CONTRACTS_ENABLED',false),
 ];

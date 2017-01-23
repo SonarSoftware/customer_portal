@@ -13,7 +13,6 @@ class IncentiveTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Gets Json String of Object Incentive
-     *
      * @return string
      */
     public static function getJson()
@@ -23,7 +22,6 @@ class IncentiveTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Gets Object Instance with Json data filled in
-     *
      * @return Incentive
      */
     public static function getObject()
@@ -34,7 +32,6 @@ class IncentiveTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests for Serialization and Deserialization Issues
-     *
      * @return Incentive
      */
     public function testSerializationDeserialization()
@@ -80,5 +77,4 @@ class IncentiveTest extends \PHPUnit_Framework_TestCase
         $obj = new Incentive();
         $obj->setLogoImageUrl(null);
     }
-
 }

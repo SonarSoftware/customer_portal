@@ -17,7 +17,7 @@ class MerchantInfoTest extends \PHPUnit_Framework_TestCase
      */
     public static function getJson()
     {
-        return '{"email":"TestSample","first_name":"TestSample","last_name":"TestSample","address":' .AddressTest::getJson() . ',"business_name":"TestSample","phone":' .PhoneTest::getJson() . ',"fax":' .PhoneTest::getJson() . ',"website":"TestSample","tax_id":"TestSample","additional_info":"TestSample"}';
+        return '{"email":"TestSample","first_name":"TestSample","last_name":"TestSample","address":' .AddressTest::getJson() . ',"business_name":"TestSample","phone":' .PhoneTest::getJson() . ',"fax":' .PhoneTest::getJson() . ',"website":"TestSample","tax_id":"TestSample","additional_info_label":"TestSample","additional_info":"TestSample"}';
     }
 
     /**
@@ -47,6 +47,7 @@ class MerchantInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($obj->getFax());
         $this->assertNotNull($obj->getWebsite());
         $this->assertNotNull($obj->getTaxId());
+        $this->assertNotNull($obj->getAdditionalInfoLabel());
         $this->assertNotNull($obj->getAdditionalInfo());
         $this->assertEquals(self::getJson(), $obj->toJson());
         return $obj;
@@ -67,7 +68,7 @@ class MerchantInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->getFax(), PhoneTest::getObject());
         $this->assertEquals($obj->getWebsite(), "TestSample");
         $this->assertEquals($obj->getTaxId(), "TestSample");
+        $this->assertEquals($obj->getAdditionalInfoLabel(), "TestSample");
         $this->assertEquals($obj->getAdditionalInfo(), "TestSample");
     }
-
 }

@@ -8,10 +8,10 @@ require __DIR__ . '/../bootstrap.php';
 
 use PayPal\Api\Address;
 use PayPal\Api\Amount;
-use PayPal\Api\CreditCard;
 use PayPal\Api\FundingInstrument;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
+use PayPal\Api\PaymentCard;
 use PayPal\Api\Transaction;
 
 // The biggest difference between creating a payment, and authorizing a payment is to set the intent of payment
@@ -25,18 +25,19 @@ $addr->setLine1("3909 Witmer Road")
     ->setCountryCode("US")
     ->setPhone("716-298-1822");
 
-$card = new CreditCard();
-$card->setType("visa")
+$paymentCard = new PaymentCard();
+$paymentCard->setType("visa")
     ->setNumber("4417119669820331")
     ->setExpireMonth("11")
     ->setExpireYear("2019")
     ->setCvv2("012")
     ->setFirstName("Joe")
     ->setLastName("Shopper")
+    ->setBillingCountry("US")
     ->setBillingAddress($addr);
 
 $fi = new FundingInstrument();
-$fi->setCreditCard($card);
+$fi->setPaymentCard($paymentCard);
 
 $payer = new Payer();
 $payer->setPaymentMethod("credit_card")
@@ -69,7 +70,7 @@ try {
     $payment->create($apiContext);
 } catch (Exception $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
- 	ResultPrinter::printError('Authorize a Payment', 'Authorized Payment', $payment->getId(), $request, $ex);
+    ResultPrinter::printError('Authorize a Payment', 'Authorized Payment', $payment->getId(), $request, $ex);
     exit(1);
 }
 

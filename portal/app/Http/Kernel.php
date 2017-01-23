@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ContractMiddleware;
 use App\Http\Middleware\DataUsageMiddleware;
 use App\Http\Middleware\TicketMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -49,5 +50,6 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\AuthMiddleware::class,
         'tickets' => TicketMiddleware::class,
         'data_usage' => DataUsageMiddleware::class,
+        'contracts' => ContractMiddleware::class,
     ];
 }

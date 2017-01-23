@@ -2,8 +2,9 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Exception;
 use Illuminate\Support\Facades\View;
+use Illuminate\Contracts\Support\Arrayable;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JavascriptValidator implements Arrayable
@@ -45,7 +46,7 @@ class JavascriptValidator implements Arrayable
 
     /**
      * @param ValidatorHandler $validator
-     * @param array               $options
+     * @param array $options
      */
     public function __construct(ValidatorHandler $validator, $options = [])
     {
@@ -62,7 +63,7 @@ class JavascriptValidator implements Arrayable
     {
         $this->selector = empty($options['selector']) ? 'form' : $options['selector'];
         $this->view = empty($options['view']) ? 'jsvalidation::bootstrap' : $options['view'];
-        $this->remote = empty($options['remote']) ? true : $options['remote'];
+        $this->remote = isset($options['remote']) ? $options['remote'] : true;
     }
 
     /**
@@ -99,7 +100,11 @@ class JavascriptValidator implements Arrayable
      */
     public function __toString()
     {
-        return $this->render();
+        try {
+            return $this->render();
+        } catch (Exception $exception) {
+            return trigger_error($exception->__toString(), E_USER_ERROR);
+        }
     }
 
     /**
@@ -114,11 +119,11 @@ class JavascriptValidator implements Arrayable
     public function __get($name)
     {
         $data = $this->getViewData();
-        if (array_key_exists($name, $data)) {
-            return $data[$name];
-        } else {
+        if (! array_key_exists($name, $data)) {
             throw new PropertyNotFoundException($name, get_class());
         }
+
+        return $data[$name];
     }
 
     /**
@@ -128,7 +133,8 @@ class JavascriptValidator implements Arrayable
      */
     protected function getViewData()
     {
-        $data = $this->validator->validationData($this->remote);
+        $this->validator->setRemote($this->remote);
+        $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
         if (! is_null($this->ignore)) {
@@ -202,6 +208,21 @@ class JavascriptValidator implements Arrayable
     public function remote($enabled = true)
     {
         $this->remote = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Validate Conditional Validations using Ajax in specified fields.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     *
+     * @return JavascriptValidator
+     */
+    public function sometimes($attribute, $rules)
+    {
+        $this->validator->sometimes($attribute, $rules);
 
         return $this;
     }

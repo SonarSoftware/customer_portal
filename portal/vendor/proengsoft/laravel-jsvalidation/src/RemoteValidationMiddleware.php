@@ -3,10 +3,11 @@
 namespace Proengsoft\JsValidation;
 
 use Closure;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Remote\Resolver;
 use Proengsoft\JsValidation\Remote\Validator;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class RemoteValidationMiddleware
 {
@@ -44,7 +45,7 @@ class RemoteValidationMiddleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($request->has($this->field)) {
             $this->wrapValidator();
@@ -60,6 +61,6 @@ class RemoteValidationMiddleware
     {
         $resolver = new Resolver($this->factory);
         $this->factory->resolver($resolver->resolver($this->field));
-        $this->factory->extend(Validator::EXTENSION_NAME, $resolver->validator());
+        $this->factory->extend(Validator::EXTENSION_NAME, $resolver->validatorClosure());
     }
 }

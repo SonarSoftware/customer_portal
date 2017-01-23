@@ -28,7 +28,24 @@ $.extend(true, laravelValidation, {
             return true;
         },
 
+        /**
+         * Bail This is the default behaivour os JSValidation.
+         * Always returns true, just lets us put sometimes in rules.*
+         * @return {boolean}
+         */
+        Bail: function() {
+            return true;
+        },
 
+        /**
+         * "Indicate" validation should pass if value is null.
+         * Always returns true, just lets us put "nullable" in rules.
+         * @return {boolean}
+         */
+        Nullable: function() {
+            return true;
+        },
+        
         /**
          * Validate the given attribute is filled if it is present.
          */
@@ -172,11 +189,13 @@ $.extend(true, laravelValidation, {
 
             if (target!==undefined) {
                 var val=String(this.elementValue(target));
-                var data=params.slice(1);
-                if ($.inArray(val,data)!== -1) {
-                    return $.validator.methods.required.call(
-                        this, value, element, true
-                    );
+                if (typeof val !== 'undefined') {
+                    var data = params.slice(1);
+                    if ($.inArray(val, data) !== -1) {
+                        return $.validator.methods.required.call(
+                            this, value, element, true
+                        );
+                    }
                 }
             }
 
@@ -184,6 +203,32 @@ $.extend(true, laravelValidation, {
 
         },
 
+        /**
+         * Validate that an attribute exists when another
+         * attribute does not have a given value.
+         * @return {boolean}
+         */
+        RequiredUnless: function(value, element, params) {
+
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
+
+            if (target!==undefined) {
+                var val=String(this.elementValue(target));
+                if (typeof val !== 'undefined') {
+                    var data = params.slice(1);
+                    if ($.inArray(val, data) !== -1) {
+                        return true;
+                    }
+                }
+            }
+
+            return $.validator.methods.required.call(
+                this, value, element, true
+            );
+
+        },
 
         /**
          * Validate that an attribute has a matching confirmation.
@@ -208,6 +253,62 @@ $.extend(true, laravelValidation, {
             }
             return false;
         },
+
+        /**
+         * Validate that the values of an attribute is in another attribute.
+         * @param value
+         * @param element
+         * @param params
+         * @returns {boolean}
+         * @constructor
+         */
+        InArray: function (value, element, params) {
+            if (typeof params[0] === 'undefined') {
+                return false;
+            }
+            var elements = this.elements();
+            var found = false;
+            var nameRegExp = laravelValidation.helpers.regexFromWildcard(params[0]);
+
+            for ( var i = 0; i < elements.length ; i++ ) {
+                var targetName = elements[i].name;
+                if (targetName.match(nameRegExp)) {
+                    var equals = laravelValidation.methods.Same.call(this,value, element, [targetName]);
+                    found = found || equals;
+                }
+            }
+
+            return found;
+        },
+
+        /**
+         * Validate an attribute is unique among other values.
+         * @param value
+         * @param element
+         * @param params
+         * @returns {boolean}
+         */
+        Distinct: function (value, element, params) {
+            if (typeof params[0] === 'undefined') {
+                return false;
+            }
+
+            var elements = this.elements();
+            var found = false;
+            var nameRegExp = laravelValidation.helpers.regexFromWildcard(params[0]);
+
+            for ( var i = 0; i < elements.length ; i++ ) {
+                var targetName = elements[i].name;
+                if (targetName !== element.name && targetName.match(nameRegExp)) {
+                    var equals = laravelValidation.methods.Same.call(this,value, element, [targetName]);
+                    found = found || equals;
+                }
+            }
+
+            return !found;
+        },
+
+
 
         /**
          * Validate that an attribute is different from another attribute.
@@ -271,8 +372,10 @@ $.extend(true, laravelValidation, {
          * The field under validation must be numeric and must have an exact length of value.
          */
         Digits: function(value, element, params) {
-            return ($.validator.methods.number.call(this, value, element, true)
-                && value.length===parseInt(params));
+            return (
+                $.validator.methods.number.call(this, value, element, true) &&
+                value.length === parseInt(params, 10)
+            );
         },
 
         /**
@@ -361,13 +464,53 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * The field under validation must be a successfully uploaded file.
+         * @return {boolean}
+         */
+        File: function(value, element) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if ('files' in element ) {
+                return (element.files.length > 0);
+            }
+            return false;
+        },
+
+        /**
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
-            var lowerParams = $.map(params, String.toLowerCase);
-            return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!==-1;
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            var lowerParams = $.map(params, function(item) {
+                return item.toLowerCase();
+            });
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+            return (fileinfo !== false && lowerParams.indexOf(fileinfo.extension.toLowerCase())!==-1);
+        },
+
+        /**
+         * The file under validation must match one of the given MIME types
+         * @return {boolean}
+         */
+        Mimetypes: function(value, element, params) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            var lowerParams = $.map(params, function(item) {
+                return item.toLowerCase();
+            });
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+
+            if (fileinfo === false) {
+                return false;
+            }
+            return (lowerParams.indexOf(fileinfo.type.toLowerCase())!==-1);
         },
 
         /**
@@ -377,6 +520,45 @@ $.extend(true, laravelValidation, {
             return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
         },
 
+        /**
+         * Validate dimensions of Image
+         * @return {boolean|string}
+         */
+        Dimensions: function(value, element, params, callback) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if (element.files === null || typeof element.files[0] === 'undefined') {
+                return false;
+            }
+
+
+            var fr = new FileReader;
+            fr.onload = function () {
+                var img = new Image();
+                img.onload = function () {
+                    var height = parseFloat(img.naturalHeight);
+                    var width = parseFloat(img.naturalWidth);
+                    var ratio = width / height;
+                    var notValid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                        ((params['min_width']) && parseFloat(params['min_width']) > width) ||
+                        ((params['max_width']) && parseFloat(params['max_width']) < width) ||
+                        ((params['height']) && parseFloat(params['height']) !== height) ||
+                        ((params['min_height']) && parseFloat(params['min_height']) > height) ||
+                        ((params['max_height']) && parseFloat(params['max_height']) < height) ||
+                        ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
+                        );
+                    callback(! notValid);
+                };
+                img.onerror = function() {
+                    callback(false);
+                };
+                img.src = fr.result;
+            };
+            fr.readAsDataURL(element.files[0]);
+
+            return 'pending';
+        },
 
         /**
          * Validate that an attribute contains only alphabetic characters.
@@ -425,7 +607,7 @@ $.extend(true, laravelValidation, {
             // Converting php regular expression
             var phpReg= new RegExp('^(?:\/)(.*\\\/?[^\/]*|[^\/]*)(?:\/)([gmixXsuUAJ]*)?$');
             var matches=params[0].match(phpReg);
-            if (matches==null) {
+            if (matches === null) {
                 return false;
             }
             // checking modifiers

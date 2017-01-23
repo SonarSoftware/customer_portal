@@ -1,3 +1,54 @@
+## 1.5.0 (2017-01-22)
+ 
+Features:
+   - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
+   - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
+   - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
+   - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
+   - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
+   - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
+   - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
+
+Issues resolved:
+  - Fix issue with HttpResponseException #130
+  - Fix Undefined index: _jsvalidation_validate_all #201
+ 
+## 1.4.3 (2017-01-07)
+
+Features:
+   - Add support for the "bail" keyword. #179
+   - Add support to validate array fields using non array rules. #180 #158
+
+Issues resolved:
+   - Fix remote custom validation. #175 
+   - File Size doesn't work with JavaScript Validator. #156
+
+## 1.4.2 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
+
+## 1.4.1 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
+
+## 1.4.0 (2016-12-28)
+
+Bugfixes:
+
+ - Features:
+     - Support for Laravel [Conditional Rules](https://laravel.com/docs/5.2/validation#conditionally-adding-rules)
+     - Support for [Array Validations](https://laravel.com/docs/5.2/validation#validating-arrays)
+     - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
+
+ - Issues resolved:
+     - Convert Exceptions to E_USER_ERROR in __toString(). #126
+     - Chrome and IE case fix in mime types. PR #136 
+     - Fix Turn off remote validation #145
+     - Support for Laravel 5.3.21 and greater
+     
+
 ## 1.3.1 (2016-01-04)
 
 Features:
@@ -28,7 +79,7 @@ Bugfixes:
 Features:
 
  - Allow validate rule "In" for type array 
- - Added JSON validator [3f508c1] (https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
+ - Added JSON validator [3f508c1](https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
  - Allow disable remote validations
  - Add support for other validation packages. #69
 

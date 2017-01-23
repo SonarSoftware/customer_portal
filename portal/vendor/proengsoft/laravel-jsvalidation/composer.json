@@ -17,8 +17,7 @@
         {
             "name": "Albert Moreno",
             "email": "albert@memorylimit.net",
-            "homepage": "http://memorylimit.net",
-            "role": "DevOps"
+            "homepage": "https://github.com/torrentalle"
         }
     ],
     "require": {
@@ -28,12 +27,13 @@
         "illuminate/contracts": "~5.0",
         "illuminate/view": "~5.0",
         "illuminate/config": "~5.0",
-        "illuminate/http": "~5.0"
+        "illuminate/http": "~5.0",
+        "illuminate/translation": "~5.0"
 
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
-        "mockery/mockery":"0.9.*"
+        "mockery/mockery":"~0.9"
     },
     "autoload": {
         "psr-4": {

@@ -80,4 +80,12 @@ Route::group(['prefix' => 'portal', 'middleware' => ['web','auth']], function(){
         Route::get("/top_off","DataUsageController@showTopOff");
         Route::post("/add_top_off","DataUsageController@addTopOff");
     });
+
+    /**
+     * Contract routes
+     */
+    Route::group(['prefix' => 'contracts', 'middleware' => ['contracts']], function() {
+        Route::get("/","ContractController@index");
+        Route::get("/{contracts}","ContractController@downloadContractPdf");
+    });
 });

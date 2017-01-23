@@ -10,10 +10,10 @@ trait RuleListTrait
      * @var array
      */
     protected $clientRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
-        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
-        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
-        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
-        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
+        'AlphaNum', 'Array', 'Bail', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date', 'Dimensions',
+        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Distinct', 'Email', 'File', 'Filled', 'Image',
+        'In', 'InArray', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Nullable',
+        'Numeric', 'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
         'String', 'Timezone', 'Url', ];
 
@@ -29,7 +29,7 @@ trait RuleListTrait
      *
      * @var array
      */
-    protected $fileRules = ['Image', 'Mimes'];
+    protected $fileRules = ['File', 'Image', 'Mimes', 'Mimetypes'];
 
     /**
      * Rule used to disable validations.
@@ -93,7 +93,7 @@ trait RuleListTrait
      * Check if rules is for input file type.
      *
      * @param $rule
-     
+     *
      * @return bool
      */
     protected function isFileRule($rule)

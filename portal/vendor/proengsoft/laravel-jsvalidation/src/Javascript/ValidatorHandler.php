@@ -27,6 +27,11 @@ class ValidatorHandler
     protected $messages;
 
     /**
+     * @var bool
+     */
+    protected $remote = true;
+
+    /**
      * Create a new JsValidation instance.
      *
      * @param RuleParser $rules
@@ -51,7 +56,22 @@ class ValidatorHandler
         $this->messages->setDelegatedValidator($validator);
     }
 
-    protected function generateJavascriptValidations($includeRemote = true)
+    /**
+     *  Enable or disables remote validations.
+     *
+     * @param bool $enabled
+     */
+    public function setRemote($enabled)
+    {
+        $this->remote = $enabled;
+    }
+
+    /**
+     * Generate Javascript Validations.
+     *
+     * @return array
+     */
+    protected function generateJavascriptValidations()
     {
         $jsValidations = array();
 
@@ -60,7 +80,7 @@ class ValidatorHandler
                 continue;
             }
 
-            $newRules = $this->jsConvertRules($attribute, $rules, $includeRemote);
+            $newRules = $this->jsConvertRules($attribute, $rules, $this->remote);
             $jsValidations = array_merge($jsValidations, $newRules);
         }
 
@@ -72,7 +92,7 @@ class ValidatorHandler
      *
      * @param $attribute
      * @param $rules
-     * @param $includeRemote
+     * @param bool $includeRemote
      *
      * @return array
      */
@@ -81,7 +101,7 @@ class ValidatorHandler
         $jsRules = [];
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters);
+            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
@@ -97,7 +117,7 @@ class ValidatorHandler
      * Check if rule should be validated with javascript.
      *
      * @param $jsRule
-     * @param $includeRemote
+     * @param bool $includeRemote
      * @return bool
      */
     protected function isValidatable($jsRule, $includeRemote)
@@ -120,17 +140,31 @@ class ValidatorHandler
     /**
      * Returns view data to render javascript.
      *
-     * @param bool $remote
      * @return array
      */
-    public function validationData($remote = true)
+    public function validationData()
     {
         $jsMessages = array();
-        $jsValidations = $this->generateJavascriptValidations($remote);
+        $jsValidations = $this->generateJavascriptValidations();
 
         return [
             'rules' => $jsValidations,
             'messages' => $jsMessages,
         ];
+    }
+
+    /**
+     * Validate Conditional Validations using Ajax in specified fields.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     */
+    public function sometimes($attribute, $rules = [])
+    {
+        $callback = function () {
+            return true;
+        };
+        $this->validator->sometimes($attribute, $rules, $callback);
+        $this->rules->addConditionalRules($attribute, (array) $rules);
     }
 }

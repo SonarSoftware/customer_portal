@@ -44,12 +44,11 @@ class OpenIdSessionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoginUrlForMultipleScopes()
     {
-
         $clientId = "AQkquBDf1zctJOWGKWUEtKXm6qVhueUEMvXO_-MCI4DQQ4-LWvkDLIN2fGsd";
         $redirectUri = 'https://devtools-paypal.com/';
         $scope = array('this', 'that', 'and more');
 
-        $expectedBaseUrl = "https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize";
+        $expectedBaseUrl = "https://www.paypal.com/signin/authorize";
 
         $this->assertEquals($expectedBaseUrl . "?client_id=$clientId&response_type=code&scope=this+that+and+more+openid&redirect_uri=" . urlencode($redirectUri),
             OpenIdSession::getAuthorizationUrl($redirectUri, $scope, $clientId), "Failed case - custom scope");
@@ -69,11 +68,10 @@ class OpenIdSessionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoginWithCustomConfig()
     {
-
         $redirectUri = 'http://mywebsite.com';
         $scope = array('this', 'that', 'and more');
 
-        $expectedBaseUrl = "https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize";
+        $expectedBaseUrl = "https://www.paypal.com/signin/authorize";
 
         $this->assertEquals($expectedBaseUrl . "?client_id=DummyId&response_type=code&scope=this+that+and+more+openid&redirect_uri=" . urlencode($redirectUri),
             OpenIdSession::getAuthorizationUrl($redirectUri, $scope, "DummyId", null, null, $this->context), "Failed case - custom config");
@@ -84,7 +82,6 @@ class OpenIdSessionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLogoutWithCustomConfig()
     {
-
         $redirectUri = 'http://mywebsite.com';
         $idToken = 'abc';
 

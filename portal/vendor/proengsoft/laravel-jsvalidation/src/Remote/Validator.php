@@ -2,13 +2,11 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
-use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 use Proengsoft\JsValidation\Support\RuleListTrait;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Validation\Validator as BaseValidator;
+use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
 /**
  * Class RemoteValidator.
@@ -37,42 +35,83 @@ class Validator
         $this->validator = $validator;
     }
 
-    public function validate($attribute, $value, $parameters)
+    /**
+     * Validate request.
+     *
+     * @param $field
+     * @param $parameters
+     */
+    public function validate($field, $parameters = [])
     {
-        $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
-        $validationResult = $this->validateJsRemoteRequest($validationData[1]);
-        throw new HttpResponseException(
-            new JsonResponse($validationResult, 200));
+        $attribute = $this->parseAttributeName($field);
+        $validationParams = $this->parseParameters($parameters);
+        $validationResult = $this->validateJsRemoteRequest($attribute, $validationParams);
+
+        $this->throwValidationException($validationResult, $this->validator);
+    }
+
+    /**
+     * Throw the failed validation exception.
+     *
+     * @param  mixed $result
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exception\HttpResponseException
+     */
+    protected function throwValidationException($result, $validator)
+    {
+        $response = new JsonResponse($result, 200);
+
+        if ($result !== true && class_exists('\Illuminate\Validation\ValidationException')) {
+            throw new \Illuminate\Validation\ValidationException($validator, $response);
+        }
+        throw new HttpResponseException($response);
     }
 
     /**
      *  Parse Validation input request data.
      *
-     * @param $attribute
-     * @param $value
+     * @param $data
+     * @return array
+     */
+    protected function parseAttributeName($data)
+    {
+        parse_str($data, $attrParts);
+        $attrParts = is_null($attrParts) ? [] : $attrParts;
+        $newAttr = array_keys(array_dot($attrParts));
+
+        return array_pop($newAttr);
+    }
+
+    /**
+     *  Parse Validation parameters.
+     *
      * @param $parameters
      * @return array
      */
-    protected function parseJsRemoteRequest($attribute, $value, $parameters)
+    protected function parseParameters($parameters)
     {
-        parse_str("$value=", $attr_parts);
-        $attr_parts = is_null($attr_parts) ? [] : $attr_parts;
-        $newAttr = array_keys(Arr::dot($attr_parts));
+        $newParams = ['validate_all' => false];
+        if (isset($parameters[0])) {
+            $newParams['validate_all'] = ($parameters[0] === 'true') ? true : false;
+        }
 
-        return [$attribute, array_pop($newAttr), $parameters];
+        return $newParams;
     }
 
     /**
      * Validate remote Javascript Validations.
      *
      * @param $attribute
+     * @param array $parameters
      * @return array|bool
      */
-    protected function validateJsRemoteRequest($attribute)
+    protected function validateJsRemoteRequest($attribute, $parameters)
     {
-        $validator = $this->validator;
-        $validator = $this->setRemoteValidation($attribute, $validator);
+        $this->setRemoteValidation($attribute, $parameters['validate_all']);
 
+        $validator = $this->validator;
         if ($validator->passes()) {
             return true;
         }
@@ -84,34 +123,38 @@ class Validator
      * Sets data for validate remote rules.
      *
      * @param $attribute
-     *
-     * @return \Illuminate\Validation\Validator
+     * @param bool $validateAll
      */
-    protected function setRemoteValidation($attribute, BaseValidator $validator)
+    protected function setRemoteValidation($attribute, $validateAll = false)
     {
-        if (! array_key_exists($attribute, $validator->getRules())) {
-            throw new BadRequestHttpException("Undefined '$attribute' attribute");
-        }
+        $validator = $this->validator;
+        $rules = $validator->getRules();
+        $rules = isset($rules[$attribute]) ? $rules[$attribute] : [];
+        if (in_array('no_js_validation', $rules)) {
+            $validator->setRules([$attribute => []]);
 
-        $rules = $validator->getRules()[$attribute];
-        $rules = $this->purgeNonRemoteRules($rules, $validator);
+            return;
+        }
+        if (! $validateAll) {
+            $rules = $this->purgeNonRemoteRules($rules, $validator);
+        }
         $validator->setRules([$attribute => $rules]);
-
-        if (empty($validator->getRules()[$attribute])) {
-            throw new BadRequestHttpException("No validations available for '$attribute'");
-        }
-
-        return $validator;
     }
 
+    /**
+     * Remove rules that should not be validated remotely.
+     *
+     * @param $rules
+     * @param BaseValidator $validator
+     * @return mixed
+     */
     protected function purgeNonRemoteRules($rules, $validator)
     {
-        $disabled = $this->validationDisabled($rules);
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
             $parsedRule = call_user_func($protectedValidator, 'parseRule', [$rule]);
-            if ($disabled || ! $this->isRemoteRule($parsedRule[0])) {
+            if (! $this->isRemoteRule($parsedRule[0])) {
                 unset($rules[$i]);
             }
         }

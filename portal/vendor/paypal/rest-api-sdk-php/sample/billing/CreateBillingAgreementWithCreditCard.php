@@ -70,15 +70,15 @@ $payer->setPaymentMethod('credit_card')
     ->setPayerInfo(new PayerInfo(array('email' => 'jaypatel512-facilitator@hotmail.com')));
 
 // Add Credit Card to Funding Instruments
-$creditCard = new CreditCard();
-$creditCard->setType('visa')
+$card = new CreditCard();
+$card->setType('visa')
     ->setNumber('4491759698858890')
     ->setExpireMonth('12')
     ->setExpireYear('2017')
     ->setCvv2('128');
 
 $fundingInstrument = new FundingInstrument();
-$fundingInstrument->setCreditCard($creditCard);
+$fundingInstrument->setCreditCard($card);
 $payer->setFundingInstruments(array($fundingInstrument));
 //Add Payer to Agreement
 $agreement->setPayer($payer);
@@ -99,7 +99,6 @@ $request = clone $agreement;
 try {
     // Please note that as the agreement has not yet activated, we wont be receiving the ID just yet.
     $agreement = $agreement->create($apiContext);
-
 } catch (Exception $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
     ResultPrinter::printError("Created Billing Agreement.", "Agreement", $agreement->getId(), $request, $ex);

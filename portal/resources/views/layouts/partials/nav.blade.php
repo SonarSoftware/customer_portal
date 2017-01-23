@@ -25,6 +25,9 @@
                 @if(Config::get("customer_portal.data_usage_enabled") === true)
                     <li @if(str_contains(Route::getCurrentRoute()->getPath(),"data_usage")) class="active" @endif><a href="{{action("DataUsageController@index")}}">{{trans("nav.dataUsage")}} @if(str_contains(Route::getCurrentRoute()->getPath(),"data_usage")) <span class="sr-only">(current)</span> @endif</a></li>
                 @endif
+                @if(Config::get("customer_portal.contracts_enabled") === true)
+                    <li @if(str_contains(Route::getCurrentRoute()->getPath(),"contracts")) class="active" @endif><a href="{{action("ContractController@index")}}">{{trans("nav.contracts")}} @if(str_contains(Route::getCurrentRoute()->getPath(),"contracts")) <span class="sr-only">(current)</span> @endif</a></li>
+                @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li @if(str_contains(Route::getCurrentRoute()->getPath(),"profile")) class="active" @endif><a href="{{action("ProfileController@show")}}">{{trans("nav.profile")}} @if(str_contains(Route::getCurrentRoute()->getPath(),"profile")) <span class="sr-only">(current)</span> @endif</a></li>

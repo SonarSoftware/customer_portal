@@ -5,4 +5,5 @@ return [
     'profile' => 'My Details',
     'tickets' => 'Support Tickets',
     'dataUsage' => 'Data Usage',
+    'contracts' => 'Contracts',
 ];
