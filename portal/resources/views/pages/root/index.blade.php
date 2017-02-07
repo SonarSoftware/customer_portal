@@ -2,11 +2,11 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-6 col-md-offset-3 give_bottom_room">
+            <div class="col-md-12 give_bottom_room">
                 @if(file_exists(base_path("/public/assets/images/logo.png")))
-                    <img src="/assets/images/logo.png">
+                    <img src="/assets/images/logo.png" class="center-block">
                 @else
-                    <img src="/assets/images/transparent_logo.png">
+                    <img src="/assets/images/transparent_logo.png" class="center-block">
                 @endif
             </div>
         </div>
@@ -31,9 +31,9 @@
             </div>
         </div>
         <div class="row" style="margin-top: 1em;">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-4 col-md-offset-4">
                 <p>
-                    <a class="btn btn-success" href="{{action("AuthenticationController@showRegistrationForm")}}" role="button">{{trans("root.register")}}</a>
+                    <a class="btn btn-success center-block" href="{{action("AuthenticationController@showRegistrationForm")}}" role="button">{{trans("root.register")}}</a>
                 </p>
             </div>
         </div>
