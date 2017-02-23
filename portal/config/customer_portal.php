@@ -28,12 +28,12 @@ return [
     /**
      * The country your ISP operates in
      */
-    'country' => env('COUNTRY','US'),
+    'country' => env('COUNTRY',null),
 
     /**
      * The state or province your ISP operates in. Should be a two character code for the US and Canada (e.g. WI, AB) and the full name for other countries.
      */
-    'state' => env('STATE','WI'),
+    'state' => env('STATE',null),
 
     /**
      * A message to display on the login page
