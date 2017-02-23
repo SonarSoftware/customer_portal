@@ -28,7 +28,7 @@ return [
     /**
      * The country your ISP operates in
      */
-    'country' => env('COUNTRY',null),
+    'country' => env('COUNTRY','US'),
 
     /**
      * The state or province your ISP operates in. Should be a two character code for the US and Canada (e.g. WI, AB) and the full name for other countries.
