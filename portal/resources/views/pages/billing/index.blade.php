@@ -70,13 +70,19 @@
             <div class="panel-body">
                 <!-- Nav tabs -->
                 <ul class="nav nav-pills" role="tablist">
-                    <li role="presentation" class="active"><a href="#transactions" aria-controls="transactions" role="tab" data-toggle="tab">{{trans("headers.recentTransactions")}}</a></li>
-                    <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
-                    <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                    @if(Config::get("customer_portal.show_detailed_transactions") == true)
+                        <li role="presentation" class="active"><a href="#transactions" aria-controls="transactions" role="tab" data-toggle="tab">{{trans("headers.recentTransactions")}}</a></li>
+                        <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
+                        <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                    @else
+                        <li role="presentation" class="active"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
+                        <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                    @endif
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
+                    @if(Config::get("customer_portal.show_detailed_transactions") == true)
                     <div role="tabpanel" class="tab-pane active" id="transactions">
                         <div class="table-responsive">
                             <table class="table table-condensed give_top_room">
@@ -116,7 +122,8 @@
                             </table>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="invoices">
+                    @endif
+                    <div role="tabpanel" class="tab-pane @if(Config::get("customer_portal.show_detailed_transactions") != true) active @endif" id="invoices">
                         <div class="table-responsive">
                             <table class="table table-condensed give_top_room">
                                 <thead>

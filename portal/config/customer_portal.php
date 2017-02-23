@@ -39,6 +39,11 @@ return [
      * BILLING CONFIGURATION OPTIONS
      */
 
+    /**
+     * Do you want to show detailed transactions or just invoices?
+     */
+    'show_detailed_transactions' => env('SHOW_DETAILED_TRANSACTIONS',false),
+
     /*
      * If you wish to allow PayPal payments via the portal, set this to true
      */
