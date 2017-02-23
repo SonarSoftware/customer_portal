@@ -33,3 +33,7 @@ h1 {
 .big_text {
     font-size: 18px;
 }
+
+.logoImage {
+    max-width: 100%;
+}

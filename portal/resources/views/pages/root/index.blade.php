@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-12 give_bottom_room">
                 @if(file_exists(base_path("/public/assets/images/logo.png")))
-                    <img src="/assets/images/logo.png" class="center-block">
+                    <img src="/assets/images/logo.png" class="center-block logoImage">
                 @else
-                    <img src="/assets/images/transparent_logo.png" class="center-block">
+                    <img src="/assets/images/transparent_logo.png" class="center-block logoImage">
                 @endif
             </div>
         </div>

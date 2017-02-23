@@ -373,7 +373,7 @@ class BillingController extends Controller
             $payments = $this->accountBillingController->getPayments(get_user()->account_id);
             foreach ($payments as $payment)
             {
-                if ($payment->success === true)
+                if ($payment->success === true && $payment->reversed === false)
                 {
                     array_push($transactions,[
                         'type' => 'payment',
