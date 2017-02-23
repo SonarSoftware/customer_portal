@@ -184,9 +184,19 @@ class CreditCard
             throw new InvalidArgumentException($values['country'] . " is not a valid country.");
         }
 
-        if (!in_array($values['state'],subdivisions($values['country'])))
+        if (!in_array($values['country'],['US','CA']))
         {
-            throw new InvalidArgumentException($values['state'] . " is not a valid state.");
+            if (!in_array($values['state'],subdivisions($values['country'])))
+            {
+                throw new InvalidArgumentException($values['state'] . " is not a valid state.");
+            }
+        }
+        else
+        {
+            if (!isset(subdivisions($values['country'])[$values['state']]))
+            {
+                throw new InvalidArgumentException($values['state'] . " is not a valid state.");
+            }
         }
     }
 

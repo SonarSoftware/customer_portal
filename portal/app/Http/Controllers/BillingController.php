@@ -211,15 +211,15 @@ class BillingController extends Controller
         }
         catch (Exception $e)
         {
-            return redirect()->back()->withErrors($e->getMessage());
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
 
         try {
-            $this->accountBillingController->createCreditCard(get_user()->account_id, $card);
+            $this->accountBillingController->createCreditCard(get_user()->account_id, $card, (bool)$request->input('auto'));
         }
         catch (Exception $e)
         {
-            return redirect()->back()->withErrors(trans("errors.failedToCreateCard"));
+            return redirect()->back()->withErrors(trans("errors.failedToCreateCard"))->withInput();
         }
         
         unset($creditCard);
@@ -508,6 +508,11 @@ class BillingController extends Controller
             'number' => $card['number'],
             'expiration_month' => intval($month),
             'expiration_year' => $year,
+            'line1' => $request->input('line1'),
+            'city' => $request->input('city'),
+            'state' => $request->input('state'),
+            'zip' => $request->input('zip'),
+            'country' => $request->input('country'),
         ]);
 
         return $creditCard;

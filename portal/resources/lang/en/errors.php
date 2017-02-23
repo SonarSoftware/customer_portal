@@ -39,4 +39,5 @@ return [
     'topOffNotAvailable' => 'Your data service does not allow top off purchases.',
     'topOffRequiresImmediatePayment' => 'Purchasing additional capacity requires immediate payment.',
     'failedToAddDataUsage' => 'Failed to add capacity to your account. Please try again later.',
+    'failedToLookupSubdivision' => 'We weren\'t able to look up the states for that country. Please refresh and try again.',
 ];

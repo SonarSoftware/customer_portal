@@ -297,7 +297,6 @@ function subdivisions($country)
 
     if (in_array($country,["US","CA"]))
     {
-        dd($subdivisions[$country]);
         return $subdivisions[$country];
     }
 
@@ -309,5 +308,3 @@ function subdivisions($country)
 
     return $cleaned;
 }
-
-foreach ($subdivisions as $subdivision) { $boom = explode("-",$subdivision->subdivision_code); $array[$subdivision->country_code][$boom[1]] = trans("country_subdivisions." . $subdivision->subdivision_code); }

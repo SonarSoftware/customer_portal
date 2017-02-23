@@ -50,6 +50,9 @@ Route::group(['prefix' => 'portal', 'middleware' => ['web','auth']], function(){
         /** Paypal Routes */
         Route::get('/paypal/{temporary_token}/complete','PayPalController@completePayment');
         Route::get('/paypal/{temporary_token}/cancel','PayPalController@cancelPayment');
+
+        /** Subdivisions for cards */
+        Route::get("subdivisions/{country}","SubdivisionController@show");
     });
 
     /**

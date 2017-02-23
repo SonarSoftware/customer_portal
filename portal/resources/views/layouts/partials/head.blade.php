@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/assets/css/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/js/vendor/sweetalert/dist/sweetalert.css">
     <link rel="stylesheet" href="/assets/css/global.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.min.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
-    <script src="/assets/lang.dist.js" type="text/javascript"></script>
+    <script src="/messages.js" type="text/javascript"></script>
     @yield('additionalCSS')
 </head>

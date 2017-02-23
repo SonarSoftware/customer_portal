@@ -46,6 +46,14 @@
                             <label for="zip">{{trans("billing.zip")}}</label>
                             {!! Form::text("zip",null,['id' => 'zip', 'class' => 'form-control', 'placeholder' => trans("billing.zip")]) !!}
                         </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox("auto",1,1) !!}
+                                    {{trans("billing.saveAsAutoPayMethod")}}
+                                </label>
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-primary">{{trans("billing.addNewCard")}}</button>
                     </div>
                 </div>

@@ -27,6 +27,12 @@ class CreateCreditCardRequest extends Request
             'cc-number' => 'required|string', //this can contain spaces
             'name' => 'required|string',
             'expirationDate' => 'required|string', //this has the / separator in it
+            'country' => 'required|string',
+            'line1' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'zip' => 'required|string',
+            'auto' => 'boolean',
         ];
     }
 }

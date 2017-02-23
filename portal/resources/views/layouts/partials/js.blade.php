@@ -10,6 +10,7 @@
 <script type="text/javascript" src="/vendor/jsvalidation/js/jsvalidation.js"></script>
 <script type="text/javascript" src="/assets/js/vendor/chartjs/Chart.bundle.min.js"></script>
 <script type="text/javascript" src="/assets/js/vendor/moment/moment.min.js"></script>
+<script type="text/javascript" src="/assets/js/vendor/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript" src="/assets/js/global.js"></script>
 <script>
     moment.locale('{{Config::get("app.locale")}}');
