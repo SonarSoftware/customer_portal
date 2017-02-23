@@ -24,7 +24,7 @@ class AuthenticationRequest extends Request
     public function rules()
     {
         return [
-            'username' => 'required|alpha_num',
+            'username' => 'required|string',
             'password' => 'required|string',
         ];
     }
