@@ -29,6 +29,11 @@ class CreditCardPaymentRequest extends Request
             'expirationDate' => 'required_if:payment_method,new_card|string', //this has the / separator in it
             'makeAuto' => 'boolean',
             'amount' => 'required|numeric|min:0.01',
+            'country' => 'required|string',
+            'line1' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'zip' => 'required|string',
         ];
     }
 }
