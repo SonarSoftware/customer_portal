@@ -36,6 +36,11 @@ return [
     'state' => env('STATE','WI'),
 
     /**
+     * A message to display on the login page
+     */
+    'login_page_message' => env('LOGIN_PAGE_MESSAGE',null),
+
+    /**
      * BILLING CONFIGURATION OPTIONS
      */
 

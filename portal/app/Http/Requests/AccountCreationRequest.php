@@ -25,7 +25,7 @@ class AccountCreationRequest extends Request
     {
         return [
             'email' => 'required|email',
-            'username' => 'alpha_num|required',
+            'username' => 'string|required',
             'password' => 'string|required|min:8|confirmed',
         ];
     }

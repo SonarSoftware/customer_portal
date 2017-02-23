@@ -10,6 +10,16 @@
                 @endif
             </div>
         </div>
+        @if(Config::get("customer_portal.login_page_message"))
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="alert alert-info" role="alert">
+                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        {{Config::get("customer_portal.login_page_message")}}
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="well">
