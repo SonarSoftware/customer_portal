@@ -11,10 +11,17 @@ class CreditCard
     private $number;
     private $expiration_month;
     private $expiration_year;
+    private $line1;
+    private $city;
+    private $state;
+    private $zip;
+    private $country;
 
     /**
+     * When passing values into this function, the country must be a two character ISO country code. The state must be a subdivision returned from subdivisions($countryCode)
+     *
      * CreditCardPayment constructor.
-     * @param $values
+     * @param $values - An array of 'name', 'number', 'expiration_month', 'expiration_year', 'line1', 'city', 'state', 'zip', 'country'
      */
     public function __construct($values)
     {
@@ -59,6 +66,51 @@ class CreditCard
     }
 
     /**
+     * Get line 1 of the address
+     * @return mixed
+     */
+    public function getLine1()
+    {
+        return $this->line1;
+    }
+
+    /**
+     * Get the city
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * Get the state
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Get the ZIP
+     * @return mixed
+     */
+    public function getZip()
+    {
+        return $this->zip;
+    }
+
+    /**
+     * Get the country
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
      * Validate the input to the constructor.
      * @param $values
      * @throws InvalidArgumentException
@@ -85,6 +137,31 @@ class CreditCard
             throw new InvalidArgumentException("You must supply an expiration year.");
         }
 
+        if (!array_key_exists("line1",$values))
+        {
+            throw new InvalidArgumentException("Line 1 of the address is missing.");
+        }
+
+        if (!array_key_exists("city",$values))
+        {
+            throw new InvalidArgumentException("The city of the address is missing.");
+        }
+
+        if (!array_key_exists("state",$values))
+        {
+            throw new InvalidArgumentException("The state of the address is missing.");
+        }
+
+        if (!array_key_exists("zip",$values))
+        {
+            throw new InvalidArgumentException("The ZIP/postal code of the address is missing.");
+        }
+
+        if (!array_key_exists("country",$values))
+        {
+            throw new InvalidArgumentException("The country of the address is missing.");
+        }
+
         $card = CreditCardValidator::validCreditCard($values['number']);
         if ($card['valid'] !== true)
         {
@@ -101,6 +178,16 @@ class CreditCard
         {
             throw new InvalidArgumentException("Expiration date is not valid.");
         }
+
+        if (!isset(countries()[$values['country']]))
+        {
+            throw new InvalidArgumentException($values['country'] . " is not a valid country.");
+        }
+
+        if (!in_array($values['state'],subdivisions($values['country'])))
+        {
+            throw new InvalidArgumentException($values['state'] . " is not a valid state.");
+        }
     }
 
     /**
@@ -113,5 +200,10 @@ class CreditCard
         $this->number = trim(str_replace(" ","",$values['number']));
         $this->expiration_month = sprintf("%02d", $values['expiration_month']);
         $this->expiration_year = trim($values['expiration_year']);
+        $this->line1 = trim($values['line1']);
+        $this->city = trim($values['city']);
+        $this->state = trim($values['state']);
+        $this->zip = trim($values['zip']);
+        $this->country = trim($values['country']);
     }
 }

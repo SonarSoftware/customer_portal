@@ -1,31 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-/**
- * Get the user object from the session
- * @return mixed|null
- */
-function get_user()
-{
-    if (!Session::has("user"))
-    {
-        return null;
-    }
-
-    return Session::get("user");
-}
-
-/**
- * Convert bytes to gigabytes
- * @param $value
- * @return string
- */
-function bytes_to_gigabytes($value)
-{
-    return round($value/1000**4,2) . "GB";
-}
-
 /**
  * Get a valid list of country codes
  * @return array
@@ -289,15 +263,14 @@ function countries()
  */
 function subdivisions($country)
 {
-    $subdivisions = json_decode(file_get_contents(resource_path("/json/subdivisions.json")),true);
+    $subdivisions = json_decode(file_get_contents("../resources/subdivisions.json"),true);
     if (!isset($subdivisions[$country]))
     {
         throw new InvalidArgumentException($country . " is not a valid country code.");
     }
 
-    if (in_array($country,["US","CA"]))
+    if (in_array($country,"US","CA"))
     {
-        dd($subdivisions[$country]);
         return $subdivisions[$country];
     }
 
@@ -309,5 +282,3 @@ function subdivisions($country)
 
     return $cleaned;
 }
-
-foreach ($subdivisions as $subdivision) { $boom = explode("-",$subdivision->subdivision_code); $array[$subdivision->country_code][$boom[1]] = trans("country_subdivisions." . $subdivision->subdivision_code); }

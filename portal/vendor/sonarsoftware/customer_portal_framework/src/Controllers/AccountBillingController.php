@@ -146,6 +146,12 @@ class AccountBillingController
             'expiration_month' => $creditCard->getExpirationMonth(),
             'expiration_year' => $creditCard->getExpirationYear(),
             'amount' => trim($amount),
+            'name_on_account' => $creditCard->getName(),
+            'line1' => $creditCard->getLine1(),
+            'city' => $creditCard->getCity(),
+            'state' => $creditCard->getState(),
+            'zip' => $creditCard->getZip(),
+            'country' => $creditCard->getCountry(),
         ]);
 
         if ($result->success === true && $saveAndMakeAuto === true)
@@ -184,10 +190,11 @@ class AccountBillingController
      * Add a new credit card to a customer account (see https://sonar.software/apidoc/#api-Account_Payment_Methods-PostAccountPaymentMethod)
      * @param $accountID
      * @param CreditCard $creditCard
+     * @param bool $auto - Whether or not the card is set for auto pay
      * @return mixed
      * @throws ApiException
      */
-    public function createCreditCard($accountID, CreditCard $creditCard)
+    public function createCreditCard($accountID, CreditCard $creditCard, $auto = true)
     {
         return $this->httpHelper->post("/accounts/" . intval($accountID) . "/payment_methods", [
             'type' => 'credit card',
@@ -195,7 +202,12 @@ class AccountBillingController
             'expiration_month' => $creditCard->getExpirationMonth(),
             'expiration_year' => $creditCard->getExpirationYear(),
             'name_on_account' => $creditCard->getName(),
-            'auto' => true,
+            'line1' => $creditCard->getLine1(),
+            'city' => $creditCard->getCity(),
+            'state' => $creditCard->getState(),
+            'zip' => $creditCard->getZip(),
+            'country' => $creditCard->getCountry(),
+            'auto' => (bool)$auto,
         ]);
     }
 
@@ -230,7 +242,7 @@ class AccountBillingController
      */
     public function setAutoOnPaymentMethod($accountID, $paymentMethodID, $auto)
     {
-        return $this->httpHelper->patch("/accounts/" . intval($accountID) . "/payment_methods/" . intval($paymentMethodID), [
+        return $this->httpHelper->patch("/accounts/" . intval($accountID) . "/payment_methods/" . intval($paymentMethodID) . "/toggle_auto", [
             'auto' => (boolean)$auto
         ]);
     }
