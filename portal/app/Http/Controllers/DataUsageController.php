@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTopOffRequest;
+use App\Traits\ListsPaymentMethods;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Config;
 
 class DataUsageController extends Controller
 {
+    use ListsPaymentMethods;
+
     private $frameworkDataUsageController;
     public function __construct()
     {
@@ -50,10 +53,16 @@ class DataUsageController extends Controller
         {
             return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
         }
-        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
-        {
-            return view("pages.data_usage.purchase_top_off",compact('policyDetails'));
-        }
+        //Disabling this for now, it will be implemented at a later date.
+//        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
+//        {
+//            $paymentMethods = $this->getPaymentMethods();
+//            if (count($paymentMethods) === 0)
+//            {
+//                return redirect()->action("BillingController@createPaymentMethod")->withErrors(trans("data_usage.youMustHaveACardOnFile"));
+//            }
+//            return view("pages.data_usage.purchase_top_off",compact('policyDetails','paymentMethods'));
+//        }
 
         return view("pages.data_usage.add_top_off",compact('policyDetails'));
     }
@@ -65,10 +74,10 @@ class DataUsageController extends Controller
      */
     public function addTopOff(AddTopOffRequest $request)
     {
-        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
-        {
-            return redirect()->back()->withErrors(trans("errors.topOffRequiresImmediatePayment"));
-        }
+//        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
+//        {
+//            return redirect()->back()->withErrors(trans("errors.topOffRequiresImmediatePayment"));
+//        }
         $policyDetails = $this->getPolicyDetails();
         if ($policyDetails->allow_user_to_purchase_capacity !== true)
         {

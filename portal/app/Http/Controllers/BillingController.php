@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCreditCardRequest;
 use App\Http\Requests\CreditCardPaymentRequest;
 use App\Http\Requests\PaymentMethodDeleteRequest;
+use App\Traits\ListsPaymentMethods;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ use SonarSoftware\CustomerPortalFramework\Models\CreditCard;
 
 class BillingController extends Controller
 {
+    use ListsPaymentMethods;
+
     private $accountBillingController;
     public function __construct()
     {
@@ -423,20 +426,6 @@ class BillingController extends Controller
         }
 
         return false;
-    }
-
-    /**
-     * Get all the payment method options
-     * @return mixed
-     */
-    private function getPaymentMethods()
-    {
-        if (!Cache::tags("billing.payment_methods")->has(get_user()->account_id))
-        {
-            $validAccountMethods = $this->accountBillingController->getValidCreditCards(get_user()->account_id);
-            Cache::tags("billing.payment_methods")->put(get_user()->account_id, $validAccountMethods, 10);
-        }
-        return Cache::tags("billing.payment_methods")->get(get_user()->account_id);
     }
 
     /**
