@@ -2,6 +2,7 @@
 
 namespace SonarSoftware\CustomerPortalFramework\Controllers;
 
+use Exception;
 use InvalidArgumentException;
 use SonarSoftware\CustomerPortalFramework\Helpers\HttpHelper;
 use SonarSoftware\CustomerPortalFramework\Models\Ticket;
@@ -125,6 +126,15 @@ class AccountTicketController
             throw new InvalidArgumentException($authorEmail . " is not a valid email address.");
         }
 
+        try {
+            $this->httpHelper->patch("/tickets/{$ticket->getTicketID()}",[
+                'open' => true,
+            ]);
+        }
+        catch (Exception $e)
+        {
+            //
+        }
         return $this->httpHelper->post("/tickets/{$ticket->getTicketID()}/ticket_replies",[
             'text' => $replyText,
             'incoming' => true,
