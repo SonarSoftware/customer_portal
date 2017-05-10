@@ -49,6 +49,11 @@ return [
      */
     'show_detailed_transactions' => env('SHOW_DETAILED_TRANSACTIONS', false),
 
+    /**
+     * Do you want to allow ACH/eCheck payments?
+     */
+    'enable_bank_payments' => env('ENABLE_BANK_PAYMENTS', false),
+
     /*
      * If you wish to allow PayPal payments via the portal, set this to true
      */

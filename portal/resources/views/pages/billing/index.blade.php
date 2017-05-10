@@ -74,9 +74,11 @@
                         <li role="presentation" class="active"><a href="#transactions" aria-controls="transactions" role="tab" data-toggle="tab">{{trans("headers.recentTransactions")}}</a></li>
                         <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
                         <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                        @if(config("customer_portal.enable_bank_payments") == true) <li role="presentation"><a href="#bankAccounts" aria-controls="bankAccounts" role="tab" data-toggle="tab">{{trans("headers.bankAccounts")}}</a></li> @endif
                     @else
                         <li role="presentation" class="active"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
                         <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                        @if(config("customer_portal.enable_bank_payments") == true) <li role="presentation"><a href="#bankAccounts" aria-controls="bankAccounts" role="tab" data-toggle="tab">{{trans("headers.bankAccounts")}}</a></li> @endif
                     @endif
                 </ul>
 
@@ -219,6 +221,64 @@
                             </table>
                         </div>
                     </div>
+                        <div role="tabpanel" class="tab-pane" id="bankAccounts">
+                            <div class="table-responsive">
+                                <p class="text-right">
+                                    <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod")}}" role="button">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        {{trans("billing.addNewBankAccount")}}
+                                    </a>
+                                </p>
+                                <table class="table table-condensed give_top_room">
+                                    <thead>
+                                    <tr>
+                                        <th>{{trans("billing.accountNumber")}}</th>
+                                        <th>{{trans("billing.autoPay")}}</th>
+                                        <th>{{trans("billing.action")}}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if(count($paymentMethods) === 0)
+                                        <TR>
+                                            <TD colspan="4">{{trans("billing.noBankAccounts")}}</TD>
+                                        </TR>
+                                    @else
+                                        @foreach($paymentMethods as $paymentMethod)
+                                            <TR>
+                                                <TD>***{{$paymentMethod->identifier}}</TD>
+                                                <TD>{{$paymentMethod->expiration_month}}/{{$paymentMethod->expiration_year}}</TD>
+                                                <TD>
+                                                    @if($paymentMethod->auto == 1)
+                                                        {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
+                                                        <button class="btn btn-xs btn-warning">
+                                                            <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
+                                                            {{trans("billing.disableAuto")}}
+                                                        </button>
+                                                        {!! Form::close() !!}
+                                                    @else
+                                                        {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
+                                                        <button class="btn btn-xs btn-info">
+                                                            <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
+                                                            {{trans("billing.enableAuto")}}
+                                                        </button>
+                                                        {!! Form::close() !!}
+                                                    @endif
+                                                </TD>
+                                                <TD>
+                                                    {!! Form::open(['action' => ["BillingController@deletePaymentMethod",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'delete']) !!}
+                                                    <button class="btn btn-xs btn-danger">
+                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                        {{trans("actions.delete")}}
+                                                    </button>
+                                                    {!! Form::close() !!}
+                                                </TD>
+                                            </TR>
+                                        @endforeach
+                                    @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

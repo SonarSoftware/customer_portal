@@ -25,4 +25,5 @@ return [
     'purchaseAdditionalData' => 'Purchase Additional Data',
     'contracts' => 'Contracts',
     'error' => 'Whoops!',
+    'bankAccounts' => 'Bank Accounts',
 ];
