@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateBankAccountRequest;
 use App\Http\Requests\CreateCreditCardRequest;
 use App\Http\Requests\CreditCardPaymentRequest;
 use App\Http\Requests\PaymentMethodDeleteRequest;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Session;
 use Inacho\CreditCard as CreditCardValidator;
 use InvalidArgumentException;
 use SonarSoftware\CustomerPortalFramework\Controllers\AccountBillingController;
+use SonarSoftware\CustomerPortalFramework\Models\BankAccount;
 use SonarSoftware\CustomerPortalFramework\Models\CreditCard;
 
 class BillingController extends Controller
@@ -177,11 +179,22 @@ class BillingController extends Controller
 
     /**
      * Show page to create a new payment method
+     * @param $type
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function createPaymentMethod()
+    public function createPaymentMethod($type)
     {
-        return view("pages.billing.create_payment_method");
+        switch ($type)
+        {
+            case "credit_card":
+                return view("pages.billing.add_card");
+                break;
+            case "bank":
+                return view("pages.billing.add_bank");
+                break;
+            default:
+                return redirect()->back()->withErrors(trans("errors.invalidPaymentMethodType"));
+        }
     }
 
     /**
@@ -189,7 +202,7 @@ class BillingController extends Controller
      * @param CreateCreditCardRequest $request
      * @return $this|mixed
      */
-    public function storePaymentMethod(CreateCreditCardRequest $request)
+    public function storeCard(CreateCreditCardRequest $request)
     {
         try {
             $card = $this->createCreditCardObjectFromRequest($request);
@@ -208,6 +221,38 @@ class BillingController extends Controller
 
         $this->clearBillingCache();
         return redirect()->action("BillingController@index")->with('success', trans("billing.cardAdded"));
+    }
+
+    /**
+     * Store a new credit card
+     * @param CreateBankAccountRequest $request
+     * @return $this|mixed
+     */
+    public function storeBank(CreateBankAccountRequest $request)
+    {
+        if (config("customer_portal.enable_bank_payments") != true)
+        {
+            return redirect()->back()->withErrors(trans("errors.failedToCreateBankAccount"))->withInput();
+        }
+
+        try {
+            $bankAccount = $this->createBankAccountObjectFromRequest($request);
+        }
+        catch (Exception $e) {
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
+        }
+
+        try {
+            $this->accountBillingController->createBankAccount(get_user()->account_id, $bankAccount, (bool)$request->input('auto'));
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(trans("errors.failedToCreateBankAccount"))->withInput();
+        }
+
+        unset($bankAccount);
+        unset($request);
+
+        $this->clearBillingCache();
+        return redirect()->action("BillingController@index")->with('success', trans("billing.bankAccountAdded"));
     }
 
     /**
@@ -432,7 +477,7 @@ class BillingController extends Controller
      * @param $request
      * @return CreditCard
      */
-    private function createCreditCardObjectFromRequest($request)
+    private function createCreditCardObjectFromRequest(CreateCreditCardRequest $request)
     {
         $card = CreditCardValidator::validCreditCard(trim(str_replace(" ", "", $request->input('cc-number'))));
         if ($card['valid'] !== true) {
@@ -465,5 +510,21 @@ class BillingController extends Controller
         ]);
 
         return $creditCard;
+    }
+
+    /**
+     * @param CreateBankAccountRequest $request
+     * @return BankAccount
+     */
+    private function createBankAccountObjectFromRequest(CreateBankAccountRequest $request)
+    {
+        $bankAccount = new BankAccount([
+            'name' => trim($request->input('name')),
+            'type' => trim($request->input('account_type')),
+            'account_number' => trim($request->input('account_number')),
+            'routing_number' => trim($request->input('routing_number')),
+        ]);
+
+        return $bankAccount;
     }
 }

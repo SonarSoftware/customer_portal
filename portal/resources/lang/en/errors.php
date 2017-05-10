@@ -40,4 +40,6 @@ return [
     'topOffRequiresImmediatePayment' => 'Purchasing additional capacity requires immediate payment.',
     'failedToAddDataUsage' => 'Failed to add capacity to your account. Please try again later.',
     'failedToLookupSubdivision' => 'We weren\'t able to look up the states for that country. Please refresh and try again.',
+    'invalidPaymentMethodType' => 'Invalid payment method type.',
+    'failedToCreateBankAccount' => 'Failed to add bank account. Please check the information and try again.',
 ];

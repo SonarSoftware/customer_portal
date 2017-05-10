@@ -56,4 +56,11 @@ return [
     'noBankAccounts' => 'No bank accounts on file.',
     'accountNumber' => 'Account Number',
     'addNewBankAccount' => 'Add new bank account',
+    'routingNumber' => 'Routing Number',
+    'nameOnAccount' => 'Name on Account',
+    'checking' => 'Checking',
+    'savings' => 'Savings',
+    'accountType' => 'Account Type',
+    'saveAsAutoPayMethodBank' => 'Automatically charge this bank account for all future invoices',
+    'bankAccountAdded' => 'Bank account added successfully.',
 ];

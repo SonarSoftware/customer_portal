@@ -10,7 +10,7 @@
                         </h3>
                     </div>
                     <div class="panel-body">
-                        {!! Form::open(['action' => 'BillingController@storePaymentMethod', 'id' => 'createPaymentMethodForm']) !!}
+                        {!! Form::open(['action' => 'BillingController@storeCard', 'id' => 'createPaymentMethodForm']) !!}
                         <div class="form-group">
                             <label for="name">{{trans("billing.nameOnCard")}}</label>
                             {!! Form::text("name",null,['id' => 'name', 'class' => 'form-control', 'placeholder' => trans("billing.nameOnCard")]) !!}

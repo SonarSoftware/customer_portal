@@ -5,6 +5,7 @@ namespace SonarSoftware\CustomerPortalFramework\Controllers;
 use Exception;
 use SonarSoftware\CustomerPortalFramework\Exceptions\ApiException;
 use SonarSoftware\CustomerPortalFramework\Helpers\HttpHelper;
+use SonarSoftware\CustomerPortalFramework\Models\BankAccount;
 use SonarSoftware\CustomerPortalFramework\Models\CreditCard;
 
 class AccountBillingController
@@ -112,10 +113,10 @@ class AccountBillingController
                 continue;
             }
             try {
-                if (\Inacho\CreditCard::validDate($datum->expiration_year, sprintf("%02d", $datum->expiration_month)) !== true)
-                {
-                    continue;
-                }
+                 if (\Inacho\CreditCard::validDate($datum->expiration_year, sprintf("%02d", $datum->expiration_month)) !== true)
+                 {
+                     continue;
+                 }
             }
             catch (Exception $e)
             {
@@ -240,6 +241,25 @@ class AccountBillingController
             'state' => $creditCard->getState(),
             'zip' => $creditCard->getZip(),
             'country' => $creditCard->getCountry(),
+            'auto' => (bool)$auto,
+        ]);
+    }
+
+    /**
+     * Add a new bank account to a customer account (see (see https://sonar.software/apidoc/#api-Account_Payment_Methods-PostAccountPaymentMethod)
+     * @param $accountID
+     * @param BankAccount $bankAccount
+     * @param bool $auto
+     * @return mixed
+     */
+    public function createBankAccount($accountID, BankAccount $bankAccount, $auto = true)
+    {
+        return $this->httpHelper->post("/accounts/" . intval($accountID) . "/payment_methods", [
+            'type' => 'bank account',
+            'account_number' => $bankAccount->getAccountNumber(),
+            'routing_number' => $bankAccount->getRoutingNumber(),
+            'name_on_account' => $bankAccount->getName(),
+            'account_type' => $bankAccount->getType(),
             'auto' => (bool)$auto,
         ]);
     }

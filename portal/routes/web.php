@@ -39,8 +39,9 @@ Route::group(['prefix' => 'portal', 'middleware' => ['web','auth']], function ()
     Route::group(['prefix' => 'billing'], function () {
         Route::get('/', 'BillingController@index');
         Route::get('/invoices/{invoices}', 'BillingController@getInvoicePdf');
-        Route::get('/payment_methods/create', 'BillingController@createPaymentMethod');
-        Route::post('/payment_methods', 'BillingController@storePaymentMethod');
+        Route::get('/payment_methods/{type}/create', 'BillingController@createPaymentMethod');
+        Route::post('/payment_methods/card', 'BillingController@storeCard');
+        Route::post('/payment_methods/bank', 'BillingController@storeBank');
         Route::delete('/payment_methods/{payment_methods}', 'BillingController@deletePaymentMethod');
         Route::patch('/payment_methods/{payment_methods}/toggle_auto', 'BillingController@toggleAutoPay');
         Route::get('/payment', 'BillingController@makePayment');

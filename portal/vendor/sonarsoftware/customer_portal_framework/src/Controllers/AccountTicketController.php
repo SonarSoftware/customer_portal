@@ -135,6 +135,7 @@ class AccountTicketController
         {
             //
         }
+
         return $this->httpHelper->post("/tickets/{$ticket->getTicketID()}/ticket_replies",[
             'text' => $replyText,
             'incoming' => true,

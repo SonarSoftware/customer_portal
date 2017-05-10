@@ -165,7 +165,7 @@
                     <div role="tabpanel" class="tab-pane" id="creditCards">
                         <div class="table-responsive">
                             <p class="text-right">
-                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod")}}" role="button">
+                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'credit_card'])}}" role="button">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     {{trans("billing.addNewCard")}}
                                 </a>
@@ -227,7 +227,7 @@
                     <div role="tabpanel" class="tab-pane" id="bankAccounts">
                         <div class="table-responsive">
                             <p class="text-right">
-                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod")}}" role="button">
+                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'bank'])}}" role="button">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     {{trans("billing.addNewBankAccount")}}
                                 </a>
