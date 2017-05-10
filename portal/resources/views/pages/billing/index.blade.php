@@ -223,65 +223,67 @@
                             </table>
                         </div>
                     </div>
-                        <div role="tabpanel" class="tab-pane" id="bankAccounts">
-                            <div class="table-responsive">
-                                <p class="text-right">
-                                    <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod")}}" role="button">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                        {{trans("billing.addNewBankAccount")}}
-                                    </a>
-                                </p>
-                                <table class="table table-condensed give_top_room">
-                                    <thead>
-                                    <tr>
-                                        <th>{{trans("billing.accountNumber")}}</th>
-                                        <th>{{trans("billing.autoPay")}}</th>
-                                        <th>{{trans("billing.action")}}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @if(count($paymentMethods) === 0)
+                    @if(config("customer_portal.enable_bank_payments") == true)
+                    <div role="tabpanel" class="tab-pane" id="bankAccounts">
+                        <div class="table-responsive">
+                            <p class="text-right">
+                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod")}}" role="button">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    {{trans("billing.addNewBankAccount")}}
+                                </a>
+                            </p>
+                            <table class="table table-condensed give_top_room">
+                                <thead>
+                                <tr>
+                                    <th>{{trans("billing.accountNumber")}}</th>
+                                    <th>{{trans("billing.autoPay")}}</th>
+                                    <th>{{trans("billing.action")}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if(count($paymentMethods) === 0)
+                                    <TR>
+                                        <TD colspan="3">{{trans("billing.noBankAccounts")}}</TD>
+                                    </TR>
+                                @else
+                                    @foreach($paymentMethods as $paymentMethod)
+                                        @if ($paymentMethod->type == "echeck" || $paymentMethod->type == "ach")
                                         <TR>
-                                            <TD colspan="3">{{trans("billing.noBankAccounts")}}</TD>
-                                        </TR>
-                                    @else
-                                        @foreach($paymentMethods as $paymentMethod)
-                                            @if ($paymentMethod->type == "echeck" || $paymentMethod->type == "ach")
-                                            <TR>
-                                                <TD>***{{$paymentMethod->identifier}}</TD>
-                                                <TD>
-                                                    @if($paymentMethod->auto == 1)
-                                                        {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
-                                                        <button class="btn btn-xs btn-warning">
-                                                            <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
-                                                            {{trans("billing.disableAuto")}}
-                                                        </button>
-                                                        {!! Form::close() !!}
-                                                    @else
-                                                        {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
-                                                        <button class="btn btn-xs btn-info">
-                                                            <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
-                                                            {{trans("billing.enableAuto")}}
-                                                        </button>
-                                                        {!! Form::close() !!}
-                                                    @endif
-                                                </TD>
-                                                <TD>
-                                                    {!! Form::open(['action' => ["BillingController@deletePaymentMethod",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'delete']) !!}
-                                                    <button class="btn btn-xs btn-danger">
-                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                        {{trans("actions.delete")}}
+                                            <TD>***{{$paymentMethod->identifier}}</TD>
+                                            <TD>
+                                                @if($paymentMethod->auto == 1)
+                                                    {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
+                                                    <button class="btn btn-xs btn-warning">
+                                                        <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
+                                                        {{trans("billing.disableAuto")}}
                                                     </button>
                                                     {!! Form::close() !!}
-                                                </TD>
-                                            </TR>
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                    </tbody>
-                                </table>
-                            </div>
+                                                @else
+                                                    {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
+                                                    <button class="btn btn-xs btn-info">
+                                                        <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
+                                                        {{trans("billing.enableAuto")}}
+                                                    </button>
+                                                    {!! Form::close() !!}
+                                                @endif
+                                            </TD>
+                                            <TD>
+                                                {!! Form::open(['action' => ["BillingController@deletePaymentMethod",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'delete']) !!}
+                                                <button class="btn btn-xs btn-danger">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                    {{trans("actions.delete")}}
+                                                </button>
+                                                {!! Form::close() !!}
+                                            </TD>
+                                        </TR>
+                                        @endif
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
