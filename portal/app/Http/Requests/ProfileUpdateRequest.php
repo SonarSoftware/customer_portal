@@ -26,12 +26,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'role' => 'string',
             'email_address' => 'email|required',
-            'work_phone' => 'string',
-            'home_phone' => 'string',
-            'mobile_phone' => 'string',
-            'fax' => 'string',
         ];
     }
 }
