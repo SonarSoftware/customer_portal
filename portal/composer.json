@@ -17,7 +17,7 @@
         "inacho/php-credit-card-validator": "^1.0",
         "paypal/rest-api-sdk-php": "^1.7",
         "mariuzzo/laravel-js-localization": "dev-master",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
