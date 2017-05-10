@@ -47,7 +47,7 @@ class TestSmtpCredentials extends Command
 
         try {
             Mail::send('emails.test', [], function ($m) use ($email) {
-                $m->from(Config::get("customer_portal.from_address"), Config::get("customer_portal.from_name"))
+                $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"))
                     ->to($email, $email)
                     ->subject('Sonar customer portal test email!');
             });

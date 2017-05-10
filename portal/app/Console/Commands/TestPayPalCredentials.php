@@ -42,15 +42,15 @@ class TestPayPalCredentials extends Command
      */
     public function handle()
     {
-        if (Config::get("customer_portal.paypal_enabled") !== true) {
+        if (config("customer_portal.paypal_enabled") !== true) {
             $this->error("PayPal is not enabled in the customer portal configuration.");
             return;
         }
 
         $apiContext = new ApiContext(
             new OAuthTokenCredential(
-                Config::get("customer_portal.paypal_api_client_id"),
-                Config::get("customer_portal.paypal_api_client_secret")
+                config("customer_portal.paypal_api_client_id"),
+                config("customer_portal.paypal_api_client_secret")
             )
         );
 

@@ -16,7 +16,7 @@ class TicketMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Config::get("customer_portal.ticketing_enabled") !== true) {
+        if (config("customer_portal.ticketing_enabled") !== true) {
             return redirect()->back()->withErrors(trans("errors.sectionDisabled"));
         }
         return $next($request);

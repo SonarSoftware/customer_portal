@@ -51,7 +51,7 @@ class DataUsageController extends Controller
             return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
         }
         //Disabling this for now, it will be implemented at a later date.
-//        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
+//        if (config("customer_portal.top_off_requires_immediate_payment") === true)
 //        {
 //            $paymentMethods = $this->getPaymentMethods();
 //            if (count($paymentMethods) === 0)
@@ -71,7 +71,7 @@ class DataUsageController extends Controller
      */
     public function addTopOff(AddTopOffRequest $request)
     {
-//        if (Config::get("customer_portal.top_off_requires_immediate_payment") === true)
+//        if (config("customer_portal.top_off_requires_immediate_payment") === true)
 //        {
 //            return redirect()->back()->withErrors(trans("errors.topOffRequiresImmediatePayment"));
 //        }

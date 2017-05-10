@@ -14,7 +14,7 @@ class FormattingService
      */
     public function currency($value)
     {
-        return Config::get("customer_portal.currency_symbol") . number_format($value, 2, Config::get("customer_portal.decimal_separator"), Config::get("customer_portal.thousands_separator"));
+        return config("customer_portal.currency_symbol") . number_format($value, 2, config("customer_portal.decimal_separator"), config("customer_portal.thousands_separator"));
     }
 
     /**
@@ -27,9 +27,9 @@ class FormattingService
     {
         if ($convertFromUtc === true) {
             $carbon = new Carbon($value, "UTC");
-            $carbon->tz(Config::get("app.timezone"));
+            $carbon->tz(config("app.timezone"));
         } else {
-            $carbon = new Carbon($value, Config::get("app.timezone"));
+            $carbon = new Carbon($value, config("app.timezone"));
         }
 
         $formattedMonth = trans("months." . $carbon->month);
@@ -46,9 +46,9 @@ class FormattingService
     {
         if ($convertFromUtc === true) {
             $carbon = new Carbon($value, "UTC");
-            $carbon->tz(Config::get("app.timezone"));
+            $carbon->tz(config("app.timezone"));
         } else {
-            $carbon = new Carbon($value, Config::get("app.timezone"));
+            $carbon = new Carbon($value, config("app.timezone"));
         }
 
         $formattedMonth = trans("months." . $carbon->month);

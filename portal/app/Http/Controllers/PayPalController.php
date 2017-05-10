@@ -29,16 +29,16 @@ class PayPalController extends Controller
      */
     public function __construct()
     {
-        if (Config::get("customer_portal.paypal_enabled") !== true) {
+        if (config("customer_portal.paypal_enabled") !== true) {
             throw new RuntimeException("PayPal is not enabled in the customer portal configuration.");
         }
 
-        $this->currency = Config::get("customer_portal.paypal_currency_code");
+        $this->currency = config("customer_portal.paypal_currency_code");
 
         $this->apiContext = new ApiContext(
             new OAuthTokenCredential(
-                Config::get("customer_portal.paypal_api_client_id"),
-                Config::get("customer_portal.paypal_api_client_secret")
+                config("customer_portal.paypal_api_client_id"),
+                config("customer_portal.paypal_api_client_secret")
             )
         );
 
@@ -69,7 +69,7 @@ class PayPalController extends Controller
         
         $transaction = new Transaction();
         $transaction->setAmount($amount)
-            ->setDescription(trans("billing.paymentToCompany", ['company_name' => Config::get("customer_portal.company_name")]))
+            ->setDescription(trans("billing.paymentToCompany", ['company_name' => config("customer_portal.company_name")]))
             ->setInvoiceNumber(uniqid(true)); //This is not a payment on a specific invoice, so we'll just generate a unique string, which is what PayPal requires
 
         $tempToken = new PaypalTemporaryToken(['account_id' => get_user()->account_id, 'token' => uniqid(true)]);

@@ -368,7 +368,7 @@ class BillingController extends Controller
     private function isPaymentPastDue()
     {
         $invoices = $this->getInvoices();
-        $now = Carbon::now(Config::get("app.timezone"));
+        $now = Carbon::now(config("app.timezone"));
 
         foreach ($invoices as $invoice) {
             if ($invoice->remaining_due <= 0) {
@@ -395,7 +395,7 @@ class BillingController extends Controller
             $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
         }
 
-        if (Config::get("customer_portal.paypal_enabled") === true) {
+        if (config("customer_portal.paypal_enabled") === true) {
             $paymentMethods['paypal'] = trans("billing.payWithPaypal");
         }
 
@@ -434,7 +434,7 @@ class BillingController extends Controller
         $month = ltrim(trim($boom[0]), 0);
         $year = trim($boom[1]);
         if (strlen($year) == 2) {
-            $now = Carbon::now(Config::get("app.timezone"));
+            $now = Carbon::now(config("app.timezone"));
             $year = substr($now->year, 0, 2) . $year;
         }
 
