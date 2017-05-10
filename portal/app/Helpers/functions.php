@@ -31,8 +31,8 @@ function bytes_to_gigabytes($value)
  */
 function countries()
 {
-    return array
-    (
+    return 
+    [
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
         'AL' => 'Albania',
@@ -278,7 +278,7 @@ function countries()
         'YE' => 'Yemen',
         'ZM' => 'Zambia',
         'ZW' => 'Zimbabwe',
-    );
+    ];
 }
 
 /**
