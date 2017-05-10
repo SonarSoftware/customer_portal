@@ -15,7 +15,7 @@
 /**
  * Unauthenticated routes, place any routes here that do not require prior authentication.
  */
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web','guest']], function () {
     //Unauthenticated routes
     Route::get('/', 'AuthenticationController@index');
     Route::post('/', 'AuthenticationController@authenticate');
@@ -27,7 +27,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/reset', 'AuthenticationController@sendResetEmail');
     Route::get('/reset/{token}', 'AuthenticationController@showNewPasswordForm');
     Route::post('/reset/{token}', 'AuthenticationController@updateContactWithNewPassword');
-    Route::get('/logout', 'AuthenticationController@logout');
 });
 
 /**
@@ -92,3 +91,5 @@ Route::group(['prefix' => 'portal', 'middleware' => ['web','auth']], function ()
         Route::get("/{contracts}", "ContractController@downloadContractPdf");
     });
 });
+
+Route::get('/logout', 'AuthenticationController@logout');
