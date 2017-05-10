@@ -56,20 +56,44 @@ class LangJsGenerator
      */
     public function generate($target, $options)
     {
+        if ($options['source']) {
+            $this->sourcePath = $options['source'];
+        }
+
         $messages = $this->getMessages();
         $this->prepareTarget($target);
 
-        $template = $this->file->get(__DIR__.'/Templates/langjs_with_messages.js');
-        $langjs = $this->file->get(__DIR__.'/../../../../lib/lang.min.js');
+        if ($options['no-lib']) {
+            $template = $this->file->get(__DIR__.'/Templates/messages.js');
+        } else {
+            $template = $this->file->get(__DIR__.'/Templates/langjs_with_messages.js');
+            $langjs = $this->file->get(__DIR__.'/../../../../lib/lang.min.js');
+            $template = str_replace('\'{ langjs }\';', $langjs, $template);
+        }
 
         $template = str_replace('\'{ messages }\'', json_encode($messages), $template);
-        $template = str_replace('\'{ langjs }\';', $langjs, $template);
 
         if ($options['compress']) {
             $template = Minifier::minify($template);
         }
 
         return $this->file->put($target, $template);
+    }
+
+    /**
+     * Recursively sorts all messages by key.
+     *
+     * @param array $messages The messages to sort by key.
+     */
+    protected function sortMessages(&$messages)
+    {
+        if (is_array($messages)) {
+            ksort($messages);
+
+            foreach ($messages as $key => &$value) {
+                $this->sortMessages($value);
+            }
+        }
     }
 
     /**
@@ -102,9 +126,15 @@ class LangJsGenerator
             $key = substr($pathName, 0, -4);
             $key = str_replace('\\', '.', $key);
             $key = str_replace('/', '.', $key);
+            
+            if (starts_with($key, 'vendor')) {
+                $key = $this->getVendorKey($key);
+            }
 
             $messages[$key] = include $path . DIRECTORY_SEPARATOR . $pathName;
         }
+
+        $this->sortMessages($messages);
 
         return $messages;
     }
@@ -148,5 +178,13 @@ class LangJsGenerator
         }
 
         return true;
+    }
+    
+    private function getVendorKey($key)
+    {
+        $keyParts = explode('.', $key, 4);
+        unset($keyParts[0]);
+
+        return $keyParts[2] .'.'. $keyParts[1] . '::' . $keyParts[3];
     }
 }

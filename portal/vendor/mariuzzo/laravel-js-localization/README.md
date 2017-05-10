@@ -2,6 +2,7 @@
 
 > 🌐 Laravel Localization in JavaScript.
 
+![Laravel 5.4](https://img.shields.io/badge/Laravel-5.4-f4645f.svg)
 ![Laravel 5.3](https://img.shields.io/badge/Laravel-5.3-f4645f.svg)
 ![Laravel 5.2](https://img.shields.io/badge/Laravel-5.2-f4645f.svg)
 ![Laravel 5.1](https://img.shields.io/badge/Laravel-5.1-f4645f.svg)
@@ -16,10 +17,10 @@ This package convert all your localization messages from your Laravel app to Jav
 
 ### Features
 
- - Support Laravel 4.2.x, Laravel 5.0.x, Laravel 5.1.x, Laravel 5.2.x and Laravel 5.3.x.
- - Includes [Lang.js](https://github.com/rmariuzzo/lang.js) (a thin library highly inspired on Laravel's [`Translator`](https://laravel.com/api/5.3/Illuminate/Translation/Translator.html) class).
+ - Support Laravel 4.2, 5.0, 5.1, 5.2, 5.3 and 5.4.
+ - Includes [Lang.js](https://github.com/rmariuzzo/lang.js) (a thin library highly inspired on Laravel's [`Translator`](https://laravel.com/api/5.4/Illuminate/Translation/Translator.html) class).
  - Allow to specify desired lang files to be converted to JS.
- - Lang.js API is based on Laravel's [`Translator`](https://laravel.com/api/5.3/Illuminate/Translation/Translator.html) class. No need to learn a whole API.
+ - Lang.js API is based on Laravel's [`Translator`](https://laravel.com/api/5.4/Illuminate/Translation/Translator.html) class. No need to learn a whole API.
 
 ## Installation
 
@@ -35,7 +36,7 @@ Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class
 
 ## Usage
 
-The `Laravel-JS-Localization` package provides a command that generate the JavaScript version of all your messages found at: `app/lang` (Laravel 4) or `resources/lang` (Laravel 5) directory. The resulting JavaScript file will contains all your messages plus [Lang.js](https://github.com/rmariuzzo/lang.js) (a thin library highly inspired on Laravel's [`Translator`](https://laravel.com/api/5.3/Illuminate/Translation/Translator.html) class).
+The `Laravel-JS-Localization` package provides a command that generate the JavaScript version of all your messages found at: `app/lang` (Laravel 4) or `resources/lang` (Laravel 5) directory. The resulting JavaScript file will contains all your messages plus [Lang.js](https://github.com/rmariuzzo/lang.js) (a thin library highly inspired on Laravel's [`Translator`](https://laravel.com/api/5.4/Illuminate/Translation/Translator.html) class).
 
 ### Generating JS messages
 
@@ -53,6 +54,12 @@ php artisan lang:js public/assets/dist/lang.dist.js
 
 ```shell
 php artisan lang:js -c
+```
+
+### Specifying a custom source folder
+
+```shell
+php artisan lang:js public/assets/dist/lang.dist.js -s themes/default/lang
 ```
 
 ## Configuration
@@ -117,6 +124,24 @@ And use it like this:
 ```js
 elixir(function(mix) {
     mix.langjs();
+});
+```
+
+#### Using [Laravel's Mix](https://laravel.com/docs/5.4/mix) with Laravel 5.4+ (optional)
+
+Add "[webpack-shell-plugin](https://www.npmjs.com/package/webpack-shell-plugin)" to package.json's "devDependencies" section.
+
+Add the following to webpack.mix.js:
+
+```js
+const WebpackShellPlugin = require('webpack-shell-plugin');
+
+// Add shell command plugin configured to create JavaScript language file
+mix.webpackConfig({
+    plugins:
+    [
+        new WebpackShellPlugin({onBuildStart:['php artisan lang:js --quiet'], onBuildEnd:[]})
+    ]
 });
 ```
 
