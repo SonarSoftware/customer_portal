@@ -28,6 +28,7 @@ return [
     'payWithNewCard' => 'Pay with new credit card',
     'payWithPaypal' => 'Pay with PayPal',
     'payUsingExistingCard' => 'Pay using card ending :card',
+    'payUsingExistingBankAccount' => 'Pay using bank account :accountNumber',
     'invalidSubmission' => 'Invalid payment submission, please try again.',
     'paymentFailedTryAnother' => 'Payment failed, please try another payment method.',
     'makePaypalPayment' => 'Pay with PayPal',

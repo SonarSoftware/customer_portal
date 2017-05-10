@@ -113,7 +113,7 @@ class BillingController extends Controller
             default:
                 //If we've made it here, this is an existing payment method
                 try {
-                    $result = $this->payWithExistingCreditCard($request);
+                    $result = $this->payWithExistingPaymentMethod($request);
                 } catch (Exception $e) {
                     Log::error($e->getMessage());
                     return redirect()->back()->withErrors($e->getMessage())->withInput();
@@ -216,7 +216,7 @@ class BillingController extends Controller
      * @return mixed
      * @throws Exception
      */
-    private function payWithExistingCreditCard($request)
+    private function payWithExistingPaymentMethod($request)
     {
         
         try {
@@ -395,6 +395,13 @@ class BillingController extends Controller
             if ($validAccountMethod->type == "credit card")
             {
                 $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
+            }
+            else
+            {
+                if (config("customer_portal.enable_bank_payments") == true)
+                {
+                    $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
+                }
             }
         }
 
