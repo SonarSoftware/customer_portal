@@ -15,8 +15,7 @@ class PortalAuth
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->get('authenticated') !== true)
-        {
+        if ($request->session()->get('authenticated') !== true) {
             return redirect("/")->withError(trans("errors.notAuthenticated"));
         }
         return $next($request);
