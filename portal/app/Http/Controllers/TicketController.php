@@ -108,8 +108,7 @@ class TicketController extends Controller
         $tickets = $this->getTickets();
         foreach ($tickets as $ticket) {
             if ($ticket->getTicketID() == $ticketID) {
-                if ($ticket->getOpen() !== true)
-                {
+                if ($ticket->getOpen() !== true) {
                     return redirect()->back()->withErrors(trans("errors.ticketNotOpen"));
                 }
                 try {
