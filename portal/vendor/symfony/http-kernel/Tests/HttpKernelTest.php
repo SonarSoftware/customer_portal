@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\HttpKernel\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class HttpKernelTest extends \PHPUnit_Framework_TestCase
+class HttpKernelTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException
@@ -308,9 +309,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
     public function testInconsistentClientIpsOnMasterRequests()
     {
         $request = new Request();
-        $request->setTrustedProxies(array('1.1.1.1'));
+        $request->setTrustedProxies(array('1.1.1.1'), -1);
         $request->server->set('REMOTE_ADDR', '1.1.1.1');
-        $request->headers->set('FORWARDED', '2.2.2.2');
+        $request->headers->set('FORWARDED', 'for=2.2.2.2');
         $request->headers->set('X_FORWARDED_FOR', '3.3.3.3');
 
         $dispatcher = new EventDispatcher();
