@@ -39,6 +39,9 @@
                 </div>
             </div>
         @endif
+        <p>
+            {{trans("data_usage.monthlyGraphHeader")}}
+        </p>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{{trans("headers.dataUsage")}}</h3>

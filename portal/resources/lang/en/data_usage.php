@@ -12,4 +12,5 @@ return [
     'confirmTopOffAddition' => 'Add additional data and bill my account',
     'successfullyAddedUsage' => 'Your capacity for this billing period has been increased!',
     'youMustHaveACardOnFile' => 'You must have a credit card on file to purchase more data usage. Please add one.',
+    'monthlyGraphHeader' => 'This graph shows your total monthly usage from the previous twelve billing periods.',
 ];
