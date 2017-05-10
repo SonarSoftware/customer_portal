@@ -31,4 +31,13 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command("sonar:deleteexpiredtokens")->hourly()->withoutOverlapping();
     }
+    /**
+     * Register the Closure based commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        require base_path('routes/console.php');
+    }
 }
