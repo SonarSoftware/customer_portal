@@ -11,8 +11,7 @@ class FormattingServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton('Sonar.FormattingService', function ($app)
-        {
+        $this->app->singleton('Sonar.FormattingService', function ($app) {
             return new FormattingService();
         });
     }

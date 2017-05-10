@@ -15,8 +15,7 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->get('authenticated',false) === true)
-        {
+        if ($request->session()->get('authenticated', false) === true) {
             return $next($request);
         }
         return redirect()->action("AuthenticationController@index")->withErrors(trans("errors.notAuthenticated"));

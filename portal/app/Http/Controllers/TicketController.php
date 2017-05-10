@@ -23,7 +23,7 @@ class TicketController extends Controller
     public function index()
     {
         $tickets = $this->getTickets();
-        return view("pages.tickets.index",compact('tickets'));
+        return view("pages.tickets.index", compact('tickets'));
     }
 
     /**
@@ -35,15 +35,13 @@ class TicketController extends Controller
     {
         //We need to ensure that this ticket belongs to this user
         $tickets = $this->getTickets();
-        foreach ($tickets as $ticket)
-        {
-            if ($ticket->getTicketID() == $id)
-            {
+        foreach ($tickets as $ticket) {
+            if ($ticket->getTicketID() == $id) {
                 $accountTicketController = new AccountTicketController();
                 $replies = array_reverse($accountTicketController->getReplies($ticket, 1));
                 //Clear the cache here, because you may see a ticket with ISP responses but the list may not show it yet
                 $this->clearTicketCache();
-                return view("pages.tickets.show",compact('replies','ticket'));
+                return view("pages.tickets.show", compact('replies', 'ticket'));
             }
         }
 
@@ -57,8 +55,7 @@ class TicketController extends Controller
     public function create()
     {
         $emailAddress = get_user()->email_address;
-        if ($emailAddress == null)
-        {
+        if ($emailAddress == null) {
             return redirect()->action("ProfileController@show")->withErrors(trans("errors.mustSetEmailAddress"));
         }
         return view("pages.tickets.create");
@@ -82,9 +79,7 @@ class TicketController extends Controller
                 'priority' => Config::get("customer_portal.ticket_priority"),
                 'inbound_email_account_id' => Config::get("customer_portal.inbound_email_account_id"),
             ]);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->withErrors(trans("errors.failedToCreateTicket"))->withInput();
         }
@@ -92,15 +87,13 @@ class TicketController extends Controller
         $accountTicketController = new AccountTicketController();
         try {
             $accountTicketController->createTicket($ticket, get_user()->contact_name, get_user()->email_address);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->withErrors(trans("errors.failedToCreateTicket"))->withInput();
         }
 
         $this->clearTicketCache();
-        return redirect()->action("TicketController@index")->with('success',trans("tickets.ticketCreated"));
+        return redirect()->action("TicketController@index")->with('success', trans("tickets.ticketCreated"));
     }
 
     /**
@@ -113,15 +106,12 @@ class TicketController extends Controller
     {
         $accountTicketController = new AccountTicketController();
         $tickets = $this->getTickets();
-        foreach ($tickets as $ticket)
-        {
+        foreach ($tickets as $ticket) {
             if ($ticket->getTicketID() == $ticketID) {
                 try {
                     $accountTicketController->postReply($ticket, $request->input('reply'), get_user()->contact_name, get_user()->email_address);
-                    return redirect()->back()->with('success',trans("tickets.replyPosted"));
-                }
-                catch (Exception $e)
-                {
+                    return redirect()->back()->with('success', trans("tickets.replyPosted"));
+                } catch (Exception $e) {
                     return redirect()->back()->withErrors(trans("errors.failedToPostReply"));
                 }
             }
@@ -144,8 +134,7 @@ class TicketController extends Controller
      */
     private function getTickets()
     {
-        if (!Cache::tags("tickets")->has(get_user()->account_id))
-        {
+        if (!Cache::tags("tickets")->has(get_user()->account_id)) {
             $accountTicketController = new AccountTicketController();
             $tickets = $accountTicketController->getTickets(get_user()->account_id);
             Cache::tags("tickets")->put(get_user()->account_id, $tickets, 10);

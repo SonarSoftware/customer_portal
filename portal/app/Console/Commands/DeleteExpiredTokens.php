@@ -41,8 +41,8 @@ class DeleteExpiredTokens extends Command
     public function handle()
     {
         $deleteTokensOlderThan = Carbon::now("UTC")->subHours(24)->toDateTimeString();
-        CreationToken::where('updated_at','<=',$deleteTokensOlderThan)->delete();
-        PasswordReset::where('updated_at','<=',$deleteTokensOlderThan)->delete();
+        CreationToken::where('updated_at', '<=', $deleteTokensOlderThan)->delete();
+        PasswordReset::where('updated_at', '<=', $deleteTokensOlderThan)->delete();
         $this->info("Tokens deleted.");
     }
 }

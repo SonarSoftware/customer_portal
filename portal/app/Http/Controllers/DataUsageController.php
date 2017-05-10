@@ -31,15 +31,13 @@ class DataUsageController extends Controller
         $policyDetails = $this->getPolicyDetails();
         $currentUsage = $historicalUsage[0];
         $historicalUsage = json_encode($historicalUsage);
-        $calculatedCap = $policyDetails->policy_cap_in_gigabytes + round($policyDetails->rollover_available_in_bytes/1000**3,2) + round($policyDetails->purchased_top_off_total_in_bytes/1000**3,2);
-        if ($calculatedCap > 0)
-        {
+        $calculatedCap = $policyDetails->policy_cap_in_gigabytes + round($policyDetails->rollover_available_in_bytes/1000**3, 2) + round($policyDetails->purchased_top_off_total_in_bytes/1000**3, 2);
+        if ($calculatedCap > 0) {
             $usagePercentage = round(($currentUsage['billable'] / $calculatedCap) * 100);
-        }
-        else {
+        } else {
             $usagePercentage = 0;
         }
-        return view("pages.data_usage.index",compact('historicalUsage','policyDetails','currentUsage','calculatedCap','usagePercentage'));
+        return view("pages.data_usage.index", compact('historicalUsage', 'policyDetails', 'currentUsage', 'calculatedCap', 'usagePercentage'));
     }
 
     /**
@@ -49,8 +47,7 @@ class DataUsageController extends Controller
     public function showTopOff()
     {
         $policyDetails = $this->getPolicyDetails();
-        if ($policyDetails->allow_user_to_purchase_capacity !== true)
-        {
+        if ($policyDetails->allow_user_to_purchase_capacity !== true) {
             return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
         }
         //Disabling this for now, it will be implemented at a later date.
@@ -64,7 +61,7 @@ class DataUsageController extends Controller
 //            return view("pages.data_usage.purchase_top_off",compact('policyDetails','paymentMethods'));
 //        }
 
-        return view("pages.data_usage.add_top_off",compact('policyDetails'));
+        return view("pages.data_usage.add_top_off", compact('policyDetails'));
     }
 
     /**
@@ -79,21 +76,18 @@ class DataUsageController extends Controller
 //            return redirect()->back()->withErrors(trans("errors.topOffRequiresImmediatePayment"));
 //        }
         $policyDetails = $this->getPolicyDetails();
-        if ($policyDetails->allow_user_to_purchase_capacity !== true)
-        {
+        if ($policyDetails->allow_user_to_purchase_capacity !== true) {
             return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
         }
 
         try {
             $this->frameworkDataUsageController->purchaseTopOff(get_user()->account_id, $request->input('quantity'));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors(trans("errors.failedToAddDataUsage"));
         }
 
         $this->clearTopOffCache();
-        return redirect()->action("DataUsageController@index")->with('success',trans("data_usage.successfullyAddedUsage"));
+        return redirect()->action("DataUsageController@index")->with('success', trans("data_usage.successfullyAddedUsage"));
     }
 
     /**
@@ -102,9 +96,8 @@ class DataUsageController extends Controller
      */
     private function getPolicyDetails()
     {
-        if (!Cache::tags("usage_based_billing_policy_details")->has(get_user()->account_id))
-        {
-            $policyDetails = $this->frameworkDataUsageController->getUsageBasedBillingPolicyDetails(get_user()->account_id,3);
+        if (!Cache::tags("usage_based_billing_policy_details")->has(get_user()->account_id)) {
+            $policyDetails = $this->frameworkDataUsageController->getUsageBasedBillingPolicyDetails(get_user()->account_id, 3);
             Cache::tags("usage_based_billing_policy_details")->put(get_user()->account_id, $policyDetails, 10);
         }
         return Cache::tags("usage_based_billing_policy_details")->get(get_user()->account_id);
@@ -116,9 +109,8 @@ class DataUsageController extends Controller
      */
     private function getHistoricalUsage()
     {
-        if (!Cache::tags("historical_data_usage")->has(get_user()->account_id))
-        {
-            $dataUsage = $this->formatHistoricalUsageData(array_slice($this->frameworkDataUsageController->getAggregatedDataUsage(get_user()->account_id,3),0,12));
+        if (!Cache::tags("historical_data_usage")->has(get_user()->account_id)) {
+            $dataUsage = $this->formatHistoricalUsageData(array_slice($this->frameworkDataUsageController->getAggregatedDataUsage(get_user()->account_id, 3), 0, 12));
             Cache::tags("historical_data_usage")->put(get_user()->account_id, $dataUsage, 60);
         }
         return Cache::tags("historical_data_usage")->get(get_user()->account_id);
@@ -134,32 +126,24 @@ class DataUsageController extends Controller
         $graphData = [];
         $largestValue = 0;
         $dataToFormat = $dataUsage->granular->series;
-        foreach ($dataToFormat as $datumToFormat)
-        {
-            foreach ($datumToFormat->in as $timestamp => $value)
-            {
-                if (!array_key_exists($timestamp,$graphData))
-                {
+        foreach ($dataToFormat as $datumToFormat) {
+            foreach ($datumToFormat->in as $timestamp => $value) {
+                if (!array_key_exists($timestamp, $graphData)) {
                     $graphData[$timestamp] = [
                         "in" => $value,
                         "out" => 0
                     ];
-                }
-                else
-                {
+                } else {
                     $graphData[$timestamp]['in'] += $value;
                 }
 
-                if ($graphData[$timestamp]['in'] > $largestValue)
-                {
+                if ($graphData[$timestamp]['in'] > $largestValue) {
                     $largestValue = $graphData[$timestamp]['in'];
                 }
             }
-            foreach ($datumToFormat->out as $timestamp => $value)
-            {
+            foreach ($datumToFormat->out as $timestamp => $value) {
                 $graphData[$timestamp]['out'] += $value;
-                if ($graphData[$timestamp]['out'] > $largestValue)
-                {
+                if ($graphData[$timestamp]['out'] > $largestValue) {
                     $largestValue = $graphData[$timestamp]['out'];
                 }
             }
@@ -167,11 +151,10 @@ class DataUsageController extends Controller
 
         //We need to convert all the values to some SI-suffixed value based on the largest value so that the graph is not shown in bytes.
         $suffixAndPower = $this->returnSiSuffixAndPower($largestValue);
-        foreach ($graphData as $timestamp => $values)
-        {
+        foreach ($graphData as $timestamp => $values) {
             $graphData[$timestamp] = [
-                'in' => round($values['in'] / 1000**$suffixAndPower['power'],2),
-                'out' => round($values['out'] / 1000**$suffixAndPower['power'],2),
+                'in' => round($values['in'] / 1000**$suffixAndPower['power'], 2),
+                'out' => round($values['out'] / 1000**$suffixAndPower['power'], 2),
             ];
         }
 
@@ -189,13 +172,12 @@ class DataUsageController extends Controller
     private function formatHistoricalUsageData($historicalUsageData)
     {
         $formattedData = [];
-        foreach ($historicalUsageData as $datum)
-        {
-            $timestamp = new Carbon($datum->start_time,"UTC");
-            array_push($formattedData,[
+        foreach ($historicalUsageData as $datum) {
+            $timestamp = new Carbon($datum->start_time, "UTC");
+            array_push($formattedData, [
                 'timestamp' => $timestamp->toRfc3339String(),
-                'billable' => round(($datum->billable_in_bytes+$datum->billable_out_bytes)/1000**3,2),
-                'free' => round(($datum->free_in_bytes+$datum->free_out_bytes)/1000**3,2),
+                'billable' => round(($datum->billable_in_bytes+$datum->billable_out_bytes)/1000**3, 2),
+                'free' => round(($datum->free_in_bytes+$datum->free_out_bytes)/1000**3, 2),
             ]);
         }
         return $formattedData;
@@ -221,8 +203,7 @@ class DataUsageController extends Controller
             'Ybps', //yotta
         ];
 
-        while ($value > 1000 && array_key_exists($power,$suffixes))
-        {
+        while ($value > 1000 && array_key_exists($power, $suffixes)) {
             $value = $value / 1000;
             $power++;
         }

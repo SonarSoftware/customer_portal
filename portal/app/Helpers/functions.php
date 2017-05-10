@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Session;
  */
 function get_user()
 {
-    if (!Session::has("user"))
-    {
+    if (!Session::has("user")) {
         return null;
     }
 
@@ -23,7 +22,7 @@ function get_user()
  */
 function bytes_to_gigabytes($value)
 {
-    return round($value/1000**4,2) . "GB";
+    return round($value/1000**4, 2) . "GB";
 }
 
 /**
@@ -289,20 +288,17 @@ function countries()
  */
 function subdivisions($country)
 {
-    $subdivisions = json_decode(file_get_contents(resource_path("/json/subdivisions.json")),true);
-    if (!isset($subdivisions[$country]))
-    {
+    $subdivisions = json_decode(file_get_contents(resource_path("/json/subdivisions.json")), true);
+    if (!isset($subdivisions[$country])) {
         throw new InvalidArgumentException($country . " is not a valid country code.");
     }
 
-    if (in_array($country,["US","CA"]))
-    {
+    if (in_array($country, ["US","CA"])) {
         return $subdivisions[$country];
     }
 
     $cleaned = [];
-    foreach ($subdivisions[$country] as $subdivision)
-    {
+    foreach ($subdivisions[$country] as $subdivision) {
         $cleaned[$subdivision] = $subdivision;
     }
 
