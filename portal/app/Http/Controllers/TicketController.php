@@ -108,6 +108,10 @@ class TicketController extends Controller
         $tickets = $this->getTickets();
         foreach ($tickets as $ticket) {
             if ($ticket->getTicketID() == $ticketID) {
+                if ($ticket->getOpen() !== true)
+                {
+                    return redirect()->back()->withErrors(trans("errors.ticketNotOpen"));
+                }
                 try {
                     $accountTicketController->postReply($ticket, $request->input('reply'), get_user()->contact_name, get_user()->email_address);
                     return redirect()->back()->with('success', trans("tickets.replyPosted"));

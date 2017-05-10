@@ -40,4 +40,5 @@ return [
     'topOffRequiresImmediatePayment' => 'Purchasing additional capacity requires immediate payment.',
     'failedToAddDataUsage' => 'Failed to add capacity to your account. Please try again later.',
     'failedToLookupSubdivision' => 'We weren\'t able to look up the states for that country. Please refresh and try again.',
+    'ticketNotOpen' => 'This ticket is currently closed, and so no reply can be posted. Please create a new ticket.',
 ];
