@@ -19,16 +19,14 @@ class SubdivisionController extends Controller
     {
         try {
             $subdivisions = subdivisions($country);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return Response::json([
                 'error' => $e->getMessage(),
-            ],422);
+            ], 422);
         }
 
         return Response::json([
             'subdivisions' => $subdivisions,
-        ],200);
+        ], 200);
     }
 }

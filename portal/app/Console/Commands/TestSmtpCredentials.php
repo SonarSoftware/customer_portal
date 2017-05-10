@@ -40,23 +40,20 @@ class TestSmtpCredentials extends Command
     public function handle()
     {
         $email = $this->argument('email');
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
-        {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $this->error($email . " is not a valid email address.");
             return;
         }
 
         try {
-            Mail::send('emails.test', [], function($m) use ($email) {
-                $m->from(Config::get("customer_portal.from_address"),Config::get("customer_portal.from_name"))
+            Mail::send('emails.test', [], function ($m) use ($email) {
+                $m->from(Config::get("customer_portal.from_address"), Config::get("customer_portal.from_name"))
                     ->to($email, $email)
                     ->subject('Sonar customer portal test email!');
             });
 
             $this->info("Test email to $email sent.");
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error("Test email failed with the following: " . $e->getMessage());
         }
     }

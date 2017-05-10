@@ -25,14 +25,11 @@ class FormattingService
      */
     public function date($value, $convertFromUtc = false)
     {
-        if ($convertFromUtc === true)
-        {
-            $carbon = new Carbon($value,"UTC");
+        if ($convertFromUtc === true) {
+            $carbon = new Carbon($value, "UTC");
             $carbon->tz(Config::get("app.timezone"));
-        }
-        else
-        {
-            $carbon = new Carbon($value,Config::get("app.timezone"));
+        } else {
+            $carbon = new Carbon($value, Config::get("app.timezone"));
         }
 
         $formattedMonth = trans("months." . $carbon->month);
@@ -47,14 +44,11 @@ class FormattingService
      */
     public function datetime($value, $convertFromUtc = false)
     {
-        if ($convertFromUtc === true)
-        {
-            $carbon = new Carbon($value,"UTC");
+        if ($convertFromUtc === true) {
+            $carbon = new Carbon($value, "UTC");
             $carbon->tz(Config::get("app.timezone"));
-        }
-        else
-        {
-            $carbon = new Carbon($value,Config::get("app.timezone"));
+        } else {
+            $carbon = new Carbon($value, Config::get("app.timezone"));
         }
 
         $formattedMonth = trans("months." . $carbon->month);

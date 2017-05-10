@@ -29,8 +29,7 @@ class PayPalController extends Controller
      */
     public function __construct()
     {
-        if (Config::get("customer_portal.paypal_enabled") !== true)
-        {
+        if (Config::get("customer_portal.paypal_enabled") !== true) {
             throw new RuntimeException("PayPal is not enabled in the customer portal configuration.");
         }
 
@@ -59,7 +58,7 @@ class PayPalController extends Controller
      */
     public function generateApprovalLink($amountToPay)
     {
-        $amountToPay = number_format($amountToPay,2,".","");
+        $amountToPay = number_format($amountToPay, 2, ".", "");
 
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
@@ -70,15 +69,15 @@ class PayPalController extends Controller
         
         $transaction = new Transaction();
         $transaction->setAmount($amount)
-            ->setDescription(trans("billing.paymentToCompany",['company_name' => Config::get("customer_portal.company_name")]))
+            ->setDescription(trans("billing.paymentToCompany", ['company_name' => Config::get("customer_portal.company_name")]))
             ->setInvoiceNumber(uniqid(true)); //This is not a payment on a specific invoice, so we'll just generate a unique string, which is what PayPal requires
 
         $tempToken = new PaypalTemporaryToken(['account_id' => get_user()->account_id, 'token' => uniqid(true)]);
         $tempToken->save();
 
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl(action("PayPalController@completePayment",['temporary_token' => $tempToken->token]))
-            ->setCancelUrl(action("PayPalController@cancelPayment",['temporary_token' => $tempToken->token]));
+        $redirectUrls->setReturnUrl(action("PayPalController@completePayment", ['temporary_token' => $tempToken->token]))
+            ->setCancelUrl(action("PayPalController@cancelPayment", ['temporary_token' => $tempToken->token]));
 
         $payment = new Payment();
         $payment->setIntent("sale")
@@ -99,18 +98,16 @@ class PayPalController extends Controller
      */
     public function completePayment(Request $request, $temporaryToken)
     {
-        $token = PaypalTemporaryToken::where('token','=',$temporaryToken)->where('account_id','=',get_user()->account_id)->first();
-        if ($token === null)
-        {
+        $token = PaypalTemporaryToken::where('token', '=', $temporaryToken)->where('account_id', '=', get_user()->account_id)->first();
+        if ($token === null) {
             $error = trans("errors.paypalTokenInvalid");
-            return view("pages.paypal.error",compact('error'));
+            return view("pages.paypal.error", compact('error'));
         }
         $token->delete();
 
-        if ($request->input('paymentId') === null || $request->input('PayerID') === null)
-        {
+        if ($request->input('paymentId') === null || $request->input('PayerID') === null) {
             $error = trans("errors.missingPaypalInformation");
-            return view("pages.paypal.error",compact('error'));
+            return view("pages.paypal.error", compact('error'));
         }
 
         $payment = Payment::get($request->input('paymentId'), $this->apiContext);
@@ -119,18 +116,15 @@ class PayPalController extends Controller
 
         try {
             $payment->execute($execution, $this->apiContext);
-            $payment = Payment::get($request->input('paymentId'),$this->apiContext);
-        }
-        catch (Exception $e)
-        {
+            $payment = Payment::get($request->input('paymentId'), $this->apiContext);
+        } catch (Exception $e) {
             $error = trans("errors.paypalGenericError");
-            return view("pages.paypal.error",compact('error'));
+            return view("pages.paypal.error", compact('error'));
         }
         
-        if (strtolower($payment->getState() != 'approved'))
-        {
+        if (strtolower($payment->getState() != 'approved')) {
             $error = trans("errors.paymentNotApproved");
-            return view("pages.paypal.error",compact('error'));
+            return view("pages.paypal.error", compact('error'));
         }
 
         //POST the payment back into Sonar for storage
@@ -138,11 +132,9 @@ class PayPalController extends Controller
             $accountBillingController = new AccountBillingController();
             $transaction = $payment->getTransactions()[0];
             $accountBillingController->storePayPalPayment(get_user()->account_id, $transaction->related_resources[0]->sale->amount->total, $transaction->related_resources[0]->sale->id);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $error = trans("errors.failedToApplyPaypalPayment");
-            return view("pages.paypal.error",compact('error'));
+            return view("pages.paypal.error", compact('error'));
         }
 
         $billingController = new BillingController;
@@ -157,9 +149,8 @@ class PayPalController extends Controller
      */
     public function cancelPayment($temporaryToken)
     {
-        $token = PaypalTemporaryToken::where('token','=',$temporaryToken)->where('account_id','=',get_user()->account_id)->first();
-        if ($token !== null)
-        {
+        $token = PaypalTemporaryToken::where('token', '=', $temporaryToken)->where('account_id', '=', get_user()->account_id)->first();
+        if ($token !== null) {
             $token->delete();
         }
 
