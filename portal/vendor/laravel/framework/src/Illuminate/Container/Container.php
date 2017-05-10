@@ -576,6 +576,8 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function resolve($abstract, $parameters = [])
     {
+        $this->with[] = $parameters;
+
         $abstract = $this->getAlias($abstract);
 
         $needsContextualBuild = ! empty($parameters) || ! is_null(
@@ -588,8 +590,6 @@ class Container implements ArrayAccess, ContainerContract
         if (isset($this->instances[$abstract]) && ! $needsContextualBuild) {
             return $this->instances[$abstract];
         }
-
-        $this->with[] = $parameters;
 
         $concrete = $this->getConcrete($abstract);
 
