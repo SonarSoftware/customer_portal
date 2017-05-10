@@ -42,8 +42,7 @@ class TestPayPalCredentials extends Command
      */
     public function handle()
     {
-        if (Config::get("customer_portal.paypal_enabled") !== true)
-        {
+        if (Config::get("customer_portal.paypal_enabled") !== true) {
             $this->error("PayPal is not enabled in the customer portal configuration.");
             return;
         }
@@ -65,9 +64,7 @@ class TestPayPalCredentials extends Command
 
         try {
             Webhook::getAll($apiContext);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error("Credentials failed! Please make sure this is a LIVE account and not a SANDBOX account and try again.");
             $this->error("Specific error was: {$e->getMessage()}");
             return;

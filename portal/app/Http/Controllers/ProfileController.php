@@ -32,15 +32,13 @@ class ProfileController extends Controller
             PhoneNumber::FAX => null
         ];
         
-        foreach ($contact->getPhoneNumbers() as $phoneNumber)
-        {
-            if ($phoneNumber != null)
-            {
+        foreach ($contact->getPhoneNumbers() as $phoneNumber) {
+            if ($phoneNumber != null) {
                 $phoneNumbers[$phoneNumber->getType()] = $phoneNumber->getNumber();
             }
         }
 
-        return view("pages.profile.show",compact('user','contact','phoneNumbers'));
+        return view("pages.profile.show", compact('user', 'contact', 'phoneNumbers'));
     }
 
     /**
@@ -58,38 +56,34 @@ class ProfileController extends Controller
 
         try {
             $work = $contact->getPhoneNumber(PhoneNumber::WORK);
-            $work->setNumber(preg_replace("/[^0-9]/","",$request->input('work_phone')));
+            $work->setNumber(preg_replace("/[^0-9]/", "", $request->input('work_phone')));
             $contact->setPhoneNumber($work);
 
             $mobile = $contact->getPhoneNumber(PhoneNumber::MOBILE);
-            $mobile->setNumber(preg_replace("/[^0-9]/","",$request->input('mobile_phone')));
+            $mobile->setNumber(preg_replace("/[^0-9]/", "", $request->input('mobile_phone')));
             $contact->setPhoneNumber($mobile);
 
             $home = $contact->getPhoneNumber(PhoneNumber::HOME);
-            $home->setNumber(preg_replace("/[^0-9]/","",$request->input('home_phone')));
+            $home->setNumber(preg_replace("/[^0-9]/", "", $request->input('home_phone')));
             $contact->setPhoneNumber($home);
 
             $fax = $contact->getPhoneNumber(PhoneNumber::FAX);
-            $fax->setNumber(preg_replace("/[^0-9]/","",$request->input('fax')));
+            $fax->setNumber(preg_replace("/[^0-9]/", "", $request->input('fax')));
             $contact->setPhoneNumber($fax);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors($e->getMessage());
         }
         
         $contactController = new ContactController();
         try {
             $contactController->updateContact($contact);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->withErrors(trans("errors.failedToUpdateProfile"));
         }
 
         $this->clearProfileCache();
-        return redirect()->action("ProfileController@show")->with('success',trans("profile.profileUpdated"));
+        return redirect()->action("ProfileController@show")->with('success', trans("profile.profileUpdated"));
     }
 
     /**
@@ -103,9 +97,7 @@ class ProfileController extends Controller
         $accountAuthenticationController = new AccountAuthenticationController();
         try {
             $accountAuthenticationController->authenticateUser(get_user()->username, $request->input('current_password'));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors(trans("errors.currentPasswordInvalid"));
         }
 
@@ -113,13 +105,11 @@ class ProfileController extends Controller
         $contactController = new ContactController();
         try {
             $contactController->updateContactPassword($contact, $request->input('new_password'));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors($e->getMessage());
         }
 
-        return redirect()->action("ProfileController@show")->with('success',trans("profile.passwordUpdated"));
+        return redirect()->action("ProfileController@show")->with('success', trans("profile.passwordUpdated"));
     }
 
     /**
@@ -137,8 +127,7 @@ class ProfileController extends Controller
      */
     private function getContact()
     {
-        if (!Cache::tags("profile.details")->has(get_user()->contact_id))
-        {
+        if (!Cache::tags("profile.details")->has(get_user()->contact_id)) {
             $contactController = new ContactController();
             $contact = $contactController->getContact(get_user()->contact_id, get_user()->account_id);
             Cache::tags("profile.details")->put(get_user()->contact_id, $contact, 10);

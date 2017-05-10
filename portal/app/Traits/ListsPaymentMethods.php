@@ -14,8 +14,7 @@ trait ListsPaymentMethods
     private function getPaymentMethods()
     {
         $accountBillingController = new AccountBillingController();
-        if (!Cache::tags("billing.payment_methods")->has(get_user()->account_id))
-        {
+        if (!Cache::tags("billing.payment_methods")->has(get_user()->account_id)) {
             $validAccountMethods = $accountBillingController->getValidCreditCards(get_user()->account_id);
             Cache::tags("billing.payment_methods")->put(get_user()->account_id, $validAccountMethods, 10);
         }
