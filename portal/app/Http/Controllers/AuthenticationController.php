@@ -110,12 +110,12 @@ class AuthenticationController extends Controller
 
         try {
             Mail::send('emails.account_create', [
-                'portal_url' => Config::get("app.url"),
-                'creation_link' => Config::get("app.url") . "/create/" . $creationToken->token,
+                'portal_url' => config("app.url"),
+                'creation_link' => config("app.url") . "/create/" . $creationToken->token,
             ], function ($m) use ($result) {
-                $m->from(Config::get("customer_portal.from_address"), Config::get("customer_portal.from_name"));
+                $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address)
-                    ->subject(trans("emails.createAccount", ['companyName' => Config::get("customer_portal.company_name")]));
+                    ->subject(trans("emails.createAccount", ['companyName' => config("customer_portal.company_name")]));
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -227,13 +227,13 @@ class AuthenticationController extends Controller
 
         try {
             Mail::send('emails.password_reset', [
-                'portal_url' => Config::get("app.url"),
-                'reset_link' => Config::get("app.url") . "/reset/" . $passwordReset->token,
+                'portal_url' => config("app.url"),
+                'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
                 'username' => $result->username,
             ], function ($m) use ($result) {
-                $m->from(Config::get("customer_portal.from_address"), Config::get("customer_portal.from_name"));
+                $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address);
-                $m->subject(trans("emails.passwordReset", ['companyName' => Config::get("customer_portal.company_name")]));
+                $m->subject(trans("emails.passwordReset", ['companyName' => config("customer_portal.company_name")]));
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());

@@ -74,10 +74,10 @@ class TicketController extends Controller
                 'email_address' => get_user()->email_address,
                 'subject' => $request->input('subject'),
                 'description' => $request->input('description'),
-                'ticket_group_id' => Config::get("customer_portal.ticket_group_id"),
-                'user_id' => Config::get("customer_portal.ticket_user_id"),
-                'priority' => Config::get("customer_portal.ticket_priority"),
-                'inbound_email_account_id' => Config::get("customer_portal.inbound_email_account_id"),
+                'ticket_group_id' => config("customer_portal.ticket_group_id"),
+                'user_id' => config("customer_portal.ticket_user_id"),
+                'priority' => config("customer_portal.ticket_priority"),
+                'inbound_email_account_id' => config("customer_portal.inbound_email_account_id"),
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
