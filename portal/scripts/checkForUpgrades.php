@@ -36,6 +36,8 @@ if (version_compare($currentVersion, $latestVersion) === -1)
 
     echo "Files copied, performing upgrade steps.\n";
 
+    exec("/bin/rm -f /usr/share/portal/bootstrap/cache/*");
+
     exec("/usr/bin/php /usr/share/portal/artisan up");
     exec("/usr/bin/php /usr/share/portal/artisan migrate --force");
     exec("/usr/bin/php /usr/share/portal/artisan cache:clear");
