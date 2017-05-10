@@ -94,6 +94,7 @@ class AccountBillingController
     }
 
     /**
+     * Deprecated: See 'getValidPaymentMethods'
      * Get a list of unexpired credit cards on the account (see https://sonar.software/apidoc/index.html#api-Account_Payment_Methods-GetAccountPaymentMethods). This does not return CreditCard objects, but just the raw API return. This is because the credit card objects
      * don't really match up - we can't access the credit card number, for example.
      * @param $accountID
@@ -111,14 +112,46 @@ class AccountBillingController
                 continue;
             }
             try {
-                 if (\Inacho\CreditCard::validDate($datum->expiration_year, sprintf("%02d", $datum->expiration_month)) !== true)
-                 {
-                     continue;
-                 }
+                if (\Inacho\CreditCard::validDate($datum->expiration_year, sprintf("%02d", $datum->expiration_month)) !== true)
+                {
+                    continue;
+                }
             }
             catch (Exception $e)
             {
                 continue;
+            }
+
+            array_push($return,$datum);
+        }
+        return $return;
+    }
+
+    /**
+     * Get a list of unexpired credit cards on the account (see https://sonar.software/apidoc/index.html#api-Account_Payment_Methods-GetAccountPaymentMethods). This does not return CreditCard objects, but just the raw API return. This is because the credit card objects
+     * don't really match up - we can't access the credit card number, for example. Same thing with bank accounts.
+     * @throws ApiException
+     * @param $accountID
+     * @return array
+     */
+    public function getValidPaymentMethods($accountID)
+    {
+        $return = [];
+        $result = $this->httpHelper->get("accounts/" . intval($accountID) . "/payment_methods");
+        foreach ($result as $datum)
+        {
+            if ($datum->type == "credit card")
+            {
+                try {
+                    if (\Inacho\CreditCard::validDate($datum->expiration_year, sprintf("%02d", $datum->expiration_month)) !== true)
+                    {
+                        continue;
+                    }
+                }
+                catch (Exception $e)
+                {
+                    continue;
+                }
             }
 
             array_push($return,$datum);
