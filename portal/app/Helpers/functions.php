@@ -31,7 +31,7 @@ function bytes_to_gigabytes($value)
  */
 function countries()
 {
-    return 
+    return
     [
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
