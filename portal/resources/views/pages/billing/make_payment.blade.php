@@ -32,29 +32,29 @@
                             <label for="name">{{trans("billing.expirationDate")}}</label>
                             {!! Form::tel("expirationDate",null,['id' => 'expirationDate', 'class' => 'form-control', 'placeholder' => trans("billing.expirationDate")]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group new_card">
                             <label for="country">{{trans("billing.country")}}</label>
-                            {!! Form::select("country",countries(),\Illuminate\Support\Facades\Config::get("customer_portal.country"),['id' => 'country', 'class' => 'form-control']) !!}
+                            {!! Form::select("country",countries(),\Illuminate\Support\Facades\Config::get("customer_portal.country"),['id' => 'country', 'class' => 'form-control', 'required' => true]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group new_card">
                             <label for="line1">{{trans("billing.line1")}}</label>
-                            {!! Form::text("line1",null,['id' => 'line1', 'class' => 'form-control', 'placeholder' => trans("billing.line1")]) !!}
+                            {!! Form::text("line1",null,['id' => 'line1', 'class' => 'form-control', 'placeholder' => trans("billing.line1"), 'required' => true]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group new_card">
                             <label for="city">{{trans("billing.city")}}</label>
-                            {!! Form::text("city",null,['id' => 'city', 'class' => 'form-control', 'placeholder' => trans("billing.city")]) !!}
+                            {!! Form::text("city",null,['id' => 'city', 'class' => 'form-control', 'placeholder' => trans("billing.city"), 'required' => true]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group new_card">
                             <label for="state">{{trans("billing.state")}}</label>
-                            {!! Form::select("state",subdivisions(\Illuminate\Support\Facades\Config::get("customer_portal.country")),\Illuminate\Support\Facades\Config::get("customer_portal.state"),['id' => 'state', 'class' => 'form-control']) !!}
+                            {!! Form::select("state",subdivisions(\Illuminate\Support\Facades\Config::get("customer_portal.country")),\Illuminate\Support\Facades\Config::get("customer_portal.state"),['id' => 'state', 'class' => 'form-control', 'required' => true]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group new_card">
                             <label for="zip">{{trans("billing.zip")}}</label>
-                            {!! Form::text("zip",null,['id' => 'zip', 'class' => 'form-control', 'placeholder' => trans("billing.zip")]) !!}
+                            {!! Form::text("zip",null,['id' => 'zip', 'class' => 'form-control', 'placeholder' => trans("billing.zip"), 'required' => true]) !!}
                         </div>
                         <div class="form-group">
                             <label for="amount">{{trans("billing.amountToPay")}}</label>
-                            {!! Form::number("amount",number_format($billingDetails->balance_due,2,".",""),['id' => 'amount', 'class' => 'form-control', 'placeholder' => trans("billing.amountToPay"), 'steps' => 'any']) !!}
+                            {!! Form::number("amount",number_format($billingDetails->balance_due,2,".",""),['id' => 'amount', 'class' => 'form-control', 'placeholder' => trans("billing.amountToPay"), 'steps' => 'any', 'required' => true]) !!}
                         </div>
                         <div class="form-group new_card">
                             <label>

@@ -25,16 +25,16 @@ class CreditCardPaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            'cc-number' => 'required_if:payment_method,new_card|string', //this can contain spaces
-            'name' => 'required_if:payment_method,new_card|string',
-            'expirationDate' => 'required_if:payment_method,new_card|string', //this has the / separator in it
+            'cc-number' => 'required_if:payment_method,new_card', //this can contain spaces
+            'name' => 'required_if:payment_method,new_card',
+            'expirationDate' => 'required_if:payment_method,new_card', //this has the / separator in it
             'makeAuto' => 'boolean',
             'amount' => 'required|numeric|min:0.01',
-            'country' => 'required|string',
-            'line1' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zip' => 'required|string',
+            'country' => 'required_if:payment_method,new_card',
+            'line1' => 'required_if:payment_method,new_card',
+            'city' => 'required_if:payment_method,new_card',
+            'state' => 'required_if:payment_method,new_card',
+            'zip' => 'required_if:payment_method,new_card',
         ];
     }
 }
