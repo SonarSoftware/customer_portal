@@ -186,6 +186,7 @@
                                         </TR>
                                     @else
                                         @foreach($paymentMethods as $paymentMethod)
+                                            @if($paymentMethod->type == "credit card")
                                             <TR>
                                                 <TD>***{{$paymentMethod->identifier}}</TD>
                                                 <TD>{{$paymentMethod->expiration_month}}/{{$paymentMethod->expiration_year}}</TD>
@@ -215,6 +216,7 @@
                                                     {!! Form::close() !!}
                                                 </TD>
                                             </TR>
+                                            @endif
                                         @endforeach
                                     @endif
                                 </tbody>
@@ -240,13 +242,13 @@
                                     <tbody>
                                     @if(count($paymentMethods) === 0)
                                         <TR>
-                                            <TD colspan="4">{{trans("billing.noBankAccounts")}}</TD>
+                                            <TD colspan="3">{{trans("billing.noBankAccounts")}}</TD>
                                         </TR>
                                     @else
                                         @foreach($paymentMethods as $paymentMethod)
+                                            @if ($paymentMethod->type == "echeck" || $paymentMethod->type == "ach")
                                             <TR>
                                                 <TD>***{{$paymentMethod->identifier}}</TD>
-                                                <TD>{{$paymentMethod->expiration_month}}/{{$paymentMethod->expiration_year}}</TD>
                                                 <TD>
                                                     @if($paymentMethod->auto == 1)
                                                         {!! Form::open(['action' => ["BillingController@toggleAutoPay",$paymentMethod->id],'id' => 'deletePaymentMethodForm', 'method' => 'patch']) !!}
@@ -273,6 +275,7 @@
                                                     {!! Form::close() !!}
                                                 </TD>
                                             </TR>
+                                            @endif
                                         @endforeach
                                     @endif
                                     </tbody>

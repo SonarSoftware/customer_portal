@@ -392,7 +392,10 @@ class BillingController extends Controller
         $paymentMethods = [];
         $validAccountMethods = $this->getPaymentMethods();
         foreach ($validAccountMethods as $validAccountMethod) {
-            $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
+            if ($validAccountMethod->type == "credit card")
+            {
+                $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
+            }
         }
 
         if (config("customer_portal.paypal_enabled") === true) {

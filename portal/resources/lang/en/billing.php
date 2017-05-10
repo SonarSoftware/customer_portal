@@ -53,4 +53,6 @@ return [
     'zip' => 'ZIP/Postal Code',
     'country' => 'Country',
     'noBankAccounts' => 'No bank accounts on file.',
+    'accountNumber' => 'Account Number',
+    'addNewBankAccount' => 'Add new bank account',
 ];
