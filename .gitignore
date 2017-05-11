@@ -7,3 +7,4 @@ portal/storage/database.sqlite
 syntax: regexp
 ^vendor/
 .hg/*
+portal/vendor/sonarsoftware/customer_portal_framework/.hg/thgstatus
