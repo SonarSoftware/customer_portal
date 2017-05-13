@@ -477,7 +477,7 @@ class BillingController extends Controller
      * @param $request
      * @return CreditCard
      */
-    private function createCreditCardObjectFromRequest(CreateCreditCardRequest $request)
+    private function createCreditCardObjectFromRequest($request)
     {
         $card = CreditCardValidator::validCreditCard(trim(str_replace(" ", "", $request->input('cc-number'))));
         if ($card['valid'] !== true) {
