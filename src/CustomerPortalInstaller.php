@@ -149,7 +149,7 @@ class CustomerPortalInstaller
         $this->climate->info()->inline("Performing basic Laravel setup... ");
         $this->executeCommand("/usr/bin/touch /usr/share/portal/storage/database.sqlite");
         $this->executeCommand("/bin/chown www-data:www-data /usr/share/portal/storage/database.sqlite");
-        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan key:generate");
+        $this->executeCommand("/usr/bin/php /usr/share/portal/artisan key:generate --force");
         $this->executeCommand("/usr/bin/php /usr/share/portal/artisan migrate --force");
         $this->executeCommand("/usr/bin/php /usr/share/portal/artisan route:cache");
         $this->climate->info("Success!");
