@@ -73,11 +73,11 @@
                     @if(Config::get("customer_portal.show_detailed_transactions") == true)
                         <li role="presentation" class="active"><a href="#transactions" aria-controls="transactions" role="tab" data-toggle="tab">{{trans("headers.recentTransactions")}}</a></li>
                         <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
-                        <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                        @if(config("customer_portal.enable_credit_card_payments") == true) <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li> @endif
                         @if(config("customer_portal.enable_bank_payments") == true) <li role="presentation"><a href="#bankAccounts" aria-controls="bankAccounts" role="tab" data-toggle="tab">{{trans("headers.bankAccounts")}}</a></li> @endif
                     @else
                         <li role="presentation" class="active"><a href="#invoices" aria-controls="invoices" role="tab" data-toggle="tab">{{trans("headers.invoices")}}</a></li>
-                        <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li>
+                        @if(config("customer_portal.enable_credit_card_payments") == true) <li role="presentation"><a href="#creditCards" aria-controls="creditCards" role="tab" data-toggle="tab">{{trans("headers.creditCards")}}</a></li> @endif
                         @if(config("customer_portal.enable_bank_payments") == true) <li role="presentation"><a href="#bankAccounts" aria-controls="bankAccounts" role="tab" data-toggle="tab">{{trans("headers.bankAccounts")}}</a></li> @endif
                     @endif
                 </ul>

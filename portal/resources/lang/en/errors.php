@@ -42,4 +42,6 @@ return [
     'failedToLookupSubdivision' => 'We weren\'t able to look up the states for that country. Please refresh and try again.',
     'invalidPaymentMethodType' => 'Invalid payment method type.',
     'failedToCreateBankAccount' => 'Failed to add bank account. Please check the information and try again.',
+    'creditCardPaymentsDisabled' => 'Credit card payments are not currently allowed.',
+    'addAPaymentMethod' => 'Please add a payment method to your account to make a payment.',
 ];

@@ -83,6 +83,10 @@ class BillingController extends Controller
     {
         $billingDetails = $this->getAccountBillingDetails();
         $paymentMethods = $this->generatePaymentMethodListForPaymentPage();
+        if (count($paymentMethods) == 0)
+        {
+            return redirect()->back()->withErrors(trans("errors.addAPaymentMethod"));
+        }
 
         return view('pages.billing.make_payment', compact('billingDetails', 'paymentMethods'));
     }
@@ -204,6 +208,11 @@ class BillingController extends Controller
      */
     public function storeCard(CreateCreditCardRequest $request)
     {
+        if (config("customer_portal.enable_credit_card_payments") == false)
+        {
+            throw new InvalidArgumentException(trans("errors.creditCardPaymentsDisabled"));
+        }
+
         try {
             $card = $this->createCreditCardObjectFromRequest($request);
         } catch (Exception $e) {
@@ -285,6 +294,11 @@ class BillingController extends Controller
      */
     private function payWithNewCreditCard(CreditCardPaymentRequest $request)
     {
+        if (config("customer_portal.enable_credit_card_payments") == false)
+        {
+            throw new InvalidArgumentException(trans("errors.creditCardPaymentsDisabled"));
+        }
+
         try {
             $creditCard = $this->createCreditCardObjectFromRequest($request);
         } catch (Exception $e) {
@@ -436,17 +450,15 @@ class BillingController extends Controller
     {
         $paymentMethods = [];
         $validAccountMethods = $this->getPaymentMethods();
-        foreach ($validAccountMethods as $validAccountMethod) {
-            if ($validAccountMethod->type == "credit card")
+        foreach ($validAccountMethods as $validAccountMethod)
+        {
+            if ($validAccountMethod->type == "credit card" && config("customer_portal.enable_credit_card_payments") == true)
             {
                 $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
             }
-            else
+            elseif (config("customer_portal.enable_bank_payments") == true && $validAccountMethod->type != "credit card")
             {
-                if (config("customer_portal.enable_bank_payments") == true)
-                {
-                    $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
-                }
+                $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
             }
         }
 
@@ -454,7 +466,10 @@ class BillingController extends Controller
             $paymentMethods['paypal'] = trans("billing.payWithPaypal");
         }
 
-        $paymentMethods['new_card'] = trans("billing.payWithNewCard");
+        if (config("customer_portal.enable_credit_card_payments") == true)
+        {
+            $paymentMethods['new_card'] = trans("billing.payWithNewCard");
+        }
 
         $paymentMethods = array_reverse($paymentMethods, true);
 
