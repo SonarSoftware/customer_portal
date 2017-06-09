@@ -128,7 +128,14 @@ class BillingController extends Controller
         }
 
         $this->clearBillingCache();
-        return view("pages.billing.payment_success", compact('result'));
+        if ($result->success == true)
+        {
+            return view("pages.billing.payment_success", compact('result'));
+        }
+        else
+        {
+            return redirect()->back()->withErrors(trans("errors.paymentFailed"));
+        }
     }
 
     /**

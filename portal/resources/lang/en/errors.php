@@ -4,7 +4,7 @@ return [
     'loginFailed' => 'Invalid username or password.',
     'invalidCreditCardNumber' => 'That credit card number is invalid.',
     'invalidExpirationDate' => 'That credit card has expired.',
-    'paymentFailed' => 'Payment failed. Please check the card and try again.',
+    'paymentFailed' => 'Payment failed. Please check your details and try again.',
     'failedToUpdateProfile' => 'Failed to update profile. Please try again later.',
     'currentPasswordInvalid' => 'Current password is incorrect.',
     'failedToDownloadInvoice' => 'Failed to download invoice. Please try again later.',
