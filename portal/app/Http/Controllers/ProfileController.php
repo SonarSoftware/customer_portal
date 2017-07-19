@@ -79,11 +79,11 @@ class ProfileController extends Controller
             $contactController->updateContact($contact);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.failedToUpdateProfile"));
+            return redirect()->back()->withErrors(utrans("errors.failedToUpdateProfile"));
         }
 
         $this->clearProfileCache();
-        return redirect()->action("ProfileController@show")->with('success', trans("profile.profileUpdated"));
+        return redirect()->action("ProfileController@show")->with('success', utrans("profile.profileUpdated"));
     }
 
     /**
@@ -98,7 +98,7 @@ class ProfileController extends Controller
         try {
             $accountAuthenticationController->authenticateUser(get_user()->username, $request->input('current_password'));
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.currentPasswordInvalid"));
+            return redirect()->back()->withErrors(utrans("errors.currentPasswordInvalid"));
         }
 
         $contact = $this->getContact();
@@ -109,7 +109,7 @@ class ProfileController extends Controller
             return redirect()->back()->withErrors($e->getMessage());
         }
 
-        return redirect()->action("ProfileController@show")->with('success', trans("profile.passwordUpdated"));
+        return redirect()->action("ProfileController@show")->with('success', utrans("profile.passwordUpdated"));
     }
 
     /**

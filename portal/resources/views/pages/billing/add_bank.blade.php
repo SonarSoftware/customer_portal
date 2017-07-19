@@ -6,36 +6,36 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            {{trans("billing.addNewBankAccount")}}
+                            {{utrans("billing.addNewBankAccount")}}
                         </h3>
                     </div>
                     <div class="panel-body">
                         {!! Form::open(['action' => 'BillingController@storeBank', 'id' => 'createPaymentMethodForm']) !!}
                         <div class="form-group">
-                            <label for="name">{{trans("billing.nameOnAccount")}}</label>
-                            {!! Form::text("name",null,['id' => 'name', 'class' => 'form-control', 'placeholder' => trans("billing.nameOnAccount")]) !!}
+                            <label for="name">{{utrans("billing.nameOnAccount")}}</label>
+                            {!! Form::text("name",null,['id' => 'name', 'class' => 'form-control', 'placeholder' => utrans("billing.nameOnAccount")]) !!}
                         </div>
                         <div class="form-group">
-                            <label for="account_number">{{trans("billing.accountNumber")}}</label>
-                            {!! Form::tel("account_number",null,['id' => 'account_number', 'class' => 'form-control', 'placeholder' => trans("billing.accountNumber")]) !!}
+                            <label for="account_number">{{utrans("billing.accountNumber")}}</label>
+                            {!! Form::tel("account_number",null,['id' => 'account_number', 'class' => 'form-control', 'placeholder' => utrans("billing.accountNumber")]) !!}
                         </div>
                         <div class="form-group">
-                            <label for="routing_number">{{trans("billing.routingNumber")}}</label>
-                            {!! Form::tel("routing_number",null,['id' => 'routing_number', 'class' => 'form-control', 'placeholder' => trans("billing.routingNumber")]) !!}
+                            <label for="routing_number">{{utrans("billing.routingNumber")}}</label>
+                            {!! Form::tel("routing_number",null,['id' => 'routing_number', 'class' => 'form-control', 'placeholder' => utrans("billing.routingNumber")]) !!}
                         </div>
                         <div class="form-group">
-                            <label for="account_type">{{trans("billing.accountType")}}</label>
-                            {!! Form::select("account_type",['checking' => trans("billing.checking"), 'savings' => trans("billing.savings")],'checking',['id' => 'account_type', 'class' => 'form-control']) !!}
+                            <label for="account_type">{{utrans("billing.accountType")}}</label>
+                            {!! Form::select("account_type",['checking' => utrans("billing.checking"), 'savings' => utrans("billing.savings")],'checking',['id' => 'account_type', 'class' => 'form-control']) !!}
                         </div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
                                     {!! Form::checkbox("auto",1,1) !!}
-                                    {{trans("billing.saveAsAutoPayMethodBank")}}
+                                    {{utrans("billing.saveAsAutoPayMethodBank")}}
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("billing.addNewBankAccount")}}</button>
+                        <button type="submit" class="btn btn-primary">{{utrans("billing.addNewBankAccount")}}</button>
                     </div>
                 </div>
             </div>

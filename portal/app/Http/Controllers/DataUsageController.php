@@ -48,18 +48,8 @@ class DataUsageController extends Controller
     {
         $policyDetails = $this->getPolicyDetails();
         if ($policyDetails->allow_user_to_purchase_capacity !== true) {
-            return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
+            return redirect()->back()->withErrors(utrans("errors.topOffNotAvailable"));
         }
-        //Disabling this for now, it will be implemented at a later date.
-//        if (config("customer_portal.top_off_requires_immediate_payment") === true)
-//        {
-//            $paymentMethods = $this->getPaymentMethods();
-//            if (count($paymentMethods) === 0)
-//            {
-//                return redirect()->action("BillingController@createPaymentMethod")->withErrors(trans("data_usage.youMustHaveACardOnFile"));
-//            }
-//            return view("pages.data_usage.purchase_top_off",compact('policyDetails','paymentMethods'));
-//        }
 
         return view("pages.data_usage.add_top_off", compact('policyDetails'));
     }
@@ -71,23 +61,19 @@ class DataUsageController extends Controller
      */
     public function addTopOff(AddTopOffRequest $request)
     {
-//        if (config("customer_portal.top_off_requires_immediate_payment") === true)
-//        {
-//            return redirect()->back()->withErrors(trans("errors.topOffRequiresImmediatePayment"));
-//        }
         $policyDetails = $this->getPolicyDetails();
         if ($policyDetails->allow_user_to_purchase_capacity !== true) {
-            return redirect()->back()->withErrors(trans("errors.topOffNotAvailable"));
+            return redirect()->back()->withErrors(utrans("errors.topOffNotAvailable"));
         }
 
         try {
             $this->frameworkDataUsageController->purchaseTopOff(get_user()->account_id, $request->input('quantity'));
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.failedToAddDataUsage"));
+            return redirect()->back()->withErrors(utrans("errors.failedToAddDataUsage"));
         }
 
         $this->clearTopOffCache();
-        return redirect()->action("DataUsageController@index")->with('success', trans("data_usage.successfullyAddedUsage"));
+        return redirect()->action("DataUsageController@index")->with('success', utrans("data_usage.successfullyAddedUsage"));
     }
 
     /**

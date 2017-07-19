@@ -45,7 +45,7 @@ class TicketController extends Controller
             }
         }
 
-        return redirect()->action("TicketController@index")->withErrors(trans("errors.invalidTicketID"));
+        return redirect()->action("TicketController@index")->withErrors(utrans("errors.invalidTicketID"));
     }
 
     /**
@@ -56,7 +56,7 @@ class TicketController extends Controller
     {
         $emailAddress = get_user()->email_address;
         if ($emailAddress == null) {
-            return redirect()->action("ProfileController@show")->withErrors(trans("errors.mustSetEmailAddress"));
+            return redirect()->action("ProfileController@show")->withErrors(utrans("errors.mustSetEmailAddress"));
         }
         return view("pages.tickets.create");
     }
@@ -81,7 +81,7 @@ class TicketController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.failedToCreateTicket"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.failedToCreateTicket"))->withInput();
         }
 
         $accountTicketController = new AccountTicketController();
@@ -89,11 +89,11 @@ class TicketController extends Controller
             $accountTicketController->createTicket($ticket, get_user()->contact_name, get_user()->email_address);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.failedToCreateTicket"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.failedToCreateTicket"))->withInput();
         }
 
         $this->clearTicketCache();
-        return redirect()->action("TicketController@index")->with('success', trans("tickets.ticketCreated"));
+        return redirect()->action("TicketController@index")->with('success', utrans("tickets.ticketCreated"));
     }
 
     /**
@@ -110,14 +110,14 @@ class TicketController extends Controller
             if ($ticket->getTicketID() == $ticketID) {
                 try {
                     $accountTicketController->postReply($ticket, $request->input('reply'), get_user()->contact_name, get_user()->email_address);
-                    return redirect()->back()->with('success', trans("tickets.replyPosted"));
+                    return redirect()->back()->with('success', utrans("tickets.replyPosted"));
                 } catch (Exception $e) {
-                    return redirect()->back()->withErrors(trans("errors.failedToPostReply"));
+                    return redirect()->back()->withErrors(utrans("errors.failedToPostReply"));
                 }
             }
         }
 
-        return redirect()->back()->withErrors(trans("errors.invalidTicketID"));
+        return redirect()->back()->withErrors(utrans("errors.invalidTicketID"));
     }
 
     /**

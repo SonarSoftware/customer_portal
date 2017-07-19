@@ -3,17 +3,17 @@
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{trans("headers.paymentSucceeded")}}</h3>
+                <h3 class="panel-title">{{utrans("headers.paymentSucceeded")}}</h3>
             </div>
             <div class="panel-body">
                 <p>
-                    {{trans("billing.paymentWasSuccessful")}}
+                    {{utrans("billing.paymentWasSuccessful")}}
                 </p>
                 <ul>
-                    <li>{{trans("billing.transactionID")}}: {{$result->transaction_id}}</li>
+                    <li>{{utrans("billing.transactionID")}}: {{$result->transaction_id}}</li>
                 </ul>
                 <p>
-                    <a href="{{action("BillingController@index")}}">{{trans("billing.backToBillingPage")}}</a>
+                    <a href="{{action("BillingController@index")}}">{{utrans("billing.backToBillingPage")}}</a>
                 </p>
             </div>
         </div>

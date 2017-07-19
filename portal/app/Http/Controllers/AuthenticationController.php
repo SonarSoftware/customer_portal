@@ -10,6 +10,7 @@ use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Requests\SendPasswordResetRequest;
 use App\PasswordReset;
 use App\Traits\Throttles;
+use App\UsernameLanguage;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ class AuthenticationController extends Controller
     public function authenticate(AuthenticationRequest $request)
     {
         if ($this->getThrottleValue("login", $this->generateLoginThrottleHash($request)) > 10) {
-            return redirect()->back()->withErrors(trans("errors.tooManyFailedAuthenticationAttempts"));
+            return redirect()->back()->withErrors(utrans("errors.tooManyFailedAuthenticationAttempts",[],$request));
         }
         $accountAuthenticationController = new AccountAuthenticationController();
         try {
@@ -56,10 +57,15 @@ class AuthenticationController extends Controller
             $this->incrementThrottleValue("login", $this->generateLoginThrottleHash($request));
             $request->session()->forget('authenticated');
             $request->session()->forget('user');
-            return redirect()->back()->withErrors(trans("errors.loginFailed"));
+            return redirect()->back()->withErrors(utrans("errors.loginFailed",[],$request));
         }
 
         $this->resetThrottleValue("login", $this->generateLoginThrottleHash($request));
+
+        $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $request->input('username')]);
+        $usernameLanguage->language = $request->cookie('language');
+        $usernameLanguage->save();
+
         return redirect()->action("BillingController@index");
     }
 
@@ -80,7 +86,7 @@ class AuthenticationController extends Controller
     public function lookupEmail(LookupEmailRequest $request)
     {
         if ($this->getThrottleValue("email_lookup", md5($request->getClientIp())) > 10) {
-            return redirect()->back()->withErrors(trans("errors.tooManyFailedLookupAttempts"));
+            return redirect()->back()->withErrors(utrans("errors.tooManyFailedLookupAttempts",[],$request));
         }
         
         $accountAuthenticationController = new AccountAuthenticationController();
@@ -88,7 +94,7 @@ class AuthenticationController extends Controller
             $result = $accountAuthenticationController->lookupEmail($request->input('email'));
         } catch (Exception $e) {
             $this->incrementThrottleValue("email_lookup", md5($request->getClientIp()));
-            return redirect()->back()->withErrors(trans("errors.emailLookupFailed"));
+            return redirect()->back()->withErrors(utrans("errors.emailLookupFailed",[],$request));
         }
 
         $creationToken = CreationToken::where('account_id', '=', $result->account_id)
@@ -115,29 +121,30 @@ class AuthenticationController extends Controller
             ], function ($m) use ($result) {
                 $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address)
-                    ->subject(trans("emails.createAccount", ['companyName' => config("customer_portal.company_name")]));
+                    ->subject(utrans("emails.createAccount", ['companyName' => config("customer_portal.company_name")],$request));
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.emailSendFailed"));
+            return redirect()->back()->withErrors(utrans("errors.emailSendFailed",[],$request));
         }
 
         $this->resetThrottleValue("email_lookup", md5($request->getClientIp()));
-        return redirect()->action("AuthenticationController@index")->with('success', trans("root.emailFound"));
+        return redirect()->action("AuthenticationController@index")->with('success', utrans("root.emailFound",[],$request));
     }
 
     /**
      * Show the account creation form
      * @param $token
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showCreationForm($token)
+    public function showCreationForm($token, Request $request)
     {
         $creationToken = CreationToken::where('token', '=', trim($token))
             ->where('updated_at', '>=', Carbon::now("UTC")->subHours(24)->toDateTimeString())
             ->first();
         if ($creationToken === null) {
-            return redirect()->action("AuthenticationController@showRegistrationForm")->withErrors(trans("errors.invalidToken"));
+            return redirect()->action("AuthenticationController@showRegistrationForm")->withErrors(utrans("errors.invalidToken",[],$request));
         }
         return view("pages.root.create", compact('creationToken'));
     }
@@ -151,7 +158,7 @@ class AuthenticationController extends Controller
     public function createAccount(AccountCreationRequest $request, $token)
     {
         if ($this->getThrottleValue("create_account", md5($token . $request->getClientIp())) > 10) {
-            return redirect()->back()->withErrors(trans("errors.tooManyFailedCreationAttempts"));
+            return redirect()->back()->withErrors(utrans("errors.tooManyFailedCreationAttempts",[],$request));
         }
 
         $creationToken = CreationToken::where('token', '=', trim($token))
@@ -159,12 +166,12 @@ class AuthenticationController extends Controller
             ->first();
         if ($creationToken === null) {
             $this->incrementThrottleValue("email_lookup", md5($token . $request->getClientIp()));
-            return redirect()->action("AuthenticationController@showRegistrationForm")->withErrors(trans("errors.invalidToken"));
+            return redirect()->action("AuthenticationController@showRegistrationForm")->withErrors(utrans("errors.invalidToken",[],$request));
         }
         
         if (strtolower(trim($creationToken->email)) != strtolower(trim($request->input('email')))) {
             $this->incrementThrottleValue("email_lookup", md5($token . $request->getClientIp()));
-            return redirect()->back()->withErrors(trans("errors.invalidEmailAddress"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.invalidEmailAddress",[],$request))->withInput();
         }
         
         $accountAuthenticationController = new AccountAuthenticationController();
@@ -177,7 +184,7 @@ class AuthenticationController extends Controller
         $creationToken->delete();
 
         $this->resetThrottleValue("email_lookup", md5($token . $request->getClientIp()));
-        return redirect()->action("AuthenticationController@index")->with('success', trans("register.accountCreated"));
+        return redirect()->action("AuthenticationController@index")->with('success', utrans("register.accountCreated",[],$request));
     }
 
     /**
@@ -197,7 +204,7 @@ class AuthenticationController extends Controller
     public function sendResetEmail(SendPasswordResetRequest $request)
     {
         if ($this->getThrottleValue("password_reset", md5($request->getClientIp())) > 5) {
-            return redirect()->back()->withErrors(trans("errors.tooManyPasswordResetRequests"));
+            return redirect()->back()->withErrors(utrans("errors.tooManyPasswordResetRequests",[],$request));
         }
 
         $accountAuthenticationController = new AccountAuthenticationController();
@@ -205,7 +212,7 @@ class AuthenticationController extends Controller
             $result = $accountAuthenticationController->lookupEmail($request->input('email'), false);
         } catch (Exception $e) {
             $this->incrementThrottleValue("password_reset", md5($request->getClientIp()));
-            return redirect()->back()->withErrors(trans("errors.resetLookupFailed"));
+            return redirect()->back()->withErrors(utrans("errors.resetLookupFailed",[],$request));
         }
 
         $passwordReset = PasswordReset::where('account_id', '=', $result->account_id)
@@ -230,31 +237,32 @@ class AuthenticationController extends Controller
                 'portal_url' => config("app.url"),
                 'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
                 'username' => $result->username,
-            ], function ($m) use ($result) {
+            ], function ($m) use ($result, $request) {
                 $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address);
-                $m->subject(trans("emails.passwordReset", ['companyName' => config("customer_portal.company_name")]));
+                $m->subject(utrans("emails.passwordReset", ['companyName' => config("customer_portal.company_name")],$request));
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.emailSendFailed"));
+            return redirect()->back()->withErrors(utrans("errors.emailSendFailed",[],$request));
         }
 
-        return redirect()->action("AuthenticationController@index")->with('success', trans("root.resetSent"));
+        return redirect()->action("AuthenticationController@index")->with('success', utrans("root.resetSent",[],$request));
     }
 
     /**
      * Show the password reset form, if valid.
      * @param $token
+     * @param Request $request
      * @return $this
      */
-    public function showNewPasswordForm($token)
+    public function showNewPasswordForm($token, Request $request)
     {
         $passwordReset = PasswordReset::where('token', '=', $token)
             ->where('updated_at', '>=', Carbon::now("UTC")->subHours(24)->toDateTimeString())
             ->first();
         if ($passwordReset === null) {
-            return redirect()->action("AuthenticationController@index")->withErrors(trans("errors.resetTokenNotValid"));
+            return redirect()->action("AuthenticationController@index")->withErrors(utrans("errors.resetTokenNotValid",[],$request));
         }
 
         return view("pages.root.new_password", compact('passwordReset'));
@@ -269,7 +277,7 @@ class AuthenticationController extends Controller
     public function updateContactWithNewPassword(PasswordUpdateRequest $request, $token)
     {
         if ($this->getThrottleValue("password_update", md5($request->getClientIp())) > 5) {
-            return redirect()->back()->withErrors(trans("errors.tooManyFailedPasswordResets"));
+            return redirect()->back()->withErrors(utrans("errors.tooManyFailedPasswordResets",[],$request));
         }
 
         $passwordReset = PasswordReset::where('token', '=', trim($token))
@@ -277,30 +285,30 @@ class AuthenticationController extends Controller
             ->first();
         if ($passwordReset === null) {
             $this->incrementThrottleValue("password_update", md5($token . $request->getClientIp()));
-            return redirect()->action("AuthenticationController@showResetPasswordForm")->withErrors(trans("errors.invalidToken"));
+            return redirect()->action("AuthenticationController@showResetPasswordForm")->withErrors(utrans("errors.invalidToken",[],$request));
         }
 
         if ($passwordReset->email != $request->input('email')) {
             $this->incrementThrottleValue("password_update", md5($token . $request->getClientIp()));
-            return redirect()->back()->withErrors(trans("errors.invalidEmailAddress"));
+            return redirect()->back()->withErrors(utrans("errors.invalidEmailAddress",[],$request));
         }
         
         $contactController = new ContactController();
         try {
             $contact = $contactController->getContact($passwordReset->contact_id, $passwordReset->account_id);
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.couldNotFindAccount"));
+            return redirect()->back()->withErrors(utrans("errors.couldNotFindAccount",[],$request));
         }
         try {
             $contactController->updateContactPassword($contact, $request->input('password'));
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.failedToResetPassword"));
+            return redirect()->back()->withErrors(utrans("errors.failedToResetPassword",[],$request));
         }
 
         $passwordReset->delete();
 
         $this->resetThrottleValue("password_update", md5($token . $request->getClientIp()));
-        return redirect()->action("AuthenticationController@index")->with('success', trans("register.passwordReset"));
+        return redirect()->action("AuthenticationController@index")->with('success', utrans("register.passwordReset",[],$request));
     }
     
     /**

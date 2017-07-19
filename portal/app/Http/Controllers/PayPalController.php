@@ -69,7 +69,7 @@ class PayPalController extends Controller
         
         $transaction = new Transaction();
         $transaction->setAmount($amount)
-            ->setDescription(trans("billing.paymentToCompany", ['company_name' => config("customer_portal.company_name")]))
+            ->setDescription(utrans("billing.paymentToCompany", ['company_name' => config("customer_portal.company_name")]))
             ->setInvoiceNumber(uniqid(true)); //This is not a payment on a specific invoice, so we'll just generate a unique string, which is what PayPal requires
 
         $tempToken = new PaypalTemporaryToken(['account_id' => get_user()->account_id, 'token' => uniqid(true)]);
@@ -100,13 +100,13 @@ class PayPalController extends Controller
     {
         $token = PaypalTemporaryToken::where('token', '=', $temporaryToken)->where('account_id', '=', get_user()->account_id)->first();
         if ($token === null) {
-            $error = trans("errors.paypalTokenInvalid");
+            $error = utrans("errors.paypalTokenInvalid");
             return view("pages.paypal.error", compact('error'));
         }
         $token->delete();
 
         if ($request->input('paymentId') === null || $request->input('PayerID') === null) {
-            $error = trans("errors.missingPaypalInformation");
+            $error = utrans("errors.missingPaypalInformation");
             return view("pages.paypal.error", compact('error'));
         }
 
@@ -118,12 +118,12 @@ class PayPalController extends Controller
             $payment->execute($execution, $this->apiContext);
             $payment = Payment::get($request->input('paymentId'), $this->apiContext);
         } catch (Exception $e) {
-            $error = trans("errors.paypalGenericError");
+            $error = utrans("errors.paypalGenericError");
             return view("pages.paypal.error", compact('error'));
         }
         
         if (strtolower($payment->getState() != 'approved')) {
-            $error = trans("errors.paymentNotApproved");
+            $error = utrans("errors.paymentNotApproved");
             return view("pages.paypal.error", compact('error'));
         }
 
@@ -133,7 +133,7 @@ class PayPalController extends Controller
             $transaction = $payment->getTransactions()[0];
             $accountBillingController->storePayPalPayment(get_user()->account_id, $transaction->related_resources[0]->sale->amount->total, $transaction->related_resources[0]->sale->id);
         } catch (Exception $e) {
-            $error = trans("errors.failedToApplyPaypalPayment");
+            $error = utrans("errors.failedToApplyPaypalPayment");
             return view("pages.paypal.error", compact('error'));
         }
 

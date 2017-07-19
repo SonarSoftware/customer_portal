@@ -69,7 +69,7 @@ class BillingController extends Controller
             $data = $this->accountBillingController->getInvoicePdf(get_user()->account_id, $invoiceID);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(trans("errors.failedToDownloadInvoice"));
+            return redirect()->back()->withErrors(utrans("errors.failedToDownloadInvoice"));
         }
 
         return response()->make(base64_decode($data->base64), 200, [
@@ -88,7 +88,7 @@ class BillingController extends Controller
         $paymentMethods = $this->generatePaymentMethodListForPaymentPage();
         if (count($paymentMethods) == 0)
         {
-            return redirect()->back()->withErrors(trans("errors.addAPaymentMethod"));
+            return redirect()->back()->withErrors(utrans("errors.addAPaymentMethod"));
         }
 
         return view('pages.billing.make_payment', compact('billingDetails', 'paymentMethods'));
@@ -115,7 +115,7 @@ class BillingController extends Controller
                 try {
                     $redirectLink = $paypalController->generateApprovalLink($request->input('amount'));
                 } catch (Exception $e) {
-                    return redirect()->back()->withErrors(trans("errors.paypalFailed"));
+                    return redirect()->back()->withErrors(utrans("errors.paypalFailed"));
                 }
                 return redirect()->to($redirectLink);
                 break;
@@ -137,7 +137,7 @@ class BillingController extends Controller
         }
         else
         {
-            return redirect()->back()->withErrors(trans("errors.paymentFailed"));
+            return redirect()->back()->withErrors(utrans("errors.paymentFailed"));
         }
     }
 
@@ -154,14 +154,14 @@ class BillingController extends Controller
                 try {
                     $this->accountBillingController->deletePaymentMethodByID(get_user()->account_id, $id);
                     $this->clearBillingCache();
-                    return redirect()->action("BillingController@index")->with('success', trans("billing.creditCardDeleted"));
+                    return redirect()->action("BillingController@index")->with('success', utrans("billing.creditCardDeleted"));
                 } catch (Exception $e) {
                     //
                 }
             }
         }
         
-        return redirect()->back()->withErrors(trans("errors.paymentMethodNotFound"));
+        return redirect()->back()->withErrors(utrans("errors.paymentMethodNotFound"));
     }
 
     /**
@@ -179,16 +179,16 @@ class BillingController extends Controller
                     $this->accountBillingController->setAutoOnPaymentMethod(get_user()->account_id, $paymentMethod->id, !$existingAutoSetting);
                     $this->clearBillingCache();
                     if ($existingAutoSetting == true) {
-                        return redirect()->action("BillingController@index")->with('success', trans("billing.autoPayDisabled"));
+                        return redirect()->action("BillingController@index")->with('success', utrans("billing.autoPayDisabled"));
                     }
-                    return redirect()->action("BillingController@index")->with('success', trans("billing.autoPayEnabled"));
+                    return redirect()->action("BillingController@index")->with('success', utrans("billing.autoPayEnabled"));
                 } catch (Exception $e) {
                     //
                 }
             }
         }
 
-        return redirect()->back()->withErrors(trans("errors.paymentMethodNotFound"));
+        return redirect()->back()->withErrors(utrans("errors.paymentMethodNotFound"));
     }
 
     /**
@@ -207,7 +207,7 @@ class BillingController extends Controller
                 return view("pages.billing.add_bank");
                 break;
             default:
-                return redirect()->back()->withErrors(trans("errors.invalidPaymentMethodType"));
+                return redirect()->back()->withErrors(utrans("errors.invalidPaymentMethodType"));
         }
     }
 
@@ -220,7 +220,7 @@ class BillingController extends Controller
     {
         if (config("customer_portal.enable_credit_card_payments") == false)
         {
-            throw new InvalidArgumentException(trans("errors.creditCardPaymentsDisabled"));
+            throw new InvalidArgumentException(utrans("errors.creditCardPaymentsDisabled"));
         }
 
         try {
@@ -232,14 +232,14 @@ class BillingController extends Controller
         try {
             $this->accountBillingController->createCreditCard(get_user()->account_id, $card, (bool)$request->input('auto'));
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.failedToCreateCard"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.failedToCreateCard"))->withInput();
         }
         
         unset($creditCard);
         unset($request);
 
         $this->clearBillingCache();
-        return redirect()->action("BillingController@index")->with('success', trans("billing.cardAdded"));
+        return redirect()->action("BillingController@index")->with('success', utrans("billing.cardAdded"));
     }
 
     /**
@@ -251,7 +251,7 @@ class BillingController extends Controller
     {
         if (config("customer_portal.enable_bank_payments") != true)
         {
-            return redirect()->back()->withErrors(trans("errors.failedToCreateBankAccount"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.failedToCreateBankAccount"))->withInput();
         }
 
         try {
@@ -264,14 +264,14 @@ class BillingController extends Controller
         try {
             $this->accountBillingController->createBankAccount(get_user()->account_id, $bankAccount, (bool)$request->input('auto'));
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans("errors.failedToCreateBankAccount"))->withInput();
+            return redirect()->back()->withErrors(utrans("errors.failedToCreateBankAccount"))->withInput();
         }
 
         unset($bankAccount);
         unset($request);
 
         $this->clearBillingCache();
-        return redirect()->action("BillingController@index")->with('success', trans("billing.bankAccountAdded"));
+        return redirect()->action("BillingController@index")->with('success', utrans("billing.bankAccountAdded"));
     }
 
     /**
@@ -287,11 +287,11 @@ class BillingController extends Controller
             $result = $this->accountBillingController->makePaymentUsingExistingPaymentMethod(get_user()->account_id, intval($request->input('payment_method')), trim($request->input('amount')));
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            throw new Exception(trans("billing.paymentFailedTryAnother"));
+            throw new Exception(utrans("billing.paymentFailedTryAnother"));
         }
 
         if ($result->success !== true) {
-            throw new Exception(trans("billing.paymentFailedTryAnother"));
+            throw new Exception(utrans("billing.paymentFailedTryAnother"));
         }
 
         return $result;
@@ -306,7 +306,7 @@ class BillingController extends Controller
     {
         if (config("customer_portal.enable_credit_card_payments") == false)
         {
-            throw new InvalidArgumentException(trans("errors.creditCardPaymentsDisabled"));
+            throw new InvalidArgumentException(utrans("errors.creditCardPaymentsDisabled"));
         }
 
         try {
@@ -318,11 +318,11 @@ class BillingController extends Controller
         try {
             $result = $this->accountBillingController->makeCreditCardPayment(get_user()->account_id, $creditCard, $request->input('amount'), (boolean)$request->input('makeAuto'));
         } catch (Exception $e) {
-            throw new InvalidArgumentException(trans("billing.errorSubmittingPayment"));
+            throw new InvalidArgumentException(utrans("billing.errorSubmittingPayment"));
         }
 
         if ($result->success !== true) {
-            throw new InvalidArgumentException(trans("errors.paymentFailed"));
+            throw new InvalidArgumentException(utrans("errors.paymentFailed"));
         }
 
         unset($creditCard);
@@ -464,21 +464,21 @@ class BillingController extends Controller
         {
             if ($validAccountMethod->type == "credit card" && config("customer_portal.enable_credit_card_payments") == true)
             {
-                $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
+                $paymentMethods[$validAccountMethod->id] = utrans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
             }
             elseif (config("customer_portal.enable_bank_payments") == true && $validAccountMethod->type != "credit card")
             {
-                $paymentMethods[$validAccountMethod->id] = trans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
+                $paymentMethods[$validAccountMethod->id] = utrans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
             }
         }
 
         if (config("customer_portal.paypal_enabled") === true) {
-            $paymentMethods['paypal'] = trans("billing.payWithPaypal");
+            $paymentMethods['paypal'] = utrans("billing.payWithPaypal");
         }
 
         if (config("customer_portal.enable_credit_card_payments") == true)
         {
-            $paymentMethods['new_card'] = trans("billing.payWithNewCard");
+            $paymentMethods['new_card'] = utrans("billing.payWithNewCard");
         }
 
         $paymentMethods = array_reverse($paymentMethods, true);
@@ -506,7 +506,7 @@ class BillingController extends Controller
     {
         $card = CreditCardValidator::validCreditCard(trim(str_replace(" ", "", $request->input('cc-number'))));
         if ($card['valid'] !== true) {
-            throw new InvalidArgumentException(trans("errors.invalidCreditCardNumber"));
+            throw new InvalidArgumentException(utrans("errors.invalidCreditCardNumber"));
         }
 
         $expiration = $request->input('expirationDate');
@@ -519,7 +519,7 @@ class BillingController extends Controller
         }
 
         if (CreditCardValidator::validDate($year, $month) !== true) {
-            throw new InvalidArgumentException(trans("errors.invalidExpirationDate"));
+            throw new InvalidArgumentException(utrans("errors.invalidExpirationDate"));
         }
 
         $creditCard = new CreditCard([
