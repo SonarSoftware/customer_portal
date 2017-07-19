@@ -19,6 +19,20 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $("#languageSelector").change(function(){
+        var language = $(this).val();
+        $("#languageSelector").prop("disabled",true);
+        $.ajax("/language",{
+            data: {
+                language: language
+            },
+            dataType: 'json',
+            type: 'POST'
+        }).success(function(data) {
+            window.location.reload();
+        });
+    });
 });
 
 Number.prototype.formatCurrency = function(c){

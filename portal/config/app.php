@@ -173,6 +173,7 @@ return [
         /** Custom */
         App\Providers\FormattingServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,
+        \App\Providers\LanguageServiceProvider::class,
         /** Vendors */
         Collective\Html\HtmlServiceProvider::class,
         Proengsoft\JsValidation\JsValidationServiceProvider::class,

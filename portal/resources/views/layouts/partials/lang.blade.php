@@ -10,7 +10,7 @@
                     <div class="form-group">
                         <select id="languageSelector" class="form-control">
                             @foreach(getAvailableLanguages($language) as $key => $value)
-                                <option value="{{$key}}">{{$value}}</option>
+                                <option value="{{$key}}" @if($language == $key) selected @endif>{{$value}}</option>
                             @endforeach
                         </select>
                     </div>

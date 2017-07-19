@@ -6,12 +6,14 @@ use App\Http\Requests\CreateBankAccountRequest;
 use App\Http\Requests\CreateCreditCardRequest;
 use App\Http\Requests\CreditCardPaymentRequest;
 use App\Http\Requests\PaymentMethodDeleteRequest;
+use App\Services\LanguageService;
 use App\Traits\ListsPaymentMethods;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -36,8 +38,9 @@ class BillingController extends Controller
      */
     public function index()
     {
+        $languageService = App::make(LanguageService::class);
         $billingDetails = $this->getAccountBillingDetails();
-
+        $languageService = App::make(LanguageService::class);
         $values = [
             'amount_due' => $billingDetails->balance_due,
             'next_bill_date' => $billingDetails->next_bill_date,

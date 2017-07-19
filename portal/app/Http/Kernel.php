@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\ContractMiddleware;
 use App\Http\Middleware\DataUsageMiddleware;
+use App\Http\Middleware\Language;
 use App\Http\Middleware\PortalAuth;
 use App\Http\Middleware\TicketMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -43,6 +44,9 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+        'language' => [
+            Language::class,
+        ]
     ];
 
     /**
