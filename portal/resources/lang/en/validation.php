@@ -127,7 +127,6 @@ return [
         'paypal' => 'PayPal',
         'subject' => 'subject',
         'description' => 'description',
-
     ],
 
 ];

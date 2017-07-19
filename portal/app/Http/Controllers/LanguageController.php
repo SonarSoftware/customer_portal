@@ -25,12 +25,8 @@ class LanguageController extends Controller
             $usernameLanguage->save();
         }
 
-        $now = Carbon::now("UTC");
-        $oneYearOut = clone $now;
-        $oneYearOut->addYear();
-
         return response()->json([
             'success' => true,
-        ])->cookie('language',$language, $now->diffInSeconds($oneYearOut));
+        ])->cookie('language',$language, 31536000);
     }
 }

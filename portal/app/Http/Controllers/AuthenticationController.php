@@ -9,6 +9,7 @@ use App\Http\Requests\LookupEmailRequest;
 use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Requests\SendPasswordResetRequest;
 use App\PasswordReset;
+use App\Services\LanguageService;
 use App\Traits\Throttles;
 use App\UsernameLanguage;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ use Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -114,11 +116,17 @@ class AuthenticationController extends Controller
 
         $creationToken->save();
 
+        $languageService = App::make(LanguageService::class);
+        $language = $languageService->getUserLanguage($request);
         try {
-            Mail::send('emails.account_create', [
-                'portal_url' => config("app.url"),
-                'creation_link' => config("app.url") . "/create/" . $creationToken->token,
-            ], function ($m) use ($result) {
+            Mail::send('emails.basic', [
+                'greeting' => trans("emails.greeting",[],$language),
+                'accountCreateBody' => trans("emails.accountCreateBody", [
+                    'portal_url' => config("app.url"),
+                    'creation_link' => config("app.url") . "/create/" . $creationToken->token,
+                ],$language),
+                'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
+            ], function ($m) use ($result, $request) {
                 $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address)
                     ->subject(utrans("emails.createAccount", ['companyName' => config("customer_portal.company_name")],$request));
@@ -232,11 +240,18 @@ class AuthenticationController extends Controller
 
         $passwordReset->save();
 
+        $languageService = App::make(LanguageService::class);
+        $language = $languageService->getUserLanguage($request);
+
         try {
-            Mail::send('emails.password_reset', [
-                'portal_url' => config("app.url"),
-                'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
-                'username' => $result->username,
+            Mail::send('emails.basic', [
+                'greeting' => trans("emails.greeting",[],$language),
+                'accountCreateBody' => trans("emails.accountCreateBody", [
+                    'portal_url' => config("app.url"),
+                    'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
+                    'username' => $result->username,
+                ],$language),
+                'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
             ], function ($m) use ($result, $request) {
                 $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
                 $m->to($result->email_address, $result->email_address);
