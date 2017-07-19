@@ -5,14 +5,14 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{trans("headers.failure")}}</h3>
+                        <h3 class="panel-title">{{utrans("headers.failure")}}</h3>
                     </div>
                     <div class="panel-body">
                         <p>
                             {{$error}}
                         </p>
                         <p>
-                            <a href="{{action("BillingController@index")}}">{{trans("billing.backToBillingPage")}}</a>
+                            <a href="{{action("BillingController@index")}}">{{utrans("billing.backToBillingPage")}}</a>
                         </p>
                     </div>
                 </div>

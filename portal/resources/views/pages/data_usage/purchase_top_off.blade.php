@@ -6,23 +6,23 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            {{trans("headers.purchaseAdditionalData")}}
+                            {{utrans("headers.purchaseAdditionalData")}}
                         </h3>
                     </div>
                     <div class="panel-body">
                         {!! Form::open(['action' => 'DataUsageController@addTopOff', 'id' => 'topOffForm', 'class' => 'form', 'autocomplete' => 'on']) !!}
                         <div class="form-group">
-                            <label for="quantity">{{trans("data_usage.quantity")}}</label>
+                            <label for="quantity">{{utrans("data_usage.quantity")}}</label>
                             <div style="padding-top: 15px; padding-bottom: 15px;">
                                 <input type="range" min="1" max="20" step="1" value="1" id="quantity" name="quantity">
                             </div>
                         </div>
                         <div>
                             <p class="text-info big_text" id="calculatedAmount">
-                                {{trans("data_usage.topOffTotal",['count' => $policyDetails->overage_units_in_gigabytes, 'cost' => \App\Facades\Formatter::currency($policyDetails->overage_cost)])}}
+                                {{utrans("data_usage.topOffTotal",['count' => $policyDetails->overage_units_in_gigabytes, 'cost' => \App\Facades\Formatter::currency($policyDetails->overage_cost)])}}
                             </p>
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("data_usage.confirmTopOffAddition")}}</button>
+                        <button type="submit" class="btn btn-primary">{{utrans("data_usage.confirmTopOffAddition")}}</button>
                         {!! Form::close() !!}
                     </div>
                 </div>

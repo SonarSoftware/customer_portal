@@ -4,7 +4,7 @@
         @if($policyDetails->has_policy === true)
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{trans("headers.currentUsage")}}</h3>
+                <h3 class="panel-title">{{utrans("headers.currentUsage")}}</h3>
             </div>
             <div class="panel-body">
                 <div class="progress">
@@ -20,7 +20,7 @@
                         <div class="col-xs-10 col-xs-offset-1">
                             <a class="btn btn-primary btn-block btn-lg" href="{{action("DataUsageController@showTopOff")}}" role="button">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
-                                {{trans("data_usage.purchaseAdditionalData")}}
+                                {{utrans("data_usage.purchaseAdditionalData")}}
                             </a>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
         @else
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{trans("headers.currentUsage")}}</h3>
+                    <h3 class="panel-title">{{utrans("headers.currentUsage")}}</h3>
                 </div>
                 <div class="panel-body">
                     <p class="text-center bigger_text text-info">
@@ -40,11 +40,11 @@
             </div>
         @endif
         <p>
-            {{trans("data_usage.monthlyGraphHeader")}}
+            {{utrans("data_usage.monthlyGraphHeader")}}
         </p>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{trans("headers.dataUsage")}}</h3>
+                <h3 class="panel-title">{{utrans("headers.dataUsage")}}</h3>
             </div>
             <div class="panel-body">
                 <canvas id="historicalUsage" height="125"></canvas>

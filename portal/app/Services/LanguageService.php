@@ -12,6 +12,7 @@ class LanguageService
     private $foundOverride = false;
     public function __construct()
     {
+        Log::info("instant");
         $language = Lang::getLocale();
         $availableLanguages = getAvailableLanguages();
         $user = get_user();
