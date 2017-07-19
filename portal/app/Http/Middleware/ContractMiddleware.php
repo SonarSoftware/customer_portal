@@ -17,7 +17,7 @@ class ContractMiddleware
     public function handle($request, Closure $next)
     {
         if (config("customer_portal.contracts_enabled") !== true) {
-            return redirect()->back()->withErrors(trans("errors.sectionDisabled"));
+            return redirect()->back()->withErrors(utrans("errors.sectionDisabled",[],$request));
         }
         return $next($request);
     }

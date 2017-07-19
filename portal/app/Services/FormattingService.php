@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 class FormattingService
@@ -32,7 +33,7 @@ class FormattingService
             $carbon = new Carbon($value, config("app.timezone"));
         }
 
-        $formattedMonth = trans("months." . $carbon->month);
+        $formattedMonth = utrans("months." . $carbon->month);
         return "$formattedMonth {$carbon->day}, {$carbon->year}";
     }
 
@@ -51,7 +52,7 @@ class FormattingService
             $carbon = new Carbon($value, config("app.timezone"));
         }
 
-        $formattedMonth = trans("months." . $carbon->month);
+        $formattedMonth = utrans("months." . $carbon->month);
         return "$formattedMonth {$carbon->day}, {$carbon->year} {$carbon->hour}:{$carbon->minute}";
     }
 }

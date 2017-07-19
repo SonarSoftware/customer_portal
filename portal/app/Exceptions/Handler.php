@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
-            return redirect()->back()->withErrors(trans("errors.tokenMismatch"));
+            return redirect()->back()->withErrors(utrans("errors.tokenMismatch",[],$request));
         }
         return parent::render($request, $e);
     }
