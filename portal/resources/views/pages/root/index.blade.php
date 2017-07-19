@@ -1,6 +1,7 @@
 @extends('layouts.no_nav')
 @section('content')
     <div class="container">
+        {{$language}}
         <div class="row">
             <div class="col-md-12 give_bottom_room">
                 @if(file_exists(base_path("/public/assets/images/logo.png")))

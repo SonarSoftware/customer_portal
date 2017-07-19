@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LanguageUpdateRequest;
 use App\UsernameLanguage;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LanguageController extends Controller
@@ -24,8 +25,12 @@ class LanguageController extends Controller
             $usernameLanguage->save();
         }
 
+        $now = Carbon::now("UTC");
+        $oneYearOut = clone $now;
+        $oneYearOut->addYear();
+
         return response()->json([
             'success' => true,
-        ])->cookie('language',$language, 0);
+        ])->cookie('language',$language, $now->diffInSeconds($oneYearOut));
     }
 }

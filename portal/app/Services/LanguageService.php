@@ -18,7 +18,7 @@ class LanguageService
         if ($user)
         {
             $usernameLanguage = UsernameLanguage::where("username","=",$user->username)->first();
-            if ($usernameLanguage && in_array($usernameLanguage->language,$availableLanguages))
+            if ($usernameLanguage && in_array($usernameLanguage->language,array_keys($availableLanguages)))
             {
                 $this->foundOverride = true;
                 $language = $usernameLanguage->language;
