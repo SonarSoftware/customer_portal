@@ -14,23 +14,23 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{trans("headers.registerYourAccount")}}</h3>
+                        <h3 class="panel-title">{{trans("headers.registerYourAccount",[],$language)}}</h3>
                     </div>
                     <div class="panel-body">
                         <p>
-                            {{trans("register.registrationDescription")}}
+                            {{trans("register.registrationDescription",[],$language)}}
                         </p>
                         {!! Form::open(['action' => 'AuthenticationController@lookupEmail', 'id' => 'emailLookupForm', 'method' => 'post']) !!}
                         <div class="form-group">
-                            <label for="email">{{trans("register.email")}}</label>
-                            {!! Form::email("email",null,['id' => 'email', 'class' => 'form-control', 'placeholder' => trans("register.email")]) !!}
+                            <label for="email">{{trans("register.email",[],$language)}}</label>
+                            {!! Form::email("email",null,['id' => 'email', 'class' => 'form-control', 'placeholder' => trans("register.email",[],$language)]) !!}
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("actions.lookupEmail")}}</button>
+                        <button type="submit" class="btn btn-primary">{{trans("actions.lookupEmail",[],$language)}}</button>
                         {!! Form::close() !!}
                     </div>
                 </div>
                 <p>
-                    <a href="{{action("AuthenticationController@index")}}">{{trans("register.back")}}</a>
+                    <a href="{{action("AuthenticationController@index")}}">{{trans("register.back",[],$language)}}</a>
                 </p>
             </div>
         </div>
