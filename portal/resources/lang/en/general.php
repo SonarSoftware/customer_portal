@@ -6,4 +6,5 @@ return [
     'notAvailable' => 'Not Available',
     'yes' => 'Yes',
     'no' => 'No',
+    'language' => 'Language',
 ];

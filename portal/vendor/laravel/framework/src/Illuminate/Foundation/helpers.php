@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
 use Illuminate\Support\HtmlString;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Bus\Dispatcher;
@@ -424,51 +423,12 @@ if (! function_exists('encrypt')) {
     /**
      * Encrypt the given value.
      *
-     * @param  string  $value
+     * @param  mixed  $value
      * @return string
      */
     function encrypt($value)
     {
         return app('encrypter')->encrypt($value);
-    }
-}
-
-if (! function_exists('env')) {
-    /**
-     * Gets the value of an environment variable.
-     *
-     * @param  string  $key
-     * @param  mixed   $default
-     * @return mixed
-     */
-    function env($key, $default = null)
-    {
-        $value = getenv($key);
-
-        if ($value === false) {
-            return value($default);
-        }
-
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-            case 'false':
-            case '(false)':
-                return false;
-            case 'empty':
-            case '(empty)':
-                return '';
-            case 'null':
-            case '(null)':
-                return;
-        }
-
-        if (strlen($value) > 1 && Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
-            return substr($value, 1, -1);
-        }
-
-        return $value;
     }
 }
 
@@ -567,7 +527,7 @@ if (! function_exists('mix')) {
      */
     function mix($path, $manifestDirectory = '')
     {
-        static $manifest;
+        static $manifests = [];
 
         if (! starts_with($path, '/')) {
             $path = "/{$path}";
@@ -581,22 +541,26 @@ if (! function_exists('mix')) {
             return new HtmlString("//localhost:8080{$path}");
         }
 
-        if (! $manifest) {
-            if (! file_exists($manifestPath = public_path($manifestDirectory.'/mix-manifest.json'))) {
+        $manifestPath = public_path($manifestDirectory.'/mix-manifest.json');
+
+        if (! isset($manifests[$manifestPath])) {
+            if (! file_exists($manifestPath)) {
                 throw new Exception('The Mix manifest does not exist.');
             }
 
-            $manifest = json_decode(file_get_contents($manifestPath), true);
+            $manifests[$manifestPath] = json_decode(file_get_contents($manifestPath), true);
         }
 
-        if (! array_key_exists($path, $manifest)) {
+        $manifest = $manifests[$manifestPath];
+
+        if (! isset($manifest[$path])) {
             throw new Exception(
                 "Unable to locate Mix file: {$path}. Please check your ".
                 'webpack.mix.js output paths and try again.'
             );
         }
 
-        return new HtmlString($manifestDirectory.$manifest[$path]);
+        return new HtmlString(asset($manifestDirectory.$manifest[$path]));
     }
 }
 
@@ -638,7 +602,7 @@ if (! function_exists('public_path')) {
      */
     function public_path($path = '')
     {
-        return app()->make('path.public').($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return app()->make('path.public').($path ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : $path);
     }
 }
 

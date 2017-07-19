@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
+use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\RuleListTrait;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
@@ -93,8 +94,8 @@ class RuleParser
     {
         foreach ((array) $attribute as $key) {
             $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
-            $merge = head($this->validator->explodeRules((array) $rules));
-            $this->conditional[$key] = array_merge($current, $merge);
+            $merge = (new ValidationRuleParser([]))->explode((array) $rules);
+            $this->conditional[$key] = array_merge($current, head($merge->rules));
         }
     }
 

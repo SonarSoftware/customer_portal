@@ -172,6 +172,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         /** Custom */
         App\Providers\FormattingServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
         /** Vendors */
         Collective\Html\HtmlServiceProvider::class,
         Proengsoft\JsValidation\JsValidationServiceProvider::class,

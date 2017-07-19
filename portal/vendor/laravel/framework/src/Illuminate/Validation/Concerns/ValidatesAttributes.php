@@ -375,9 +375,15 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(1, $parameters, 'different');
 
-        $other = Arr::get($this->data, $parameters[0]);
+        foreach ($parameters as $parameter) {
+            $other = Arr::get($this->data, $parameter);
 
-        return isset($other) && $value !== $other;
+            if (is_null($other) || $value === $other) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -478,7 +484,9 @@ trait ValidatesAttributes
             [1, 1], array_filter(sscanf($parameters['ratio'], '%f/%d'))
         );
 
-        return abs($numerator / $denominator - $width / $height) > 0.000001;
+        $precision = 1 / max($width, $height);
+
+        return abs($numerator / $denominator - $width / $height) > $precision;
     }
 
     /**

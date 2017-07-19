@@ -1,6 +1,9 @@
 @include("layouts.partials.head")
-@include("layouts.partials.nav")
 <body>
+    @include("layouts.partials.nav")
+    @if(count(getAvailableLanguages()) > 1)
+    @include("layouts.partials.lang")
+    @endif
     @include('layouts.partials.errors')
     @include('layouts.partials.success')
     @yield('content')

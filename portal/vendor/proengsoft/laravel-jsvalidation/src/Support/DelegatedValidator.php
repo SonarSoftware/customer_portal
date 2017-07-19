@@ -148,7 +148,7 @@ class DelegatedValidator
      */
     public function parseRule($rules)
     {
-        return ValidationRuleParser::parse([$rules]);
+        return ValidationRuleParser::parse($rules);
     }
 
     /**

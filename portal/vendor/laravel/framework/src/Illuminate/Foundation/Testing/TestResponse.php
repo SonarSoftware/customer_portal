@@ -17,7 +17,7 @@ class TestResponse
     }
 
     /**
-     * The reponse to delegate to.
+     * The response to delegate to.
      *
      * @var \Illuminate\Http\Response
      */
@@ -114,7 +114,7 @@ class TestResponse
 
         if (! is_null($value)) {
             PHPUnit::assertEquals(
-                $this->headers->get($headerName), $value,
+                $value, $this->headers->get($headerName),
                 "Header [{$headerName}] was found, but value [{$actual}] does not match [{$value}]."
             );
         }
@@ -161,7 +161,7 @@ class TestResponse
             ? app('encrypter')->decrypt($cookieValue) : $cookieValue;
 
         PHPUnit::assertEquals(
-            $actual, $value,
+            $value, $actual,
             "Cookie [{$cookieName}] was found, but value [{$actual}] does not match [{$value}]."
         );
 
@@ -403,6 +403,21 @@ class TestResponse
     public function json()
     {
         return $this->decodeResponseJson();
+    }
+
+    /**
+     * Assert that the response view equals the given value.
+     *
+     * @param  string $value
+     * @return $this
+     */
+    public function assertViewIs($value)
+    {
+        $this->ensureResponseHasView();
+
+        PHPUnit::assertEquals($value, $this->original->getName());
+
+        return $this;
     }
 
     /**

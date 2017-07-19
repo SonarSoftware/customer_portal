@@ -304,3 +304,23 @@ function subdivisions($country)
 
     return $cleaned;
 }
+
+/**
+ * Get the configured languages on the system
+ * @param string $language
+ * @return array
+ */
+function getAvailableLanguages($language = "en")
+{
+    $languages = [];
+    $dirs = glob(resource_path("lang/*"));
+    foreach ($dirs as $dir)
+    {
+        $boom = explode("/",$dir);
+        if (strlen($boom[count($boom)-1]) === 2)
+        {
+            $languages[$boom[count($boom)-1]] = trans("languages." . $boom[count($boom)-1],[],$language);
+        }
+    }
+    return $languages;
+}
