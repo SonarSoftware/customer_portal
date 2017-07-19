@@ -1,7 +1,6 @@
 @extends('layouts.no_nav')
 @section('content')
     <div class="container">
-        {{$language}}
         <div class="row">
             <div class="col-md-12 give_bottom_room">
                 @if(file_exists(base_path("/public/assets/images/logo.png")))
@@ -26,16 +25,16 @@
                 <div class="well">
                     {!! Form::open(['action' => 'AuthenticationController@authenticate']) !!}
                     <div class="form-group">
-                        <label for="username">{{trans("root.username")}}</label>
-                        {!! Form::text("username",null,['placeholder' => trans("root.username"), 'id' => 'username', 'class' => 'form-control']) !!}
+                        <label for="username">{{trans("root.username",[],$language)}}</label>
+                        {!! Form::text("username",null,['placeholder' => trans("root.username",[],$language), 'id' => 'username', 'class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        <label for="password">{{trans("root.password")}}</label>
-                        {!! Form::password("password",['placeholder' => trans("root.password"), 'id' => 'password', 'class' => 'form-control']) !!}
+                        <label for="password">{{trans("root.password",[],$language)}}</label>
+                        {!! Form::password("password",['placeholder' => trans("root.password",[],$language), 'id' => 'password', 'class' => 'form-control']) !!}
                     </div>
-                    <button type="submit" class="btn btn-primary">{{trans("actions.login")}}</button>
+                    <button type="submit" class="btn btn-primary">{{trans("actions.login",[],$language)}}</button>
                     <small style="margin-left: 3em;">
-                        <a href="{{action("AuthenticationController@showResetPasswordForm")}}">{{trans("root.forgot")}}</a>
+                        <a href="{{action("AuthenticationController@showResetPasswordForm")}}">{{trans("root.forgot",[],$language)}}</a>
                     </small>
                     {!! Form::close() !!}
                 </div>
@@ -44,7 +43,7 @@
         <div class="row" style="margin-top: 1em;">
             <div class="col-md-4 col-md-offset-4">
                 <p>
-                    <a class="btn btn-success center-block" href="{{action("AuthenticationController@showRegistrationForm")}}" role="button">{{trans("root.register")}}</a>
+                    <a class="btn btn-success center-block" href="{{action("AuthenticationController@showRegistrationForm")}}" role="button">{{trans("root.register",[],$language)}}</a>
                 </p>
             </div>
         </div>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\LanguageService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -323,4 +325,18 @@ function getAvailableLanguages($language = "en")
         }
     }
     return $languages;
+}
+
+/**
+ * Translate to the user language
+ * @param string $string
+ * @param array $variables
+ * @param null $request
+ * @return \Illuminate\Contracts\Translation\Translator|string
+ */
+function utrans(string $string, array $variables = [], $request = null)
+{
+    $languageService = App::make(LanguageService::class);
+    $language = $languageService->getUserLanguage($request);
+    return trans($string, $variables, $language);
 }

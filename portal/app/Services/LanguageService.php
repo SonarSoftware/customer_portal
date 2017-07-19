@@ -28,11 +28,12 @@ class LanguageService
     }
 
     /**
+     * @param null $request - Pass in the request to optionally load from the cookie
      * @return string
      */
     public function getUserLanguage($request = null)
     {
-        if ($request->cookie('language') && $this->foundOverride === false)
+        if ($request && $request->cookie('language') && $this->foundOverride === false)
         {
             return $request->cookie('language');
         }
