@@ -3,12 +3,12 @@
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{trans("headers.ticket")}}</h3>
+                <h3 class="panel-title">{{utrans("headers.ticket")}}</h3>
             </div>
             <div class="panel-body">
                 <h3>{{$ticket->getSubject()}}</h3>
                 @if (count($replies) == 0)
-                    {{trans("tickets.noRepliesYet")}}
+                    {{utrans("tickets.noRepliesYet")}}
                 @endif
             </div>
             @if(count($replies) > 0)
@@ -20,10 +20,10 @@
                                 <em>
                                     @if($reply->incoming == true)
                                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                        {{trans("tickets.youWrote")}}
+                                        {{utrans("tickets.youWrote")}}
                                     @else
                                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                                        {{trans("tickets.ispWrote",['companyName' => Config::get("customer_portal.company_name")])}}
+                                        {{utrans("tickets.ispWrote",['companyName' => Config::get("customer_portal.company_name")])}}
                                     @endif
                                 </em>
                             </div>
@@ -43,10 +43,10 @@
             <div class="panel-body">
                 {!! Form::open(['action' => ['TicketController@postReply', 'tickets' => $ticket->getTicketID()], 'id' => 'replyForm', 'method' => 'post']) !!}
                 <div class="form-group">
-                    <label for="reply">{{trans("tickets.postAReply")}}</label>
-                    {!! Form::textarea("reply",null,['class' => 'form-control', 'id' => 'reply', 'placeholder' => trans("tickets.postAReplyPlaceholder")]) !!}
+                    <label for="reply">{{utrans("tickets.postAReply")}}</label>
+                    {!! Form::textarea("reply",null,['class' => 'form-control', 'id' => 'reply', 'placeholder' => utrans("tickets.postAReplyPlaceholder")]) !!}
                 </div>
-                <button type="submit" class="btn btn-primary">{{trans("actions.postReply")}}</button>
+                <button type="submit" class="btn btn-primary">{{utrans("actions.postReply")}}</button>
                 {!! Form::close() !!}
             </div>
         </div>

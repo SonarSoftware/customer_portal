@@ -5,19 +5,19 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{trans("headers.createTicket")}}</h3>
+                        <h3 class="panel-title">{{utrans("headers.createTicket")}}</h3>
                     </div>
                     <div class="panel-body">
                         {!! Form::open(['action' => 'TicketController@store', 'id' => 'ticketForm']) !!}
                         <div class="form-group">
-                            <label for="subject">{{trans("tickets.subject")}}</label>
-                            {!! Form::text("subject",null,['class' => 'form-control', 'id' => 'subject', 'placeholder' => trans("tickets.subjectLong")]) !!}
+                            <label for="subject">{{utrans("tickets.subject")}}</label>
+                            {!! Form::text("subject",null,['class' => 'form-control', 'id' => 'subject', 'placeholder' => utrans("tickets.subjectLong")]) !!}
                         </div>
                         <div class="form-group">
-                            <label for="description">{{trans("tickets.description")}}</label>
-                            {!! Form::textarea("description",null,['class' => 'form-control', 'id' => 'description', 'placeholder' => trans("tickets.descriptionLong")]) !!}
+                            <label for="description">{{utrans("tickets.description")}}</label>
+                            {!! Form::textarea("description",null,['class' => 'form-control', 'id' => 'description', 'placeholder' => utrans("tickets.descriptionLong")]) !!}
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("actions.createTicket")}}</button>
+                        <button type="submit" class="btn btn-primary">{{utrans("actions.createTicket")}}</button>
                         {!! Form::close() !!}
                     </div>
                 </div>
