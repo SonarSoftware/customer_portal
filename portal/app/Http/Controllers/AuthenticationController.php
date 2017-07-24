@@ -96,6 +96,7 @@ class AuthenticationController extends Controller
             $result = $accountAuthenticationController->lookupEmail($request->input('email'));
         } catch (Exception $e) {
             $this->incrementThrottleValue("email_lookup", md5($request->getClientIp()));
+            Log::info($e->getMessage());
             return redirect()->back()->withErrors(utrans("errors.emailLookupFailed",[],$request));
         }
 
@@ -121,7 +122,7 @@ class AuthenticationController extends Controller
         try {
             Mail::send('emails.basic', [
                 'greeting' => trans("emails.greeting",[],$language),
-                'accountCreateBody' => trans("emails.accountCreateBody", [
+                'body' => trans("emails.accountCreateBody", [
                     'portal_url' => config("app.url"),
                     'creation_link' => config("app.url") . "/create/" . $creationToken->token,
                 ],$language),
@@ -246,7 +247,7 @@ class AuthenticationController extends Controller
         try {
             Mail::send('emails.basic', [
                 'greeting' => trans("emails.greeting",[],$language),
-                'accountCreateBody' => trans("emails.accountCreateBody", [
+                'body' => trans("emails.accountCreateBody", [
                     'portal_url' => config("app.url"),
                     'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
                     'username' => $result->username,
