@@ -55,6 +55,7 @@
 @section('additionalJS')
     <script>
         var historicalUsage = {!! $historicalUsage !!};
+        var dataUsageLabel = '{{utrans("data_usage.usage")}}';
     </script>
     <script src="/assets/js/pages/data_usage/index.js" type="text/javascript"></script>
 @endsection

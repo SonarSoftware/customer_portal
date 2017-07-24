@@ -2,7 +2,7 @@ $(document).ready(function(){
     var labels = [];
     var datasets = [
         {
-            label: Lang.get("data_usage.usage"),
+            label: dataUsageLabel,
             borderColor: "rgba(243, 156, 18,1.0)",
             backgroundColor: "rgba(241, 196, 15,0.5)",
             borderWidth: 1,
