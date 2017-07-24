@@ -6,5 +6,5 @@ return [
     'notAvailable' => 'Non Disponible',
     'yes' => 'Oui',
     'no' => 'Non',
-    'language' => 'La langue',
+    'language' => 'Langue',
 ];

@@ -6,5 +6,6 @@ return [
     'noContracts' => ' Présentement aucun contrat de disponible.',
     'signed' => 'Signé',
     'pendingSignature' => 'En Attente d\'une Signature.',
+	'sign' => 'Signer un contrat',
     'download' => 'Télécharger le Contrat',
 ];

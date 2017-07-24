@@ -10,7 +10,7 @@ return [
     'accountCreated' => 'Compte créé, s’il vous plaît connecter pour accéder à votre compte.',
     'forgotDescription' => 'Entrez votre adresse email ci-dessous et nous vous enverrons un email avec votre nom d’utilisateur et un lien pour réinitialiser votre mot de passe.',
     'passwordReset' => 'Mot de passe a été réinitialisé. Veuillez vous connecter à nouveau.',
-    'resetDescription' => 'Please enter the email address for your account and a new password.',
+    'resetDescription' => 'Entrez l\'adresse e-mail de votre compte et un nouveau mot de passe.',
 ];
 
 

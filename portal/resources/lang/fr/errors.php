@@ -40,4 +40,8 @@ return [
     'topOffRequiresImmediatePayment' => '.',
     'failedToAddDataUsage' => 'Impossible d’ajouter la capacité de votre compte. Veuillez réessayer ultérieurement.',
     'failedToLookupSubdivision' => 'Nous n’étions pas en mesure de chercher les États pour ce pays. S’il vous plaît rafraîchir et essayez à nouveau.',
+	'invalidPaymentMethodType' => 'Méthode de paiement non valide.',
+    'failedToCreateBankAccount' => 'Impossible d\'ajouter un compte bancaire. Vérifiez les informations et réessayez.',
+    'creditCardPaymentsDisabled' => 'Les paiements par carte de crédit ne sont actuellement pas autorisés.',
+    'addAPaymentMethod' => 'Veuillez ajouter un mode de paiement à votre compte pour effectuer un paiement.',
 ];

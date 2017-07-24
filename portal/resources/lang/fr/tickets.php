@@ -9,7 +9,7 @@ return [
     'ticketCreated' => 'Billet avec succès créé.',
     'noRepliesYet' => 'Il n’y a aucune réponse à ce billet encore. S’il vous plaît revenez plus tard.',
     'youWrote' => 'Vous avez écrit:',
-    'ispWrote' => ':companyName wrote:',
+    'ispWrote' => ':companyName écrit:',
     'postAReply' => 'Écrire une réponse',
     'postAReplyPlaceholder' => 'Entrez votre réponse au billet ici.',
     'status' => 'Statut',
