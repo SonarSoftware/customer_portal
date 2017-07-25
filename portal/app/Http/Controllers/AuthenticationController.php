@@ -65,7 +65,7 @@ class AuthenticationController extends Controller
         $this->resetThrottleValue("login", $this->generateLoginThrottleHash($request));
 
         $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $request->input('username')]);
-        $usernameLanguage->language = $request->cookie('language');
+        $usernameLanguage->language = $request->input('language');
         $usernameLanguage->save();
 
         return redirect()->action("BillingController@index");

@@ -3,6 +3,7 @@
 namespace SonarSoftware\CustomerPortalFramework\Helpers;
 
 use Dotenv\Dotenv;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\TransferException;
@@ -55,8 +56,23 @@ class HttpHelper
         }
         catch (TransferException $e)
         {
-            $textResponse = json_decode($e->getResponse()->getBody());
-            throw new ApiException($this->transformErrorToMessage($textResponse));
+            try {
+                $response = $e->getResponse();
+                if ($response)
+                {
+                    $textResponse = json_decode($response->getBody());
+                    throw new ApiException($this->transformErrorToMessage($textResponse));
+                }
+                else
+                {
+                    throw new ApiException("Failed to connect.");
+                }
+            }
+            catch (Exception $e)
+            {
+                throw new ApiException("Failed to connect.");
+            }
+
         }
 
         $body = json_decode($response->getBody());

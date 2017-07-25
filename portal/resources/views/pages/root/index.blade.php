@@ -24,6 +24,7 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="well">
                     {!! Form::open(['action' => 'AuthenticationController@authenticate']) !!}
+                    <input type="hidden" name="language" value="{{$language}}">
                     <div class="form-group">
                         <label for="username">{{trans("root.username",[],$language)}}</label>
                         {!! Form::text("username",null,['placeholder' => trans("root.username",[],$language), 'id' => 'username', 'class' => 'form-control']) !!}
