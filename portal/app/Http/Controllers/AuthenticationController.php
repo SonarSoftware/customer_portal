@@ -247,7 +247,7 @@ class AuthenticationController extends Controller
         try {
             Mail::send('emails.basic', [
                 'greeting' => trans("emails.greeting",[],$language),
-                'body' => trans("emails.accountCreateBody", [
+                'body' => trans("emails.passwordResetBody", [
                     'portal_url' => config("app.url"),
                     'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
                     'username' => $result->username,
