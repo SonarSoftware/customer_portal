@@ -25,7 +25,7 @@ return [
     'tooManyFailedCreationAttempts' => 'You\'ve failed to create an account too many times in a short period of time. Please wait a few minutes and try again.',
     'tooManyFailedPasswordResets' => 'You\'ve failed to reset your password too many times in a short period of time. Please wait a few minutes and try again.',
     'couldNotFindAccount' => 'Sorry, but your account could not be found. Please try again later or try registering a new account.',
-    'failedToResetPassword' => 'Password reset failed. Please try again later.',
+    'failedToResetPassword' => 'Your password is too simple. Please try a longer and more complex password.',
     'tokenMismatch' => 'Looks like you may have been idle too long. Please try again.',
     'failedToPostReply' => 'Failed to post reply. Please try again later.',
     'paymentMethodNotFound' => 'That payment method could not be found. Perhaps it was already deleted.',
