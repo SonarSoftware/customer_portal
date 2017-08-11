@@ -147,11 +147,6 @@ class CreditCard
             throw new InvalidArgumentException("The city of the address is missing.");
         }
 
-        if (!array_key_exists("state",$values))
-        {
-            throw new InvalidArgumentException("The state of the address is missing.");
-        }
-
         if (!array_key_exists("zip",$values))
         {
             throw new InvalidArgumentException("The ZIP/postal code of the address is missing.");
@@ -186,7 +181,7 @@ class CreditCard
 
         if (!in_array($values['country'],['US','CA']))
         {
-            if (!in_array($values['state'],subdivisions($values['country'])))
+            if (count(subdivisions($values['country'])) > 0 && !in_array($values['state'],subdivisions($values['country'])))
             {
                 throw new InvalidArgumentException($values['state'] . " is not a valid state.");
             }
@@ -212,7 +207,7 @@ class CreditCard
         $this->expiration_year = trim($values['expiration_year']);
         $this->line1 = trim($values['line1']);
         $this->city = trim($values['city']);
-        $this->state = trim($values['state']);
+        $this->state = isset($values['state']) ? trim($values['state']) : null;
         $this->zip = trim($values['zip']);
         $this->country = trim($values['country']);
     }

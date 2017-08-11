@@ -38,7 +38,7 @@
                             <label for="city">{{utrans("billing.city")}}</label>
                             {!! Form::text("city",null,['id' => 'city', 'class' => 'form-control', 'placeholder' => utrans("billing.city")]) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="stateWrapper" @if(count(subdivisions(\Illuminate\Support\Facades\Config::get("customer_portal.country"))) === 0) style="display:none;" @endif">
                             <label for="state">{{utrans("billing.state")}}</label>
                             {!! Form::select("state",subdivisions(\Illuminate\Support\Facades\Config::get("customer_portal.country")),\Illuminate\Support\Facades\Config::get("customer_portal.state"),['id' => 'state', 'class' => 'form-control']) !!}
                         </div>

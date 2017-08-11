@@ -292,7 +292,7 @@ function subdivisions($country)
 {
     $subdivisions = json_decode(file_get_contents(resource_path("/json/subdivisions.json")), true);
     if (!isset($subdivisions[$country])) {
-        throw new InvalidArgumentException($country . " is not a valid country code.");
+        return [];
     }
 
     if (in_array($country, ["US","CA"])) {

@@ -31,7 +31,7 @@ class CreateCreditCardRequest extends FormRequest
             'country' => 'required|string',
             'line1' => 'required|string',
             'city' => 'required|string',
-            'state' => 'required|string',
+            'state' => 'string',
             'zip' => 'required|string',
             'auto' => 'boolean',
         ];
