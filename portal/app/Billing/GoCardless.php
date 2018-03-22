@@ -2,53 +2,67 @@
 
 namespace App\Billing;
 
+use App\GoCardlessToken;
+use Illuminate\Support\Facades\Redirect;
+
 class GoCardless
 {
     private $client;
     public function __construct()
     {
         $this->client = new \GoCardlessPro\Client([
-            'access_token' => getenv('GOCARDLESS_ACCESS_TOKEN'),
-            'environment' => getenv('GOCARDLESS_ENVIRONMENT'),
+            'access_token' => config("customer_portal.gocardless_access_token"),
+            'environment' => config("customer_portal.gocardless_environment"),
         ]);
     }
 
     /**
-     *
+     * Setup the redirect flow
      */
     public function createRedirect()
     {
-        $redirecttFlow = $this->client->redirectFlows()->create([
-            'params' => [
-                'description' => '',
-                'session_token' => '', //TODO: create
-                'success_redirect_url' => '',
-                'prefilled_customer' => [
-                    'given_name' => '',
-                    'family_name' => '',
-                    'email' => '',
-                    'address_line1' => '',
-                    'city' => '',
-                    'postal_code' => '',
-                ]
-            ]
+        $token = str_random(32);
+        while (GoCardlessToken::where('token','=',$token)->count() > 0)
+        {
+            $token = str_random(32);
+        }
+        $gocardlessToken = new GoCardlessToken([
+            'token' => $token,
+            'account_id' => get_user()->account_id
         ]);
 
-        //Keep $redirectFlow->id and redirect to $redirectFlow->redirect_url
+        $params = [
+            'params' => [
+                'description' => config("customer_portal.company_name"),
+                'session_token' => $gocardlessToken->token,
+                'success_redirect_url' => action("GoCardlessController@handleReturnRedirect"),
+            ]
+        ];
+
+        $redirectFlow = $this->client->redirectFlows()->create($params);
+
+        $gocardlessToken->redirect_flow_id = $redirectFlow->id;
+        $gocardlessToken->save();
+
+        return $redirectFlow->redirect_url;
     }
 
-    public function handleRedirect($id)
+    /**
+     * @param GoCardlessToken $goCardlessToken
+     * @throws \GoCardlessPro\Core\Exception\InvalidStateException
+     */
+    public function completeRedirect(GoCardlessToken $goCardlessToken)
     {
-        $redirectFlow = $this->client->redirectFlows()->complete(
-            $id,
+        $completedFlow = $this->client->redirectFlows()->complete(
+            $goCardlessToken->redirect_flow_id,
             [
                 "params" => [
-                    "session_token" => "", //TODO: retrieve
+                    "session_token" => $goCardlessToken->token
                 ]
             ]
         );
 
-        //Keep $redirectFlow->links->mandate, and $redirectFlow->links->customer ?
-        //confirmation URL is $redirectFlow->confirmation_url
+        //Store $completedFlow->links->mandate for later use
+        return $completedFlow->confirmation_url;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Billing\GoCardless;
 use App\Http\Requests\CreateBankAccountRequest;
 use App\Http\Requests\CreateCreditCardRequest;
 use App\Http\Requests\CreditCardPaymentRequest;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inacho\CreditCard as CreditCardValidator;
 use InvalidArgumentException;
@@ -204,7 +206,15 @@ class BillingController extends Controller
                 return view("pages.billing.add_card");
                 break;
             case "bank":
-                return view("pages.billing.add_bank");
+                if (config("customer_portal.enable_gocardless") === true)
+                {
+                    $gocardless = new GoCardless();
+                    return Redirect::away($gocardless->createRedirect());
+                }
+                else
+                {
+                    return view("pages.billing.add_bank");
+                }
                 break;
             default:
                 return redirect()->back()->withErrors(utrans("errors.invalidPaymentMethodType"));

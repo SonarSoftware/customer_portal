@@ -54,6 +54,9 @@ Route::group(['middleware' => ['language']], function () {
 
             /** Subdivisions for cards */
             Route::get("subdivisions/{country}", "SubdivisionController@show");
+
+            /** GoCardless success */
+            Route::get("debit_add_success","GoCardlessController@handleReturnRedirect");
         });
 
         /**

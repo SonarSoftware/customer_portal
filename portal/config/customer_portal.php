@@ -25,17 +25,17 @@ return [
      */
     'currency_symbol' => env('CURRENCY_SYMBOL', '$'),
 
-    /**
+    /*
      * The country your ISP operates in
      */
     'country' => env('COUNTRY', 'US'),
 
-    /**
+    /*
      * The state or province your ISP operates in. Should be a two character code for the US and Canada (e.g. WI, AB) and the full name for other countries.
      */
     'state' => env('STATE', null),
 
-    /**
+    /*
      * A message to display on the login page
      */
     'login_page_message' => env('LOGIN_PAGE_MESSAGE', null),
@@ -44,16 +44,16 @@ return [
      * BILLING CONFIGURATION OPTIONS
      */
 
-    /**
+    /*
      * Do you want to show detailed transactions or just invoices?
      */
     'show_detailed_transactions' => env('SHOW_DETAILED_TRANSACTIONS', false),
 
-    /**
+    /*
      * Do you want to allow ACH/eCheck payments?
      */
     'enable_bank_payments' => env('ENABLE_BANK_PAYMENTS', false),
-    /**
+    /*
      * Do you want to allow credit card payments?
      */
     'enable_credit_card_payments' => env("ENABLE_CREDIT_CARD_PAYMENTS",true),
@@ -76,6 +76,14 @@ return [
      * A sane default (USD) is provided, but ensure this is updated if you are not using US dollars.
      */
     'paypal_currency_code' => env('PAYPAL_CURRENCY_CODE', 'USD'),
+
+    /*
+     * These settings all relate to GoCardless integration.
+     */
+    'enable_gocardless' => env('ENABLE_GOCARDLESS', false),
+    'gocardless_access_token' => env('GOCARDLESS_ACCESS_TOKEN', null),
+    'gocardless_environment' => env('GOCARDLESS_ENVIRONMENT', 'sandbox'),
+    'gocardless_currency_code' => env('GOCARDLESS_CURRENCY_CODE', 'EUR'),
 
     /**
      * TICKETING OPTIONS

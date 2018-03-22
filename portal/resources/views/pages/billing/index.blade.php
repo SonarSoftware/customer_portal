@@ -223,7 +223,7 @@
                             </table>
                         </div>
                     </div>
-                    @if(config("customer_portal.enable_bank_payments") == true)
+                    @if(config("customer_portal.enable_bank_payments") == true || config("customer_portal.enable_gocardless") == true)
                     <div role="tabpanel" class="tab-pane" id="bankAccounts">
                         <div class="table-responsive">
                             <p class="text-right">
