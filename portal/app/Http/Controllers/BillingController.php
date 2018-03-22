@@ -476,7 +476,7 @@ class BillingController extends Controller
             {
                 $paymentMethods[$validAccountMethod->id] = utrans("billing.payUsingExistingCard", ['card' => "****" . $validAccountMethod->identifier . " (" . sprintf("%02d", $validAccountMethod->expiration_month) . " / " . $validAccountMethod->expiration_year . ")"]);
             }
-            elseif (config("customer_portal.enable_bank_payments") == true && $validAccountMethod->type != "credit card")
+            elseif ((config("customer_portal.enable_bank_payments") == true || config("customer_portal.enable_gocardless") == true) && $validAccountMethod->type != "credit card")
             {
                 $paymentMethods[$validAccountMethod->id] = utrans("billing.payUsingExistingBankAccount", ['accountNumber' => "**" . $validAccountMethod->identifier]);
             }

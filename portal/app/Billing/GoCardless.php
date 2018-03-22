@@ -4,6 +4,10 @@ namespace App\Billing;
 
 use App\GoCardlessToken;
 use Illuminate\Support\Facades\Redirect;
+use InvalidArgumentException;
+use SonarSoftware\CustomerPortalFramework\Exceptions\ApiException;
+use SonarSoftware\CustomerPortalFramework\Exceptions\AuthenticationException;
+use SonarSoftware\CustomerPortalFramework\Helpers\HttpHelper;
 
 class GoCardless
 {
@@ -49,6 +53,7 @@ class GoCardless
 
     /**
      * @param GoCardlessToken $goCardlessToken
+     * @return mixed
      * @throws \GoCardlessPro\Core\Exception\InvalidStateException
      */
     public function completeRedirect(GoCardlessToken $goCardlessToken)
@@ -62,7 +67,26 @@ class GoCardless
             ]
         );
 
-        //Store $completedFlow->links->mandate for later use
+        try
+        {
+
+            $fullMandate = $this->client->mandates()->get($completedFlow->links->mandate);
+            $bankAccount = $this->client->customerBankAccounts()->get($fullMandate->links->customer_bank_account);
+
+            $httpHelper = new HttpHelper();
+            $result = $httpHelper->post("accounts/" . get_user()->account_id . "/tokenized_payment_method", [
+                'token' => $completedFlow->links->mandate,
+                'name_on_account' => get_user()->contact_name,
+                'type' => 'echeck',
+                'identifier' => $bankAccount->account_number_ending,
+                'auto' => false,
+            ]);
+        }
+        catch (ApiException $e)
+        {
+            throw new InvalidArgumentException($e->getMessage());
+        }
+
         return $completedFlow->confirmation_url;
     }
 }

@@ -25,6 +25,8 @@ class GoCardlessController extends Controller
         try {
             $gocardless = new GoCardless();
             $result = $gocardless->completeRedirect($gocardlessToken);
+            $controller = new BillingController();
+            $controller->clearBillingCache();
             return Redirect::away($result);
         }
         catch (Exception $e)

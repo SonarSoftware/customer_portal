@@ -36,7 +36,7 @@ return [
     'expiration' => 'Expiration',
     'noCreditCardsOnFile' => 'No credit cards on file.',
     'action' => 'Action',
-    'creditCardDeleted' => 'Credit card deleted successfully.',
+    'creditCardDeleted' => 'Payment method deleted successfully.',
     'enableAuto' => 'Enable Autopay',
     'disableAuto' => 'Disable Autopay',
     'autoPayEnabled' => 'Auto pay successfully enabled.',
