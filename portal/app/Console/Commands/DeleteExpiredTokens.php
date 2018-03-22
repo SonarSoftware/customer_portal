@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\CreationToken;
+use App\GoCardlessToken;
 use App\PasswordReset;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -43,6 +44,7 @@ class DeleteExpiredTokens extends Command
         $deleteTokensOlderThan = Carbon::now("UTC")->subHours(24)->toDateTimeString();
         CreationToken::where('updated_at', '<=', $deleteTokensOlderThan)->delete();
         PasswordReset::where('updated_at', '<=', $deleteTokensOlderThan)->delete();
+        GoCardlessToken::where('updated_at','<=',$deleteTokensOlderThan)->delete();
         $this->info("Tokens deleted.");
     }
 }
