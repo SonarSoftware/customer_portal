@@ -116,12 +116,37 @@ HELP
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $info = $this->fileInfo();
-        $num = $input->getOption('num');
-        $factory = new ConsoleColorFactory($this->colorMode);
-        $colors = $factory->getConsoleColor();
+        $info        = $this->fileInfo();
+        $num         = $input->getOption('num');
+        $factory     = new ConsoleColorFactory($this->colorMode);
+        $colors      = $factory->getConsoleColor();
         $highlighter = new Highlighter($colors);
-        $contents = file_get_contents($info['file']);
-        $output->page($highlighter->getCodeSnippet($contents, $info['line'], $num, $num), ShellOutput::OUTPUT_RAW);
+        $contents    = file_get_contents($info['file']);
+
+        $output->startPaging();
+        $output->writeln('');
+        $output->writeln(sprintf('From <info>%s:%s</info>:', $this->replaceCwd($info['file']), $info['line']));
+        $output->writeln('');
+        $output->write($highlighter->getCodeSnippet($contents, $info['line'], $num, $num), ShellOutput::OUTPUT_RAW);
+        $output->stopPaging();
+    }
+
+    /**
+     * Replace the given directory from the start of a filepath.
+     *
+     * @param string $file
+     *
+     * @return string
+     */
+    private function replaceCwd($file)
+    {
+        $cwd = getcwd();
+        if ($cwd === false) {
+            return $file;
+        }
+
+        $cwd = rtrim($cwd, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        return preg_replace('/^' . preg_quote($cwd, '/') . '/', '', $file);
     }
 }

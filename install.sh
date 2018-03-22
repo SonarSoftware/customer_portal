@@ -11,6 +11,7 @@ if grep -Fxq "stretch/sid" /etc/debian_version
     else
         echo -e "\e[1;31mFAILED\e[0m"
         echo -e "\e[1;31mPlease reinstall Ubuntu 16.04!\e[0m"
+        exit 1;
 fi
 
 if [ -f /usr/bin/php ]

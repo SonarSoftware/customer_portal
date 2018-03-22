@@ -182,6 +182,11 @@ class Standard extends PrettyPrinterAbstract
             $stringValue = sprintf('%.17G', $node->value);
         }
 
+        // %G is locale dependent and there exists no locale-independent alternative. We don't want
+        // mess with switching locales here, so let's assume that a comma is the only non-standard
+        // decimal separator we may encounter...
+        $stringValue = str_replace(',', '.', $stringValue);
+
         // ensure that number is really printed as float
         return preg_match('/^-?[0-9]+$/', $stringValue) ? $stringValue . '.0' : $stringValue;
     }
@@ -369,10 +374,18 @@ class Standard extends PrettyPrinterAbstract
     }
 
     protected function pExpr_UnaryMinus(Expr\UnaryMinus $node) {
+        if ($node->expr instanceof Expr\UnaryMinus || $node->expr instanceof Expr\PreDec) {
+            // Enforce -(-$expr) instead of --$expr
+            return '-(' . $this->p($node->expr) . ')';
+        }
         return $this->pPrefixOp('Expr_UnaryMinus', '-', $node->expr);
     }
 
     protected function pExpr_UnaryPlus(Expr\UnaryPlus $node) {
+        if ($node->expr instanceof Expr\UnaryPlus || $node->expr instanceof Expr\PreInc) {
+            // Enforce +(+$expr) instead of ++$expr
+            return '+(' . $this->p($node->expr) . ')';
+        }
         return $this->pPrefixOp('Expr_UnaryPlus', '+', $node->expr);
     }
 

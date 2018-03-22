@@ -44,7 +44,6 @@ if (version_compare($currentVersion, $latestVersion) === -1)
     exec("/usr/bin/php /usr/share/portal/artisan view:clear");
     exec("/usr/bin/php /usr/share/portal/artisan route:cache");
     exec("/usr/bin/php /usr/share/portal/artisan config:cache");
-    exec("/usr/bin/php /usr/share/portal/artisan optimize");
 
     echo "Portal successfully updated.\n";
     return;

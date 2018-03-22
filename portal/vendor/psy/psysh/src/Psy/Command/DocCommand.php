@@ -74,7 +74,7 @@ HELP
             if (empty($doc) && !$db) {
                 $output->writeln('<warning>PHP manual not found</warning>');
                 $output->writeln('    To document core PHP functionality, download the PHP reference manual:');
-                $output->writeln('    https://github.com/bobthecow/dotfiles/wiki/PHP-manual');
+                $output->writeln('    https://github.com/bobthecow/psysh/wiki/PHP-manual');
             } else {
                 $output->writeln($doc);
             }
@@ -87,12 +87,18 @@ HELP
     private function getManualDoc($reflector)
     {
         switch (get_class($reflector)) {
+            case 'ReflectionClass':
+            case 'ReflectionObject':
             case 'ReflectionFunction':
                 $id = $reflector->name;
                 break;
 
             case 'ReflectionMethod':
                 $id = $reflector->class . '::' . $reflector->name;
+                break;
+
+            case 'ReflectionProperty':
+                $id = $reflector->class . '::$' . $reflector->name;
                 break;
 
             default:

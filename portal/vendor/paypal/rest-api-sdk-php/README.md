@@ -36,6 +36,11 @@ __Welcome to PayPal PHP SDK__. This repository contains PayPal's PHP SDK and sam
    - PHP 5.3 or above
    - [curl](https://secure.php.net/manual/en/book.curl.php), [json](https://secure.php.net/manual/en/book.json.php) & [openssl](https://secure.php.net/manual/en/book.openssl.php) extensions must be enabled
 
+
+## Direct Credit Card Support
+[Braintree Direct](https://www.braintreepayments.com/products/braintree-direct) is PayPal's preferred integration solution for accepting direct credit card payments in your mobile app or website. Braintree, a PayPal service, is the easiest way to accept credit cards, PayPal, and many other payment methods.
+
+
 ## License
 
 Read [License](LICENSE) for more licensing information.
@@ -51,4 +56,3 @@ Read [here](CONTRIBUTING.md) for more information.
    * [Sample Source Code](http://paypal.github.io/PayPal-PHP-SDK/sample/)
    * [API Reference](https://developer.paypal.com/webapps/developer/docs/api/)
    * [Reporting Issues / Feature Requests](https://github.com/paypal/PayPal-PHP-SDK/issues)
-   * [Pizza App Using Paypal REST API](https://github.com/paypal/rest-api-sample-app-php)

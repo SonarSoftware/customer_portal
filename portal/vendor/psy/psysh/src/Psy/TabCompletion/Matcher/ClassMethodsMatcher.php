@@ -36,7 +36,12 @@ class ClassMethodsMatcher extends AbstractMatcher
 
         $class = $this->getNamespaceAndClass($tokens);
 
-        $reflection = new \ReflectionClass($class);
+        try {
+            $reflection = new \ReflectionClass($class);
+        } catch (\ReflectionException $re) {
+            return array();
+        }
+
         $methods = $reflection->getMethods(\ReflectionMethod::IS_STATIC);
         $methods = array_map(function (\ReflectionMethod $method) {
             return $method->getName();
@@ -57,7 +62,7 @@ class ClassMethodsMatcher extends AbstractMatcher
      */
     public function hasMatched(array $tokens)
     {
-        $token = array_pop($tokens);
+        $token     = array_pop($tokens);
         $prevToken = array_pop($tokens);
 
         switch (true) {

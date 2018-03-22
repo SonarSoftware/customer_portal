@@ -2,6 +2,8 @@
 
 namespace PhpParser;
 
+use PhpParser\Node;
+
 abstract class NodeAbstract implements Node, \JsonSerializable
 {
     protected $attributes;
@@ -21,7 +23,12 @@ abstract class NodeAbstract implements Node, \JsonSerializable
      * @return string Type of the node
      */
     public function getType() {
-        return strtr(substr(rtrim(get_class($this), '_'), 15), '\\', '_');
+        $className = rtrim(get_class($this), '_');
+        return strtr(
+            substr($className, strlen(Node::class) + 1),
+            '\\',
+            '_'
+        );
     }
 
     /**

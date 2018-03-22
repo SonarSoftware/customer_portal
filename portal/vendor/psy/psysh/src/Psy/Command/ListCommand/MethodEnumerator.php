@@ -39,9 +39,9 @@ class MethodEnumerator extends Enumerator
             return;
         }
 
-        $showAll = $input->getOption('all');
+        $showAll   = $input->getOption('all');
         $noInherit = $input->getOption('no-inherit');
-        $methods = $this->prepareMethods($this->getMethods($showAll, $reflector, $noInherit));
+        $methods   = $this->prepareMethods($this->getMethods($showAll, $reflector, $noInherit));
 
         if (empty($methods)) {
             return;
@@ -77,8 +77,9 @@ class MethodEnumerator extends Enumerator
             }
         }
 
-        // @todo this should be natcasesort
-        ksort($methods);
+        // @todo switch to ksort after we drop support for 5.3:
+        //     ksort($methods, SORT_NATURAL | SORT_FLAG_CASE);
+        uksort($methods, 'strnatcasecmp');
 
         return $methods;
     }

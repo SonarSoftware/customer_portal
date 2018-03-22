@@ -21,10 +21,11 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 class Dumper extends CliDumper
 {
     private $formatter;
+    private $forceArrayIndexes;
 
     protected static $onlyControlCharsRx = '/^[\x00-\x1F\x7F]+$/';
-    protected static $controlCharsRx = '/([\x00-\x1F\x7F]+)/';
-    protected static $controlCharsMap = array(
+    protected static $controlCharsRx     = '/([\x00-\x1F\x7F]+)/';
+    protected static $controlCharsMap    = array(
         "\0"   => '\0',
         "\t"   => '\t',
         "\n"   => '\n',
@@ -34,9 +35,10 @@ class Dumper extends CliDumper
         "\033" => '\e',
     );
 
-    public function __construct(OutputFormatter $formatter)
+    public function __construct(OutputFormatter $formatter, $forceArrayIndexes = false)
     {
         $this->formatter = $formatter;
+        $this->forceArrayIndexes = $forceArrayIndexes;
         parent::__construct();
         $this->setColors(false);
     }
@@ -57,7 +59,7 @@ class Dumper extends CliDumper
      */
     protected function dumpKey(Cursor $cursor)
     {
-        if (Cursor::HASH_INDEXED !== $cursor->hashType) {
+        if ($this->forceArrayIndexes || Cursor::HASH_INDEXED !== $cursor->hashType) {
             parent::dumpKey($cursor);
         }
     }

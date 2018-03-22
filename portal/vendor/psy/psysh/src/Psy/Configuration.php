@@ -35,16 +35,34 @@ use XdgBaseDir\Xdg;
  */
 class Configuration
 {
-    const COLOR_MODE_AUTO = 'auto';
-    const COLOR_MODE_FORCED = 'forced';
+    const COLOR_MODE_AUTO     = 'auto';
+    const COLOR_MODE_FORCED   = 'forced';
     const COLOR_MODE_DISABLED = 'disabled';
 
     private static $AVAILABLE_OPTIONS = array(
-        'defaultIncludes', 'useReadline', 'usePcntl', 'codeCleaner', 'pager',
-        'loop', 'configDir', 'dataDir', 'runtimeDir', 'manualDbFile',
-        'requireSemicolons', 'useUnicode', 'historySize', 'eraseDuplicates',
-        'tabCompletion', 'errorLoggingLevel', 'warnOnMultipleConfigs',
-        'colorMode', 'updateCheck', 'startupMessage',
+        'codeCleaner',
+        'colorMode',
+        'configDir',
+        'dataDir',
+        'defaultIncludes',
+        'eraseDuplicates',
+        'errorLoggingLevel',
+        'forceArrayIndexes',
+        'historySize',
+        'loop',
+        'manualDbFile',
+        'pager',
+        'prompt',
+        'requireSemicolons',
+        'runtimeDir',
+        'startupMessage',
+        'tabCompletion',
+        'updateCheck',
+        'useBracketedPaste',
+        'usePcntl',
+        'useReadline',
+        'useUnicode',
+        'warnOnMultipleConfigs',
     );
 
     private $defaultIncludes;
@@ -59,18 +77,20 @@ class Configuration
     private $manualDbFile;
     private $hasReadline;
     private $useReadline;
+    private $useBracketedPaste;
     private $hasPcntl;
     private $usePcntl;
-    private $newCommands = array();
+    private $newCommands       = array();
     private $requireSemicolons = false;
     private $useUnicode;
     private $tabCompletion;
     private $tabCompletionMatchers = array();
-    private $errorLoggingLevel = E_ALL;
+    private $errorLoggingLevel     = E_ALL;
     private $warnOnMultipleConfigs = false;
     private $colorMode;
     private $updateCheck;
     private $startupMessage;
+    private $forceArrayIndexes = false;
 
     // services
     private $readline;
@@ -83,6 +103,7 @@ class Configuration
     private $presenter;
     private $completer;
     private $checker;
+    private $prompt;
 
     /**
      * Construct a Configuration instance.
@@ -558,6 +579,44 @@ class Configuration
     }
 
     /**
+     * Enable or disable bracketed paste.
+     *
+     * Note that this only works with readline (not libedit) integration for now.
+     *
+     * @param bool $useBracketedPaste
+     */
+    public function setUseBracketedPaste($useBracketedPaste)
+    {
+        $this->useBracketedPaste = (bool) $useBracketedPaste;
+    }
+
+    /**
+     * Check whether to use bracketed paste with readline.
+     *
+     * When this works, it's magical. Tabs in pastes don't try to autcomplete.
+     * Newlines in paste don't execute code until you get to the end. It makes
+     * readline act like you'd expect when pasting.
+     *
+     * But it often (usually?) does not work. And when it doesn't, it just spews
+     * escape codes all over the place and generally makes things ugly :(
+     *
+     * If `useBracketedPaste` has been set to true, but the current readline
+     * implementation is anything besides GNU readline, this will return false.
+     *
+     * @return bool True if the shell should use bracketed paste
+     */
+    public function useBracketedPaste()
+    {
+        // For now, only the GNU readline implementation supports bracketed paste.
+        $supported = ($this->getReadlineClass() === 'Psy\Readline\GNUReadline');
+
+        return $supported && $this->useBracketedPaste;
+
+        // @todo mebbe turn this on by default some day?
+        // return isset($this->useBracketedPaste) ? ($supported && $this->useBracketedPaste) : $supported;
+    }
+
+    /**
      * Check whether this PHP instance has Pcntl available.
      *
      * @return bool True if Pcntl is available
@@ -1017,7 +1076,7 @@ class Configuration
     public function getPresenter()
     {
         if (!isset($this->presenter)) {
-            $this->presenter = new Presenter($this->getOutput()->getFormatter());
+            $this->presenter = new Presenter($this->getOutput()->getFormatter(), $this->forceArrayIndexes());
         }
 
         return $this->presenter;
@@ -1195,5 +1254,45 @@ class Configuration
     public function getStartupMessage()
     {
         return $this->startupMessage;
+    }
+
+    /**
+     * Set the prompt.
+     *
+     * @param string $prompt
+     */
+    public function setPrompt($prompt)
+    {
+        $this->prompt = $prompt;
+    }
+
+    /**
+     * Get the prompt.
+     *
+     * @return string
+     */
+    public function getPrompt()
+    {
+        return $this->prompt;
+    }
+
+    /**
+     * Get the force array indexes.
+     *
+     * @return bool
+     */
+    public function forceArrayIndexes()
+    {
+        return $this->forceArrayIndexes;
+    }
+
+    /**
+     * Set the force array indexes.
+     *
+     * @param bool $forceArrayIndexes
+     */
+    public function setForceArrayIndexes($forceArrayIndexes)
+    {
+        $this->forceArrayIndexes = $forceArrayIndexes;
     }
 }

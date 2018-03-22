@@ -32,7 +32,7 @@ class SQLiteGrammar extends Grammar
      */
     protected $operators = [
         '=', '<', '>', '<=', '>=', '<>', '!=',
-        'like', 'not like', 'between', 'ilike',
+        'like', 'not like', 'ilike',
         '&', '|', '<<', '>>',
     ];
 
@@ -115,6 +115,18 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
+     * Compile a "where time" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereTime(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%H:%M:%S', $query, $where);
+    }
+
+    /**
      * Compile a date based where clause.
      *
      * @param  string  $type
@@ -153,7 +165,9 @@ class SQLiteGrammar extends Grammar
         // grammar insert builder because no special syntax is needed for the single
         // row inserts in SQLite. However, if there are multiples, we'll continue.
         if (count($values) == 1) {
-            return parent::compileInsert($query, reset($values));
+            return empty(reset($values))
+                    ? "insert into $table default values"
+                    : parent::compileInsert($query, reset($values));
         }
 
         $names = $this->columnize(array_keys(reset($values)));

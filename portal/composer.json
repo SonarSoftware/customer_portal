@@ -9,15 +9,16 @@
     "type": "project",
     "require": {
         "php": ">=7.0",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "predis/predis": "^1.0",
-        "laravelcollective/html": "^5.4",
+        "laravelcollective/html": "^5.5",
         "proengsoft/laravel-jsvalidation": "^1.6.0-dev",
         "sonarsoftware/customer_portal_framework": "1.*",
         "inacho/php-credit-card-validator": "^1.0",
         "paypal/rest-api-sdk-php": "^1.7",
         "mariuzzo/laravel-js-localization": "dev-master",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "gocardless/gocardless-pro": "^1.5"
     },
     "repositories": [
         {
@@ -28,7 +29,8 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "~6.0",
+        "filp/whoops": "~2.0"
     },
     "autoload": {
         "classmap": [
@@ -54,12 +56,14 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {

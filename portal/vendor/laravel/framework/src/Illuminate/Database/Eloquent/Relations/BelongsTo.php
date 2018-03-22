@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Concerns\SupportsDefaultModels;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
 class BelongsTo extends Relation
 {
     use SupportsDefaultModels;
@@ -250,7 +253,7 @@ class BelongsTo extends Relation
         }
 
         return $query->select($columns)->whereColumn(
-            $this->getQualifiedForeignKey(), '=', $query->getModel()->getTable().'.'.$this->ownerKey
+            $this->getQualifiedForeignKey(), '=', $query->qualifyColumn($this->ownerKey)
         );
     }
 
@@ -324,7 +327,7 @@ class BelongsTo extends Relation
      */
     public function getQualifiedForeignKey()
     {
-        return $this->child->getTable().'.'.$this->foreignKey;
+        return $this->child->qualifyColumn($this->foreignKey);
     }
 
     /**
@@ -344,7 +347,7 @@ class BelongsTo extends Relation
      */
     public function getQualifiedOwnerKeyName()
     {
-        return $this->related->getTable().'.'.$this->ownerKey;
+        return $this->related->qualifyColumn($this->ownerKey);
     }
 
     /**

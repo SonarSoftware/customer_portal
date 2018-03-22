@@ -18,7 +18,7 @@ use Psy\Output\PassthruPager;
 use Psy\VersionUpdater\GitHubChecker;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     private function getConfig($configFile = null)
     {
@@ -238,21 +238,19 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($colorMode, $config->colorMode());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage invalid color mode: some invalid mode
+     */
     public function testSetColorModeInvalid()
     {
         $config = $this->getConfig();
-        $colorMode = 'some invalid mode';
-
-        $this->setExpectedException(
-            '\InvalidArgumentException',
-            'invalid color mode: some invalid mode'
-        );
-        $config->setColorMode($colorMode);
+        $config->setColorMode('some invalid mode');
     }
 
     public function testSetCheckerValid()
     {
-        $config = $this->getConfig();
+        $config  = $this->getConfig();
         $checker = new GitHubChecker();
 
         $config->setChecker($checker);
