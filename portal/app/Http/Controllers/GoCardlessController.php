@@ -16,7 +16,9 @@ class GoCardlessController extends Controller
      */
     public function handleReturnRedirect(Request $request)
     {
-        $gocardlessToken = GoCardlessToken::where('redirect_flow_id','=',$request->input('redirect_flow_id'))->first();
+        $gocardlessToken = GoCardlessToken::where('redirect_flow_id','=',$request->input('redirect_flow_id'))
+            ->where('account_id','=',get_user()->account_id)
+            ->first();
         if (!$gocardlessToken)
         {
             return redirect()->action("BillingController@index")->withErrors(utrans("errors.invalidRedirectFlowID"));
