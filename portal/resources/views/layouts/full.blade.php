@@ -1,5 +1,5 @@
 @include("layouts.partials.head")
-<body>
+<body class="inner_page">
     @include("layouts.partials.nav")
     @include('layouts.partials.errors')
     @include('layouts.partials.success')

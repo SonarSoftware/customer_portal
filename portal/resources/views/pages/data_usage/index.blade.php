@@ -33,13 +33,13 @@
                     <h3 class="panel-title">{{utrans("headers.currentUsage")}}</h3>
                 </div>
                 <div class="panel-body">
-                    <p class="text-center bigger_text text-info">
+                    <p class="text-center bigger_text text-info1">
                         {{ $currentUsage['billable'] }}GB
                     </p>
                 </div>
             </div>
         @endif
-        <p>
+        <p class="text-info1">
             {{utrans("data_usage.monthlyGraphHeader")}}
         </p>
         <div class="panel panel-default">

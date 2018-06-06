@@ -44,5 +44,4 @@ return [
     'failedToCreateBankAccount' => 'Failed to add bank account. Please check the information and try again.',
     'creditCardPaymentsDisabled' => 'Credit card payments are not currently allowed.',
     'addAPaymentMethod' => 'Please add a payment method to your account to make a payment.',
-    'invalidRedirectFlowID' => 'Failed to setup direct debit. Please try again.',
 ];

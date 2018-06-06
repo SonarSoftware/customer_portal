@@ -8,8 +8,8 @@
                 <span class="icon-bar"></span>
             </button>
             <span class="navbar-brand">
-                @if(file_exists(base_path("/public/assets/images/logo.png")))
-                    <img src="/assets/images/logo.png" height="20px">
+                @if(file_exists(base_path("/public/assets/images/new_logo.png")))
+                    <img src="/assets/images/new_logo.png" height="20px">
                 @else
                     <img src="/assets/images/transparent_logo.png" height="20px">
                 @endif
@@ -30,8 +30,8 @@
                 @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li @if(str_contains(Route::getCurrentRoute()->uri(),"profile")) class="active" @endif><a href="{{action("ProfileController@show")}}">{{utrans("nav.profile")}} @if(str_contains(Route::getCurrentRoute()->uri(),"profile")) <span class="sr-only">(current)</span> @endif</a></li>
-                <li><a href="/logout">{{utrans("nav.logOut")}}</a></li>
+                <li @if(str_contains(Route::getCurrentRoute()->uri(),"profile")) class="active" @endif><a href="{{action("ProfileController@show")}}"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp{{utrans("nav.profile")}} @if(str_contains(Route::getCurrentRoute()->uri(),"profile")) <span class="sr-only">(current)</span> @endif</a></li>
+                <li><a href="/logout"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;&nbsp;{{utrans("nav.logOut")}}</a></li>
             </ul>
         </div>
     </div>

@@ -3,8 +3,8 @@ $(document).ready(function(){
     var datasets = [
         {
             label: dataUsageLabel,
-            borderColor: "rgba(243, 156, 18,1.0)",
-            backgroundColor: "rgba(241, 196, 15,0.5)",
+            borderColor: "rgba(255, 255, 255,1)",
+            backgroundColor: "rgba(46, 153, 22,1)",
             borderWidth: 1,
             data: []
         }

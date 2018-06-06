@@ -12,9 +12,8 @@
                             {{Formatter::currency($values['amount_due'])}}
                         </p>
                         <p>
-                            <a class="btn btn-primary btn-block btn-lg" href="{{action("BillingController@makePayment")}}" role="button">
-                                <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>
-                                {{utrans("billing.makePayment")}}
+                            <a class="btn btn-success btn-block btn-lg" href="{{action("BillingController@makePayment")}}" role="button">
+                                  {{utrans("billing.makePayment")}}
                             </a>
                         </p>
                     </div>
@@ -29,20 +28,20 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <tbody>
-                                    <TR class="info text-info">
-                                        <TD>{{utrans("general.accountNumber")}}</TD>
-                                        <TD>{{get_user()->account_id}}</TD>
-                                    </TR>
-                                    <TR @if($values['balance_minus_funds'] > 0) class="bg-danger text-danger" @else class="bg-success text-success" @endif>
-                                        <TD>{{utrans("billing.totalBalance")}}</TD>
-                                        <TD>{{Formatter::currency($values['balance_minus_funds'])}}</TD>
+                                    <TR>
+                                        <TD class="wh_txt" >{{utrans("general.accountNumber")}}</TD>
+                                        <TD >{{get_user()->account_id}}</TD>
                                     </TR>
                                     <TR>
-                                        <TD>{{utrans("billing.nextBillDate")}}</TD>
-                                        <TD>@if($values['next_bill_date'] !== null) {{Formatter::date($values['next_bill_date'],false)}} @else {{utrans("general.notAvailable")}} @endif</TD>
+                                        <TD class="wh_txt">{{utrans("billing.totalBalance")}}</TD>
+                                        <TD >{{Formatter::currency($values['balance_minus_funds'])}}</TD>
                                     </TR>
                                     <TR>
-                                        <TD>{{utrans("billing.nextBillAmount")}}</TD>
+                                        <TD class="wh_txt">{{utrans("billing.nextBillDate")}}</TD>
+                                        <TD >@if($values['next_bill_date'] !== null) {{Formatter::date($values['next_bill_date'],false)}} @else {{utrans("general.notAvailable")}} @endif</TD>
+                                    </TR>
+                                    <TR>
+                                        <TD class="wh_txt">{{utrans("billing.nextBillAmount")}}</TD>
                                         <TD>
                                             @if($values['next_bill_amount'] !== null)
                                                 {{Formatter::currency($values['next_bill_amount'])}}
@@ -165,7 +164,7 @@
                     <div role="tabpanel" class="tab-pane" id="creditCards">
                         <div class="table-responsive">
                             <p class="text-right">
-                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'credit_card'])}}" role="button">
+                                <a class="btn btn-success  btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'credit_card'])}}" role="button">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     {{utrans("billing.addNewCard")}}
                                 </a>
@@ -223,11 +222,11 @@
                             </table>
                         </div>
                     </div>
-                    @if(config("customer_portal.enable_bank_payments") == true || config("customer_portal.enable_gocardless") == true)
+                    @if(config("customer_portal.enable_bank_payments") == true)
                     <div role="tabpanel" class="tab-pane" id="bankAccounts">
                         <div class="table-responsive">
                             <p class="text-right">
-                                <a class="btn btn-primary btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'bank'])}}" role="button">
+                                <a class="btn btn-success btn-sm" href="{{action("BillingController@createPaymentMethod",['type' => 'bank'])}}" role="button">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     {{utrans("billing.addNewBankAccount")}}
                                 </a>
