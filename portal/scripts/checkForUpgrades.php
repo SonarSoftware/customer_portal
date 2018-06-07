@@ -10,10 +10,11 @@ $latestVersion = $body[0]->name;
 
 if (version_compare($currentVersion, $latestVersion) === -1)
 {
+    $latestVersion = 'master';
     echo "There is a newer version, $latestVersion.\n";
     exec("/usr/bin/php /usr/share/portal/artisan down");
     exec("/bin/rm -f /tmp/customerPortal.zip");
-    exec("/usr/bin/wget -O /tmp/customerPortal.zip https://github.com/SonarSoftware/customer_portal/archive/$latestVersion.zip",$output,$returnVar);
+    exec("/usr/bin/wget -O /tmp/customerPortal.zip https://github.com/pacwave/customer_portal/archive/$latestVersion.zip",$output,$returnVar);
     if ($returnVar !== 0)
     {
         echo "Failed to download customer portal file. Try again later.\n";
