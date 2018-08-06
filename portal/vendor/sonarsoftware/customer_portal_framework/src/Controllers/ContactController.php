@@ -33,14 +33,17 @@ class ContactController
         $result = $this->httpHelper->get("accounts/" . intval($accountID) . "/contacts/" . intval($contactID));
 
         $phoneNumbers = [];
-        foreach ($result->phone_numbers as $type => $phoneNumberResult)
+        if (is_array($result->phone_numbers))
         {
-            $phoneNumber = new PhoneNumber([
-                'number' => $phoneNumberResult->number,
-                'extension' => $phoneNumberResult->extension,
-                'type' => $type,
-            ]);
-            array_push($phoneNumbers, $phoneNumber);
+            foreach ($result->phone_numbers as $type => $phoneNumberResult)
+            {
+                $phoneNumber = new PhoneNumber([
+                    'number' => $phoneNumberResult->number,
+                    'extension' => $phoneNumberResult->extension,
+                    'type' => $type,
+                ]);
+                array_push($phoneNumbers, $phoneNumber);
+            }
         }
 
         $contact = new Contact([
