@@ -63,4 +63,5 @@ return [
     'accountType' => 'Account Type',
     'saveAsAutoPayMethodBank' => 'Automatically charge this bank account for all future invoices',
     'bankAccountAdded' => 'Bank account added successfully.',
+    'cvc' => 'CVC',
 ];

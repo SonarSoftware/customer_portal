@@ -542,6 +542,7 @@ class BillingController extends Controller
             'state' => $request->input('state'),
             'zip' => $request->input('zip'),
             'country' => $request->input('country'),
+            'cvc' => $request->input('cvc'),
         ]);
 
         return $creditCard;
