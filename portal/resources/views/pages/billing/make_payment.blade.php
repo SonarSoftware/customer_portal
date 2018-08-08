@@ -33,6 +33,13 @@
                             {!! Form::tel("expirationDate",null,['id' => 'expirationDate', 'class' => 'form-control', 'placeholder' => utrans("billing.expirationDate")]) !!}
                         </div>
                         <div class="form-group new_card">
+                            <label for="cvc">{{utrans("billing.cvc")}}</label>
+                            <div class="input-group">
+                                {!! Form::tel("cvc",null,['id' => 'cvc', 'autocomplete' => 'cvc', 'class' => 'form-control', 'placeholder' => utrans("billing.cvc")]) !!}
+                                <span class="input-group-addon"><i class="fa fa-cc" id="ccIcon" style="width: 25px;"></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group new_card">
                             <label for="country">{{utrans("billing.country")}}</label>
                             {!! Form::select("country",countries(),\Illuminate\Support\Facades\Config::get("customer_portal.country"),['id' => 'country', 'class' => 'form-control', 'required' => true]) !!}
                         </div>

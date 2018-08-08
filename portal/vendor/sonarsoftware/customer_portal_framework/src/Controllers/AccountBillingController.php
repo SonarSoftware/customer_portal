@@ -186,6 +186,7 @@ class AccountBillingController
             'state' => $creditCard->getState(),
             'zip' => $creditCard->getZip(),
             'country' => $creditCard->getCountry(),
+            'cvc' => $creditCard->getCvc(),
         ]);
 
         if ($result->success === true && $saveAndMakeAuto === true)
