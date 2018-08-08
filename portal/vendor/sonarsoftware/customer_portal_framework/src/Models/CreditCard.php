@@ -16,6 +16,7 @@ class CreditCard
     private $state;
     private $zip;
     private $country;
+    private $cvc;
 
     /**
      * When passing values into this function, the country must be a two character ISO country code. The state must be a subdivision returned from subdivisions($countryCode)
@@ -110,6 +111,11 @@ class CreditCard
         return $this->country;
     }
 
+    public function getCvc()
+    {
+        return $this->cvc;
+    }
+
     /**
      * Validate the input to the constructor.
      * @param $values
@@ -163,6 +169,11 @@ class CreditCard
             throw new InvalidArgumentException("The credit card number is not valid.");
         }
 
+        if (CreditCardValidator::validCvc($values['cvc'], $card['type']) === false)
+        {
+            throw new InvalidArgumentException("The CVC is not valid.");
+        }
+
         $month = sprintf("%02d", $values['expiration_month']);
         if (strlen($values['expiration_year']) !== 4)
         {
@@ -210,5 +221,6 @@ class CreditCard
         $this->state = isset($values['state']) ? trim($values['state']) : null;
         $this->zip = trim($values['zip']);
         $this->country = trim($values['country']);
+        $this->cvc = trim($values['cvc']);
     }
 }
