@@ -35,7 +35,7 @@ class CreditCardPaymentRequest extends FormRequest
             'city' => 'required_if:payment_method,new_card',
             'state' => 'required_if:payment_method,new_card',
             'zip' => 'required_if:payment_method,new_card',
-            'cvc' => 'required_if:payment_method:new_card|numeric',
+            'cvc' => 'required_if:payment_method,new_card|numeric',
         ];
     }
 }
