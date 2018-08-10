@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\Request;
+use Illuminate\Support\Facades\Request;
 
 class CreditCardPaymentRequest extends FormRequest
 {
@@ -35,7 +35,7 @@ class CreditCardPaymentRequest extends FormRequest
             'city' => 'required_if:payment_method,new_card',
             'state' => 'required_if:payment_method,new_card',
             'zip' => 'required_if:payment_method,new_card',
-            'cvc' => 'required_if:payment_method,new_card|numeric',
+            'cvc' => 'required_if:payment_method,new_card',
         ];
     }
 }

@@ -319,11 +319,7 @@ class BillingController extends Controller
             throw new InvalidArgumentException(utrans("errors.creditCardPaymentsDisabled"));
         }
 
-        try {
-            $creditCard = $this->createCreditCardObjectFromRequest($request);
-        } catch (Exception $e) {
-            return redirect()->back()->withErrors($e->getMessage());
-        }
+        $creditCard = $this->createCreditCardObjectFromRequest($request);
 
         try {
             $result = $this->accountBillingController->makeCreditCardPayment(get_user()->account_id, $creditCard, $request->input('amount'), (boolean)$request->input('makeAuto'));
