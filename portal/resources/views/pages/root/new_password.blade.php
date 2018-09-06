@@ -33,7 +33,7 @@
                             <label for="password_confirmation ">{{trans("register.confirmPassword",[],$language)}}</label>
                             {!! Form::password("password_confirmation",['id' => 'password_confirmation', 'class' => 'form-control', 'placeholder' => trans("register.confirmPassword",[],$language)]) !!}
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("actions.lookupEmail",[],$language)}}</button>
+                        <button type="submit" class="btn btn-primary">{{trans("actions.resetPassword",[],$language)}}</button>
                         {!! Form::close() !!}
                     </div>
                 </div>

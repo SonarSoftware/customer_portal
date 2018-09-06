@@ -8,4 +8,5 @@ return [
     'sendResetEmail' => 'Send Reset Email',
     'postReply' => 'Post a Reply',
     'delete' => 'Delete',
+    'resetPassword' => 'Reset Password',
 ];
