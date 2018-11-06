@@ -33,11 +33,12 @@
                             <label for="password">{{trans("register.password",[],$language)}}</label>
                             {!! Form::password("password",['id' => 'password', 'class' => 'form-control', 'placeholder' => trans("register.password",[],$language)]) !!}
                         </div>
+                        <p id="strength" style="color: #a94442;"></p>
                         <div class="form-group">
                             <label for="password_confirmation">{{trans("register.confirmPassword",[],$language)}}</label>
                             {!! Form::password("password_confirmation",['id' => 'password_confirmation', 'class' => 'form-control', 'placeholder' => trans("register.confirmPassword",[],$language)]) !!}
                         </div>
-                        <button type="submit" class="btn btn-primary">{{trans("actions.createAccount",[],$language)}}</button>
+                        <button type="submit" id="createButton" class="btn btn-primary">{{trans("actions.createAccount",[],$language)}}</button>
                         {!! Form::close() !!}
                     </div>
                 </div>
@@ -49,6 +50,11 @@
     </div>
 @endsection
 @section('additionalJS')
+    <script>
+        var passwordStrength = {{Config::get("customer_portal.password_strength_required")}};
+    </script>
+    <script type="text/javascript" src="/assets/js/zxcvbn.js"></script>
+    <script type="text/javascript" src="/assets/js/pages/register/register.js"></script>
     {!! JsValidator::formRequest('App\Http\Requests\AccountCreationRequest','#createForm') !!}
 @endsection
 @section('additionalCSS')

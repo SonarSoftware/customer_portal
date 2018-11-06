@@ -138,4 +138,9 @@ return [
      * CONTRACTS
      */
     'contracts_enabled' => env('CONTRACTS_ENABLED', false),
+
+    /**
+     * PASSWORD STRENGTH
+     */
+    'password_strength_required' => env('PASSWORD_STRENGTH_REQUIRED', 2),
 ];
