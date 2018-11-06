@@ -33,7 +33,7 @@ class ContactController
         $result = $this->httpHelper->get("accounts/" . intval($accountID) . "/contacts/" . intval($contactID));
 
         $phoneNumbers = [];
-        if (is_array($result->phone_numbers))
+        if (is_object($result->phone_numbers))
         {
             foreach ($result->phone_numbers as $type => $phoneNumberResult)
             {

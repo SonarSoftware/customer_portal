@@ -31,7 +31,7 @@ class ProfileController extends Controller
             PhoneNumber::HOME => null,
             PhoneNumber::FAX => null
         ];
-        
+
         foreach ($contact->getPhoneNumbers() as $phoneNumber) {
             if ($phoneNumber != null) {
                 $phoneNumbers[$phoneNumber->getType()] = $phoneNumber->getNumber();
@@ -124,6 +124,7 @@ class ProfileController extends Controller
     /**
      * Get info on the current user via the Sonar API.
      * @return Contact
+     * @throws \SonarSoftware\CustomerPortalFramework\Exceptions\ApiException
      */
     private function getContact()
     {
