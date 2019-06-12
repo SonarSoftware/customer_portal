@@ -1,3 +1,6 @@
+# End of Life
+This portal is no longer supported and will not receive further updates. Please check out our [brand new portal](https://github.com/sonarsoftwareinc/customer_portal)!
+
 # Sonar Customer Portal
 This provides a prebuilt customer portal for [Sonar](https://sonar.software). This requires Sonar 0.6 or greater. Please check the [wiki](https://github.com/SonarSoftware/customer_portal/wiki) for installation instructions.
 
